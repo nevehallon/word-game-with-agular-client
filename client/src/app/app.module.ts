@@ -9,6 +9,7 @@ import { BoardComponent } from './components/board/board.component';
 import { ActionBarComponent } from './components/action-bar/action-bar.component';
 import { RackFrameComponent } from './components/rack-frame/rack-frame.component';
 import { RackComponent } from './components/rack/rack.component';
+import { SquareComponent } from './components/square/square.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { RackComponent } from './components/rack/rack.component';
     BoardComponent,
     ActionBarComponent,
     RackFrameComponent,
-    RackComponent
+    RackComponent,
+    SquareComponent
   ],
   imports: [
     BrowserModule,

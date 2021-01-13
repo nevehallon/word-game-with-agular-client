@@ -1,1 +1,3 @@
-<p>board works!</p>
+<div id="board">
+    <app-square *ngFor="let square of squares; index as i" [squareIndex]="i"></app-square>
+</div>
