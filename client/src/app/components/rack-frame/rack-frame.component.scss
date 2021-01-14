@@ -1,0 +1,23 @@
+#rackImg {
+  background-image: url(../../../assets/images/Untitled-1.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% 95%;
+  margin: 0 auto;
+  width: 100vmin;
+  max-width: 75vh;
+  min-height: 65px;
+
+  display: grid;
+  grid-template-rows: 76.94%;
+}
+
+#rack {
+  //   height: 45px;
+  margin: 0 auto;
+  width: 98%;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 50px));
+  justify-content: space-evenly;
+}

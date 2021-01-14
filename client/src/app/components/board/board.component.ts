@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit {
-  squares: Array<any> = Array(225);
+  squares: any[] = Array(225);
 
   constructor() {}
 

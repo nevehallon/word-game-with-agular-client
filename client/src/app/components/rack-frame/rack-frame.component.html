@@ -1,1 +1,3 @@
-<p>rack-frame works!</p>
+<div id="rackImg">
+    <app-rack [tiles]="tiles" id="rack" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)"></app-rack>
+</div>
