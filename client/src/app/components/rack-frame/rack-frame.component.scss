@@ -29,24 +29,28 @@
 }
 
 .tile {
-  background-color: honeydew;
-  box-shadow: inset 0 0 4px 0px;
   position: relative;
   border: 1px solid black;
-  border-radius: 5px;
   font-size: 3vmax;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
   height: 100%;
+  cursor: -webkit-grab;
+  cursor: grab;
+  background: wheat;
+  box-shadow: inset 0px 0px 14px 0px;
+  border-radius: 3px;
+}
+
+div.tile:active {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
 }
 
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .cdk-drag-placeholder {

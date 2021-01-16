@@ -30,10 +30,6 @@
 }
 
 .tile {
-  background-color: honeydew;
-  box-shadow: inset 0 0 4px 0px;
-  position: relative;
-  // border: 1px solid black;
   border-radius: 5px;
   font-size: 2.5vmax;
   display: flex;
@@ -42,8 +38,17 @@
   position: relative;
   height: 100%;
   width: 100%;
+  cursor: -webkit-grab;
+  cursor: grab;
+  background: wheat;
+  box-shadow: inset 0px 0px 14px 0px;
+  border-radius: 3px;
 }
 
+div.tile:active {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
 .cdk-drag-placeholder {
   opacity: 0;
 }

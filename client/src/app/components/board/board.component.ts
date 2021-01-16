@@ -15,9 +15,7 @@ import {
 export class BoardComponent implements OnInit {
   squares: any[] = Array(225)
     .fill('')
-    .map((x, i) => ({
-      data: [],
-    }));
+    .map((x, i) => ({ data: [] }));
 
   tw = [0, 7, 14, 105, 119, 210, 217, 224];
 
