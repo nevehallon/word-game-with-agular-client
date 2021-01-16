@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  CdkDrag,
   CdkDragDrop,
+  CdkDropList,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
@@ -13,7 +15,9 @@ import {
 export class BoardComponent implements OnInit {
   squares: any[] = Array(225)
     .fill('')
-    .map((x, i) => i);
+    .map((x, i) => ({
+      data: [],
+    }));
 
   tw = [0, 7, 14, 105, 119, 210, 217, 224];
 
@@ -49,9 +53,12 @@ export class BoardComponent implements OnInit {
         event.currentIndex
       );
     }
-    console.log('square:', this.squares);
   }
 
+  onlyOneTile(item: CdkDrag, list: CdkDropList) {
+    if (list.data.length === 1) return false;
+    return true;
+  }
   constructor() {}
 
   ngOnInit(): void {}

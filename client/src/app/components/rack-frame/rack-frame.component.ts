@@ -15,7 +15,13 @@ export class RackFrameComponent implements OnInit {
     .fill('')
     .map((x, i) => x + 'square' + i);
 
-  tiles: any[] = [0, 1, 2, 3, 4, 5, 6];
+  tiles: any[] = Array(7)
+    .fill('')
+    .map((x, i) => ({
+      content: i,
+      id: `tile${i}`,
+      class: ['tile'],
+    }));
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -32,7 +38,6 @@ export class RackFrameComponent implements OnInit {
         event.currentIndex
       );
     }
-    console.log('rackframe:', this.tiles);
   }
 
   constructor() {}
