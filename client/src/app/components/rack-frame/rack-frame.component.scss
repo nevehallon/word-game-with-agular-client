@@ -22,9 +22,28 @@
   justify-content: space-evenly;
 }
 
-#rack.cdk-drop-list-dragging {
+.cdk-drop-list-dragging {
   .tile:not(.cdk-drag-placeholder) {
     transition: transform 1000ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  .tile {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+  }
+}
+
+.cdk-drop-list-receiving {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  .tile {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
   }
 }
 
@@ -36,21 +55,25 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  cursor: -webkit-grab;
+  cursor: move; /* fallback if grab cursor is unsupported */
   cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
   background: wheat;
   box-shadow: inset 0px 0px 14px 0px;
   border-radius: 3px;
 }
 
-div.tile:active {
-  cursor: -webkit-grabbing;
+.tile:active {
   cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
 }
 
 .cdk-drag-preview {
-  box-sizing: border-box;
-  border-radius: 4px;
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
 }
 
 .cdk-drag-placeholder {
