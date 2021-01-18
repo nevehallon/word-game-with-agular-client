@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   CdkDrag,
   CdkDragDrop,
+  CdkDragStart,
   CdkDropList,
   moveItemInArray,
   transferArrayItem,
@@ -36,7 +37,16 @@ export class BoardComponent implements OnInit {
     };
   }
 
+  bodyElement: HTMLElement = document.body;
+
+  dragStart(event: CdkDragStart) {
+    this.bodyElement.classList.add('inheritCursors');
+    this.bodyElement.style.cursor = 'grabbing';
+  }
+
   drop(event: CdkDragDrop<string[]>) {
+    this.bodyElement.classList.remove('inheritCursors');
+    this.bodyElement.style.cursor = 'unset';
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,

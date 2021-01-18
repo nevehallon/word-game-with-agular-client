@@ -1,7 +1,7 @@
 <ng-container cdkDropListGroup>
 
     <div *ngFor="let square of squares; index as i" cdkDropList [id]="'square'+i" [cdkDropListData]="squares[i].data" [cdkDropListConnectedTo]="['rack']" class="square" [ngClass]="multiplier(i)" (cdkDropListDropped)="drop($event)" [cdkDropListEnterPredicate]="onlyOneTile">
-        <div cdkDrag *ngFor="let item of squares[i].data" [class]="item.class" [id]="item.id">{{item.content}}</div>
+        <div cdkDrag *ngFor="let item of squares[i].data" [class]="item.class" [id]="item.id" (cdkDragStarted)="dragStart($event)">{{item.content}}</div>
     </div>
 
 </ng-container>
