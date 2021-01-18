@@ -1,3 +1,5 @@
+$wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-tile.jpg);
+
 #rackImg {
   background-image: url(../../../assets/images/Untitled-1.png);
   background-position: center center;
@@ -15,7 +17,7 @@
 #rack {
   //   height: 45px;
   margin: 0 auto;
-  width: 98%;
+  width: 100%;
   position: relative;
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 50px));
@@ -33,23 +35,42 @@
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
-}
-
-.tile {
-  position: relative;
   border: 1px solid black;
-  font-size: 3vmax;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  background: wheat;
   box-shadow: inset 0px 0px 14px 0px;
-  border-radius: 3px;
+
+  $size: 50px;
+
+  height: 100%;
+  width: 100%;
+  position: relative;
+  margin: auto;
+  background-image: $wood-tile;
+  font-size: $size * 0.65;
+  text-align: center;
+  color: #373737;
+  text-shadow: 0 -1px 0 black, 0 2px 2px white;
+  border-radius: 8%;
+  overflow: hidden;
+  border-bottom: 3px solid rgba(black, 0.75);
+
+  div {
+    $offset: $size * 0.04;
+
+    position: absolute;
+    right: $offset;
+    bottom: $offset;
+    font-size: $size * 0.22;
+    line-height: 1;
+  }
 }
 
 .cdk-drag-placeholder {
   opacity: 0;
+  border: 0;
+  transform: scale(0.9);
 }
 
 .cdk-drag-animating {

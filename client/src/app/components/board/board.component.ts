@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -7,13 +7,15 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { CreateGridService } from 'src/app/services/create-grid.service';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
+  providers: [],
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, AfterViewInit {
   squares: any[] = Array(225)
     .fill('')
     .map((x, i) => ({ data: [] }));
@@ -61,13 +63,22 @@ export class BoardComponent implements OnInit {
         event.currentIndex
       );
     }
+    setTimeout(() => {
+      this.gridService.updateGameState(document);
+      console.log(this.gridService.gridState);
+    }, 0);
   }
 
   onlyOneTile(item: CdkDrag, list: CdkDropList) {
     if (list.data.length === 1) return false;
     return true;
   }
-  constructor() {}
+
+  constructor(private gridService: CreateGridService) {}
 
   ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    this.gridService.updateGameState(document);
+  }
 }

@@ -1,7 +1,8 @@
 <div id="rackImg">
     <div id="rack" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListConnectedTo]="squareIds" [cdkDropListData]="tiles" (cdkDropListDropped)="drop($event)">
-        <div [id]="tile.id" class="tile" *ngFor="let tile of tiles" cdkDrag (cdkDragStarted)="dragStart($event)">
-            {{tile.content}}
+        <div [attr.data-drag]="tile.id" [id]="tile.id" class="tile" *ngFor="let tile of tiles" cdkDrag (cdkDragStarted)="dragStart($event)">
+            {{tile.content.letter}}
+            <div>{{tile.content.points}}</div>
         </div>
     </div>
 </div>

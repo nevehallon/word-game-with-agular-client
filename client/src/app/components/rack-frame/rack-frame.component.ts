@@ -1,28 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import {
   CdkDragDrop,
   CdkDragStart,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { CreateGridService } from 'src/app/services/create-grid.service';
+import { GameLogicService } from 'src/app/services/game-logic.service';
 
 @Component({
   selector: 'app-rack-frame',
   templateUrl: './rack-frame.component.html',
   styleUrls: ['./rack-frame.component.scss'],
 })
-export class RackFrameComponent implements OnInit {
+export class RackFrameComponent implements OnInit, AfterViewInit {
   squareIds: string[] = Array(225)
     .fill('')
     .map((x, i) => x + 'square' + i);
 
-  tiles: any[] = Array(7)
-    .fill('')
-    .map((x, i) => ({
-      content: i,
-      id: `tile${i}`,
-      class: ['tile'],
-    }));
+  tiles: any[] = [];
 
   bodyElement: HTMLElement = document.body;
 
@@ -48,9 +44,26 @@ export class RackFrameComponent implements OnInit {
         event.currentIndex
       );
     }
+    setTimeout(() => {
+      this.gridService.updateGameState(document);
+    }, 0);
   }
 
-  constructor() {}
+  constructor(
+    private gridService: CreateGridService,
+    private gameService: GameLogicService
+  ) {}
 
   ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.tiles = this.gameService.startGame(document).map((x, i) => ({
+        content: x,
+        id: `tile${i}`,
+        class: ['tile', 'hot'],
+        'data-drag': i,
+      }));
+    }, 0);
+  }
 }

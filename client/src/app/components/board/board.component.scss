@@ -1,9 +1,11 @@
+$wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-tile.jpg);
+
 .square {
   background-color: honeydew;
   box-shadow: inset 0 0 4px 0px;
   position: relative;
-  border: 1px solid black;
-  border-radius: 5px;
+  border: 0 solid black;
+  border-radius: 2px;
   font-size: 3vmin;
   display: flex;
   justify-content: center;
@@ -34,20 +36,34 @@
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
-}
-
-.tile {
-  border-radius: 5px;
-  font-size: 2.5vmax;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  box-shadow: inset 0px 0px 14px 0px;
+
+  $size: 35px;
+
   height: 100%;
   width: 100%;
-  background: wheat;
-  box-shadow: inset 0px 0px 14px 0px;
-  border-radius: 3px;
+  position: relative;
+  margin: auto;
+  background-image: $wood-tile;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #373737;
+  text-shadow: 0 -0.4px 0 black, 0 2px 2px white;
+  border-radius: 8%;
+
+  div {
+    $offset: $size * 0.02;
+    font-weight: 500;
+
+    position: absolute;
+    right: $offset;
+    bottom: $offset;
+    font-size: 0.5rem;
+    line-height: 0.5;
+  }
 }
 
 .cdk-drop-list-dragging {
