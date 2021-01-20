@@ -6,7 +6,6 @@ $wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-t
   position: relative;
   border: 0 solid black;
   border-radius: 2px;
-  font-size: 3vmin;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,28 +40,23 @@ $wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-t
   align-items: center;
   box-shadow: inset 0px 0px 14px 0px;
 
-  $size: 35px;
-
   height: 100%;
   width: 100%;
   position: relative;
   margin: auto;
   background-image: $wood-tile;
-  font-size: 0.9rem;
-  text-align: center;
   color: #373737;
-  text-shadow: 0 -0.4px 0 black, 0 2px 2px white;
+  text-shadow: 0 -0.4px 0 black, 0 1px 2px white;
   border-radius: 8%;
+  svg {
+    width: 100%;
+    text {
+      letter-spacing: -2px;
+    }
+  }
 
   div {
-    $offset: $size * 0.02;
-    font-weight: 500;
-
     position: absolute;
-    right: $offset;
-    bottom: $offset;
-    font-size: 0.5rem;
-    line-height: 0.5;
   }
 }
 
