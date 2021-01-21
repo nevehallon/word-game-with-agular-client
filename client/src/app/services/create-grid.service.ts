@@ -64,7 +64,7 @@ export class CreateGridService {
         // console.log($element);
         let letter;
         if ($element.querySelector('.tile')?.innerHTML) {
-          letter = $element.querySelector('.tile').innerHTML.slice(0, 1);
+          letter = $element.querySelector('.tile').textContent.slice(0, 1);
         }
         // prettier-ignore
         let hot = letter ? $element.querySelector(".tile").classList.contains("hot") : " ";
@@ -72,7 +72,7 @@ export class CreateGridService {
           ? $element.querySelector('.tile').getAttribute('data-drag')
           : ' ';
         let pointVal = letter
-          ? $element.querySelector('.tile div')?.innerHTML
+          ? $element.querySelector('.tile div')?.textContent.slice(1)
           : ' ';
         gridLetters[i].push(
           letter

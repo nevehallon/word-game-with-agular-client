@@ -40,6 +40,8 @@ $wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-t
   align-items: center;
   box-shadow: inset 0px 0px 14px 0px;
 
+  font-weight: 400;
+  line-height: 0;
   height: 100%;
   width: 100%;
   position: relative;
@@ -57,6 +59,7 @@ $wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-t
 
   div {
     position: absolute;
+    font-weight: 500;
   }
 }
 
@@ -68,6 +71,8 @@ $wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-t
 
 .cdk-drag-placeholder {
   opacity: 0;
+  border: 0;
+  font-size: 0;
 }
 
 .cdk-drag-animating {

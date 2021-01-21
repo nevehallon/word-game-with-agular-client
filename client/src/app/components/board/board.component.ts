@@ -8,6 +8,8 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { CreateGridService } from 'src/app/services/create-grid.service';
+import { GameLogicService } from 'src/app/services/game-logic.service';
+import { BoardValidatorService } from 'src/app/services/board-validator.service';
 
 @Component({
   selector: 'app-board',
@@ -64,7 +66,16 @@ export class BoardComponent implements OnInit, AfterViewInit {
       );
     }
     setTimeout(() => {
+      this.gameLogic.isValidMove = false;
       this.gridService.updateGameState(document);
+      this.gameLogic.isValidMove = this.validate.validate(
+        this.gridService.gridState,
+        this.gameLogic.firstTurn,
+        this.gameLogic.wordsLogged,
+        true,
+        document
+      );
+
       console.log(this.gridService.gridState);
     }, 0);
   }
@@ -74,7 +85,11 @@ export class BoardComponent implements OnInit, AfterViewInit {
     return true;
   }
 
-  constructor(private gridService: CreateGridService) {}
+  constructor(
+    private gridService: CreateGridService,
+    private gameLogic: GameLogicService,
+    private validate: BoardValidatorService
+  ) {}
 
   ngOnInit(): void {}
 
