@@ -72,7 +72,7 @@ export class CreateGridService {
           ? $element.querySelector('.tile').getAttribute('data-drag')
           : ' ';
         let pointVal = letter
-          ? $element.querySelector('.tile div')?.textContent.slice(1)
+          ? $element.querySelector('.tile')?.textContent.slice(1)
           : ' ';
         gridLetters[i].push(
           letter

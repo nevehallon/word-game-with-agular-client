@@ -6,6 +6,7 @@ import recurseRandomWord from "./recurseRandomWord.js";
 import utils from "./utils.js";
 import config from "./config.js";
 import permutations from "./permutations.js";
+import localforage from "localforage";
 
 const PERMS_MIN_LEN = config.PERMS_MIN_LEN;
 
@@ -124,7 +125,9 @@ function Trie(input) {
         return [];
       }
 
-      const prefixNode = strPrefix.length ? checkPrefix(trie, strPrefix).prefixNode : trie;
+      const prefixNode = strPrefix.length
+        ? checkPrefix(trie, strPrefix).prefixNode
+        : trie;
 
       return recursePrefix(prefixNode, strPrefix, sorted);
     },
