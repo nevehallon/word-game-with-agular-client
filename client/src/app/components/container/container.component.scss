@@ -3,3 +3,12 @@
 
 #rackFrame {
 }
+
+#actionBar {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100vmin;
+  max-width: 75vh;
+  justify-content: space-around;
+  margin: 0 auto;
+}

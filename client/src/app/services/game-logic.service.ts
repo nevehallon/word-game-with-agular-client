@@ -428,11 +428,12 @@ export class GameLogicService {
   }
 
   mix($document: HTMLDocument) {
-    if ($document.querySelectorAll('#rack .tile').length < 2) return;
     let shuffledRack = _.shuffle($document.querySelectorAll('#rack .tile'));
-    $document.querySelectorAll('#rack .tile').forEach((el) => el.remove());
+    let rack = $document.querySelector<HTMLElement>('#rack');
+    rack.innerHTML = '';
+
     shuffledRack.forEach((tile) => {
-      $document.querySelector<HTMLElement>('#rack').append(tile);
+      rack.append(tile);
       // setDraggable($(tile));TODO:
     });
   }
