@@ -1,17 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { GameLogicService } from 'src/app/services/game-logic.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { BtnAttrs } from 'src/app/interfaces/btn-attrs';
+import { SourceService } from 'src/app/services/source.service';
+import _ from 'lodash';
 
 @Component({
   selector: 'app-action-bar',
   templateUrl: './action-bar.component.html',
   styleUrls: ['./action-bar.component.scss'],
 })
-export class ActionBarComponent implements OnInit {
-  constructor(private gameService: GameLogicService) {}
+export class ActionBarComponent implements OnInit, OnDestroy {
+  constructor(private source: SourceService) {}
+
+  tiles: any[] = [];
+  rackSubscription: Subscription;
+
+  btnAttributes: BtnAttrs = null;
+  btnAttributeSubscription: Subscription;
 
   mixTiles() {
-    if (document.querySelectorAll('#rack .tile').length < 2) return;
-    this.gameService.mix(document);
+    console.log(this.btnAttributes);
+
+    if (this.tiles.length < 2) return;
+
+    let shuffledRack =
+      this.tiles.length === 2 ? this.tiles.reverse() : _.shuffle(this.tiles);
+
+    this.source.changePlayerRack(shuffledRack);
   }
   //   $("#bagBtn").click(showBagContent);
   // $("#scoresBtn").click(showScoreHistory);
@@ -29,5 +44,20 @@ export class ActionBarComponent implements OnInit {
   //   e.stopImmediatePropagation();
   // });
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.rackSubscription = this.source.currentPlayerRack.subscribe(
+      (tiles) => (this.tiles = tiles)
+    );
+    this.btnAttributeSubscription = this.source.currentBtnAttr.subscribe(
+      (attrs) => {
+        this.btnAttributes = attrs;
+        console.log(this.btnAttributes);
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.rackSubscription.unsubscribe();
+    this.btnAttributeSubscription.unsubscribe();
+  }
 }

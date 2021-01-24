@@ -4,9 +4,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContainerComponent } from './components/container/container.component';
 import { FrameComponent } from './components/frame/frame.component';
 import { BoardComponent } from './components/board/board.component';
@@ -30,7 +30,7 @@ import { RackFrameComponent } from './components/rack-frame/rack-frame.component
     MatButtonModule,
     MatTooltipModule,
   ],
-  providers: [],
+  // providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

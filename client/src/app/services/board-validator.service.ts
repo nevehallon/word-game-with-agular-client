@@ -1,11 +1,31 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Trie } from '../../assets/trie-prefix-tree/index.js';
 import _ from 'lodash';
+import { Subscription } from 'rxjs';
+import { BtnAttrs } from '../interfaces/btn-attrs.js';
+import { SourceService } from './source.service.js';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BoardValidatorService {
+export class BoardValidatorService implements OnDestroy {
+  constructor(private source: SourceService) {
+    this.init();
+  }
+
+  init() {
+    this.btnAttributeSubscription = this.source.currentBtnAttr.subscribe(
+      (attrs) => (this.btnAttributes = attrs)
+    );
+  }
+
+  btnAttributes: BtnAttrs;
+  btnAttributeSubscription: Subscription;
+
+  ngOnDestroy(): void {
+    this.btnAttributeSubscription.unsubscribe();
+  }
+
   zip(arrays) {
     return arrays[0].map((_, i) => arrays.map((array) => array[i]));
   }
@@ -28,25 +48,39 @@ export class BoardValidatorService {
   }
 
   isHot($document: HTMLDocument) {
-    $document.querySelector('#passPlay').textContent = 'Play';
+    const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
 
-    $document
-      .querySelector('#passPlay')
-      .setAttribute('class', 'btn btn-primary');
+    btnAttrs.passPlay.text = 'Play';
+    // $document.querySelector('#passPlay').textContent = 'Play';
 
-    $document.querySelector('#swapRecall').innerHTML =
-      '<svg data-src="https://s.svgbox.net/materialui.svg?ic=undo" width="25" height="25" fill="currentColor"></svg> Recall';
+    btnAttrs.passPlay.bgColor = 'rgb(30, 126, 52)';
+    // $document.querySelector<HTMLElement>('#passPlay').style.backgroundColor =
+    //   'rgb(30, 126, 52)';
+
+    btnAttrs.swapRecall.text = 'Recall';
+    btnAttrs.swapRecall.icon = 'undo';
+    // $document.querySelector<HTMLElement>('#swapRecall').innerHTML =
+    //   '<svg data-src="https://s.svgbox.net/materialui.svg?ic=undo" width="25" height="25" fill="currentColor"></svg> Recall';
+
+    this.source.changeBtnAttr(btnAttrs);
   }
 
   isNot($document: HTMLDocument) {
-    $document.querySelector('#passPlay').textContent = 'Pass';
+    const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
 
-    $document
-      .querySelector('#passPlay')
-      .setAttribute('class', 'btn btn-primary');
+    btnAttrs.passPlay.text = 'Pass';
+    // $document.querySelector('#passPlay').textContent = 'Pass';
 
-    $document.querySelector('#swapRecall').innerHTML =
-      '<svg data-src="https://s.svgbox.net/materialui.svg?ic=swap_vertical_circle" width="25" height="25" fill="currentColor"></svg> Swap';
+    btnAttrs.passPlay.bgColor = 'rgb(30, 126, 52)';
+    // $document.querySelector<HTMLElement>('#passPlay').style.backgroundColor =
+    //   'rgb(30, 126, 52)';
+
+    btnAttrs.swapRecall.text = 'Swap';
+    btnAttrs.swapRecall.icon = 'swap_vertical_circle';
+    // $document.querySelector('#swapRecall').innerHTML =
+    //   '<svg data-src="https://s.svgbox.net/materialui.svg?ic=swap_vertical_circle" width="25" height="25" fill="currentColor"></svg> Swap';
+
+    this.source.changeBtnAttr(btnAttrs);
   }
 
   playError($document: HTMLDocument) {
@@ -71,7 +105,7 @@ export class BoardValidatorService {
     try {
       let hasWords = true;
 
-      !$document.querySelectorAll('.column .hot').length
+      !$document.querySelectorAll('.square .hot').length
         ? this.isNot($document)
         : this.isHot($document);
       if (isPlayer) {
@@ -449,5 +483,4 @@ export class BoardValidatorService {
       return error;
     }
   }
-  constructor() {}
 }

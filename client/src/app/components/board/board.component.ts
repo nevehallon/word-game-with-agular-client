@@ -15,7 +15,6 @@ import { BoardValidatorService } from 'src/app/services/board-validator.service'
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
-  providers: [],
 })
 export class BoardComponent implements OnInit, AfterViewInit {
   squares: any[] = Array(225)

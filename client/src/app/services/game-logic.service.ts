@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
 import { ScrabbleLettersService } from './scrabble-letters.service';
 import _ from 'lodash';
-import { GetRequestsService } from './get-requests.service';
+// import { GetRequestsService } from './get-requests.service';
 import { ComputeService } from './compute.service';
 import { CreateGridService } from './create-grid.service';
 import { BoardValidatorService } from './board-validator.service';
+import { SourceService } from './source.service';
 @Injectable({
   providedIn: 'root',
 })
 export class GameLogicService {
   constructor(
     private letters: ScrabbleLettersService,
-    private http: GetRequestsService,
+    // private http: GetRequestsService,
     private calc: ComputeService,
     private gridService: CreateGridService,
-    private validate: BoardValidatorService
+    private validate: BoardValidatorService,
+    private source: SourceService
   ) {}
 
   DEBUG_MODE = false; //? change to true for the AI to play it self
@@ -95,7 +97,14 @@ export class GameLogicService {
         // this.pcPlay(); //TODO:
       }, 3000);
     }
-    return playerRack;
+    playerRack = playerRack.map((x, i) => ({
+      content: x,
+      id: `tile${i}`,
+      class: ['tile', 'hot'],
+      'data-drag': i,
+    }));
+
+    this.source.changePlayerRack(playerRack);
   }
 
   repaintBoard($document: HTMLDocument) {
@@ -425,17 +434,6 @@ export class GameLogicService {
         this.passCount = -1;
         this.pass(true, true, false, undefined, $document);
       });
-  }
-
-  mix($document: HTMLDocument) {
-    let shuffledRack = _.shuffle($document.querySelectorAll('#rack .tile'));
-    let rack = $document.querySelector<HTMLElement>('#rack');
-    rack.innerHTML = '';
-
-    shuffledRack.forEach((tile) => {
-      rack.append(tile);
-      // setDraggable($(tile));TODO:
-    });
   }
 
   recall($document: HTMLDocument) {

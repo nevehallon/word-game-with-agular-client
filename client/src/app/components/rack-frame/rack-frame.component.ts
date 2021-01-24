@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   CdkDragDrop,
   CdkDragStart,
@@ -7,18 +7,22 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CreateGridService } from 'src/app/services/create-grid.service';
 import { GameLogicService } from 'src/app/services/game-logic.service';
+import { Subscription } from 'rxjs';
+import { SourceService } from 'src/app/services/source.service';
 
 @Component({
   selector: 'app-rack-frame',
   templateUrl: './rack-frame.component.html',
   styleUrls: ['./rack-frame.component.scss'],
 })
-export class RackFrameComponent implements OnInit, AfterViewInit {
+export class RackFrameComponent implements OnInit, OnDestroy {
   squareIds: string[] = Array(225)
     .fill('')
     .map((x, i) => x + 'square' + i);
 
   tiles: any[] = [];
+
+  rackSubscription: Subscription;
 
   bodyElement: HTMLElement = document.body;
 
@@ -51,19 +55,18 @@ export class RackFrameComponent implements OnInit, AfterViewInit {
 
   constructor(
     private gridService: CreateGridService,
-    private gameService: GameLogicService
+    private gameService: GameLogicService,
+    private source: SourceService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.rackSubscription = this.source.currentPlayerRack.subscribe(
+      (tiles) => (this.tiles = tiles)
+    );
+    this.gameService.startGame(document);
+  }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.tiles = this.gameService.startGame(document).map((x, i) => ({
-        content: x,
-        id: `tile${i}`,
-        class: ['tile', 'hot'],
-        'data-drag': i,
-      }));
-    }, 0);
+  ngOnDestroy(): void {
+    this.rackSubscription.unsubscribe();
   }
 }
