@@ -35,7 +35,7 @@ export class GameLogicService {
   wordsLogged = [];
   history = [];
   rivalRack = [];
-  hints = JSON.parse(localStorage.getItem('hints')) || { show: true };
+  // hints = JSON.parse(localStorage.getItem('hints')) || { show: true };
 
   bag = _.shuffle(_.shuffle(this.letters.get()));
   // bag = _.drop(bag, 86); //? uncomment for doing tests on a shorter game

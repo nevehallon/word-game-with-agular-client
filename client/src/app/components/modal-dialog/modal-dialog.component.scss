@@ -1,0 +1,75 @@
+.center-align {
+  text-align: center;
+}
+
+// *
+// * bag
+// *
+
+.tilesLeft,
+.blankOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+  width: 70%;
+  margin: auto;
+  row-gap: 2px;
+
+  .status-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+    font-size: small;
+    font-weight: bold;
+  }
+}
+
+$wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-tile.jpg);
+
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0px 0px 14px 0px;
+
+  font-weight: 400;
+  line-height: 0;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  margin: auto;
+  background-image: $wood-tile;
+  color: #373737;
+  text-shadow: 0 -0.4px 0 black, 0 1px 2px white;
+  border-radius: 8%;
+  svg {
+    width: 100%;
+    text {
+      letter-spacing: -2px;
+    }
+  }
+
+  div {
+    position: absolute;
+    font-weight: 500;
+  }
+}
+
+// *
+// * settings
+// *
+mat-slider {
+  width: 100%;
+}
+
+#between {
+  background: black;
+  width: 50%;
+  margin: 2em auto;
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: space-around;
+}

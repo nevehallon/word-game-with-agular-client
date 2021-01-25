@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs';
 import { BtnAttrs } from 'src/app/interfaces/btn-attrs';
 import { SourceService } from 'src/app/services/source.service';
 import _ from 'lodash';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-action-bar',
@@ -10,11 +12,12 @@ import _ from 'lodash';
   styleUrls: ['./action-bar.component.scss'],
 })
 export class ActionBarComponent implements OnInit, OnDestroy {
-  constructor(private source: SourceService) {}
+  constructor(private source: SourceService, public dialog: MatDialog) {}
 
   tiles: any[] = [];
   rackSubscription: Subscription;
 
+  onOff = true;
   btnAttributes: BtnAttrs = null;
   btnAttributeSubscription: Subscription;
 
@@ -28,13 +31,31 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
     this.source.changePlayerRack(shuffledRack);
   }
-  //   $("#bagBtn").click(showBagContent);
-  // $("#scoresBtn").click(showScoreHistory);
+
+  showBagContent() {
+    this.dialog.open(ModalDialogComponent, {
+      data: {
+        type: 'bag',
+      },
+    });
+  }
+
+  showSettings() {
+    this.dialog.open(ModalDialogComponent, {
+      width: '75%',
+      data: {
+        type: 'settings',
+      },
+    });
+  }
+
+  // $("#settingsBtn").click(showSettings);
+
   // $("#swapRecall").click(() => ($("#swapRecall").text().includes("Swap") ? swap() : recall()));
+  // $("#scoresBtn").click(showScoreHistory);
   // $("#passPlay").click(() =>
   //   $("#passPlay").text().includes("Pass") ? prePass(true, false, false, playersTurn) : play()
   // );
-  // $("#settingsBtn").click(showSettings);
 
   // $("#startGame").click(rematch);
   // $("#zoomOut").click(zoomOut);
@@ -51,7 +72,12 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     this.btnAttributeSubscription = this.source.currentBtnAttr.subscribe(
       (attrs) => {
         this.btnAttributes = attrs;
-        console.log(this.btnAttributes);
+        setTimeout(() => {
+          this.onOff = false;
+        }, 0);
+        setTimeout(() => {
+          this.onOff = true;
+        }, 0);
       }
     );
   }

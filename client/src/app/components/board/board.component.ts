@@ -10,6 +10,7 @@ import {
 import { CreateGridService } from 'src/app/services/create-grid.service';
 import { GameLogicService } from 'src/app/services/game-logic.service';
 import { BoardValidatorService } from 'src/app/services/board-validator.service';
+import { SourceService } from 'src/app/services/source.service';
 
 @Component({
   selector: 'app-board',
@@ -87,8 +88,11 @@ export class BoardComponent implements OnInit, AfterViewInit {
   constructor(
     private gridService: CreateGridService,
     private gameLogic: GameLogicService,
+    private source: SourceService,
     private validate: BoardValidatorService
-  ) {}
+  ) {
+    validate.init(this.source);
+  }
 
   ngOnInit(): void {}
 

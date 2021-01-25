@@ -1,0 +1,51 @@
+<div *ngIf="data?.type === 'bag'">
+    <h2 [ngStyle]="{'text-align': 'center'}">Remaining Tiles in Bag:</h2>
+    <div class="tilesLeft">
+        <div *ngFor="let x of letterToPointsSorted" class="status-box">
+            <div class="tile">
+
+                <svg viewBox="0 0 20 20">
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{x.letter === "" ? "*" : x.letter}}</text>
+                </svg>
+                <div>
+                    <svg viewBox="0 0 40 40">
+                        <text x="82%" y="85%" dominant-baseline="middle" text-anchor="middle">{{x.points}}</text>
+                    </svg>
+                </div>
+            </div>
+            <span>
+                {{currentFreq()[(x.letter === "BLANK" ? "" : x.letter) + ""]}}
+            </span>
+        </div>
+    </div>
+    <mat-dialog-actions>
+        <button color="primary" mat-raised-button mat-dialog-close>Close</button>
+    </mat-dialog-actions>
+</div>
+
+<div *ngIf="data?.type === 'settings'">
+    <h1 class="center-align">Settings</h1>
+    <h3 class="center-align">Current difficulty:</h3>
+
+    <div>
+        <!-- 
+            <input type="range" class="custom-range" min="15" max="65" step="1" id="difficulty" value="${value}">
+            <input type="checkbox" id="showHints" ${hints.show ? "checked" : ""}> -->
+        <!-- [displayWith]="formatLabel" -->
+        <label class="center-align" [ngStyle]="difficultyStyles" id="difficultyText" for="difficulty">{{difficultyText}}</label>
+        <mat-slider [value]="value" (input)="giveFeedBack($event)" tickInterval="1" min="15" max="65"></mat-slider>
+        <div [ngStyle]="difficultyStyles" id="difficultyPercentage" [class]="'center-align'">
+            {{((value - 15) * 100) / (65 - 15)}}%
+        </div>
+        <hr id="between" />
+        <div class="center-align">
+            <label id="hints" for="showHints">Show hints: </label>
+            <mat-checkbox id="showHints" [(ngModel)]="checked"></mat-checkbox>
+        </div>
+    </div>
+
+    <mat-dialog-actions>
+        <button mat-raised-button mat-dialog-close>Close</button>
+        <button (click)="saveSettings()" color="primary" mat-raised-button mat-dialog-close>Save</button>
+    </mat-dialog-actions>
+</div>

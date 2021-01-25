@@ -9,11 +9,11 @@ import { SourceService } from './source.service.js';
   providedIn: 'root',
 })
 export class BoardValidatorService implements OnDestroy {
-  constructor(private source: SourceService) {
-    this.init();
-  }
+  private source;
+  constructor() {}
 
-  init() {
+  init(source) {
+    this.source = source;
     this.btnAttributeSubscription = this.source.currentBtnAttr.subscribe(
       (attrs) => (this.btnAttributes = attrs)
     );
@@ -47,51 +47,43 @@ export class BoardValidatorService implements OnDestroy {
     this.zipWordMultiplier[index].push(multi);
   }
 
-  isHot($document: HTMLDocument) {
+  isHot() {
     const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
 
     btnAttrs.passPlay.text = 'Play';
-    // $document.querySelector('#passPlay').textContent = 'Play';
 
     btnAttrs.passPlay.bgColor = 'rgb(30, 126, 52)';
-    // $document.querySelector<HTMLElement>('#passPlay').style.backgroundColor =
-    //   'rgb(30, 126, 52)';
 
     btnAttrs.swapRecall.text = 'Recall';
     btnAttrs.swapRecall.icon = 'undo';
-    // $document.querySelector<HTMLElement>('#swapRecall').innerHTML =
-    //   '<svg data-src="https://s.svgbox.net/materialui.svg?ic=undo" width="25" height="25" fill="currentColor"></svg> Recall';
 
     this.source.changeBtnAttr(btnAttrs);
   }
 
-  isNot($document: HTMLDocument) {
+  isNot() {
     const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
 
     btnAttrs.passPlay.text = 'Pass';
-    // $document.querySelector('#passPlay').textContent = 'Pass';
-
-    btnAttrs.passPlay.bgColor = 'rgb(30, 126, 52)';
-    // $document.querySelector<HTMLElement>('#passPlay').style.backgroundColor =
-    //   'rgb(30, 126, 52)';
+    btnAttrs.passPlay.bgColor = '';
+    btnAttrs.passPlay.icon = '';
 
     btnAttrs.swapRecall.text = 'Swap';
     btnAttrs.swapRecall.icon = 'swap_vertical_circle';
-    // $document.querySelector('#swapRecall').innerHTML =
-    //   '<svg data-src="https://s.svgbox.net/materialui.svg?ic=swap_vertical_circle" width="25" height="25" fill="currentColor"></svg> Swap';
 
     this.source.changeBtnAttr(btnAttrs);
   }
 
-  playError($document: HTMLDocument) {
-    setTimeout(() => {
-      if ($document.querySelector('#passPlay').textContent === 'Pass') return;
-      $document.querySelector('#passPlay').innerHTML =
-        "<svg data-src='https://s.svgbox.net/materialui.svg?ic=block' width='25' height='25' fill='currentColor'></svg> Play";
-      $document
-        .querySelector('#passPlay')
-        .setAttribute('class', 'btn btn-danger');
-    }, 0);
+  playError() {
+    // setTimeout(() => {
+    const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
+
+    if (btnAttrs.passPlay.text === 'Pass') return;
+
+    btnAttrs.passPlay.icon = 'block';
+    btnAttrs.passPlay.text = 'Play';
+    btnAttrs.passPlay.bgColor = '#c82333';
+    this.source.changeBtnAttr(btnAttrs);
+    // }, 0);
   }
 
   validate(
@@ -106,13 +98,13 @@ export class BoardValidatorService implements OnDestroy {
       let hasWords = true;
 
       !$document.querySelectorAll('.square .hot').length
-        ? this.isNot($document)
-        : this.isHot($document);
+        ? this.isNot()
+        : this.isHot();
       if (isPlayer) {
         if (firstTurn && !board[7][7].letter.trim()) {
           if (!$document.querySelectorAll('#board .hot').length)
-            return this.isNot($document);
-          this.playError($document);
+            return this.isNot();
+          this.playError();
           throw '(45) Your word must touch an existing word or the center star';
         }
 
@@ -135,8 +127,8 @@ export class BoardValidatorService implements OnDestroy {
               hotCompare[1] !== hotPivot[1]
             ) {
               if (!$document.querySelectorAll('#board .hot').length)
-                return this.isNot($document);
-              this.playError($document);
+                return this.isNot();
+              this.playError();
               throw '(59) The letters you play must lie on the same row or column, and must be connected to each other';
             }
           });
@@ -225,8 +217,8 @@ export class BoardValidatorService implements OnDestroy {
               next
             ) {
               if (!$document.querySelectorAll('#board .hot').length)
-                return this.isNot($document);
-              this.playError($document);
+                return this.isNot();
+              this.playError();
               throw '(37) The letters you play must lie on the same row or column, and must be connected to each other';
             }
             //prettier-ignore
@@ -241,8 +233,8 @@ export class BoardValidatorService implements OnDestroy {
 
         if (ids.length == 2) {
           if (!$document.querySelectorAll('#board .hot').length)
-            return this.isNot($document);
-          this.playError($document);
+            return this.isNot();
+          this.playError();
           throw `138) Word must contain at least two letters`;
         }
       }
@@ -258,8 +250,8 @@ export class BoardValidatorService implements OnDestroy {
           if (_.without(hotLetters, '', 'true').length > 1) {
             if (isPlayer) {
               if (!$document.querySelectorAll('#board .hot').length)
-                return this.isNot($document);
-              this.playError($document);
+                return this.isNot();
+              this.playError();
               throw '(47) The letters you play must lie on the same row or column, and must be connected to each other';
             } else {
               // console.log({
@@ -277,8 +269,8 @@ export class BoardValidatorService implements OnDestroy {
       if ((!touching && !firstTurn) || singleHot > 1) {
         if (isPlayer) {
           if (!$document.querySelectorAll('#board .hot').length)
-            return this.isNot($document);
-          this.playError($document);
+            return this.isNot();
+          this.playError();
           throw '(48) The letters you play must lie on the same row or column, and must be connected to each other';
         } else {
           // console.log({
@@ -318,8 +310,8 @@ export class BoardValidatorService implements OnDestroy {
                 coords = [];
                 if (!skip && prev && next && isPlayer) {
                   if (!$document.querySelectorAll('#board .hot').length)
-                    return this.isNot($document);
-                  this.playError($document);
+                    return this.isNot();
+                  this.playError();
                   throw '(51) The letters you play must lie on the same row or column, and must be connected to each other';
                 }
                 if (prev && next) return (done = true);
@@ -356,8 +348,8 @@ export class BoardValidatorService implements OnDestroy {
                 zipCoords = [];
                 if (!skip && prev && next && isPlayer) {
                   if (!$document.querySelectorAll('#board .hot').length)
-                    return this.isNot($document);
-                  this.playError($document);
+                    return this.isNot();
+                  this.playError();
                   throw '(52) The letters you play must lie on the same row or column, and must be connected to each other';
                 }
                 if (prev && next) return (done = true);
@@ -415,8 +407,8 @@ export class BoardValidatorService implements OnDestroy {
           this.potentialPoints.length + this.potentialZipPoints.length
         ) {
           if (!$document.querySelectorAll('#board .hot').length)
-            return this.isNot($document);
-          this.playError($document);
+            return this.isNot();
+          this.playError();
           throw '(57) The letters you play must lie on the same row or column, and must be connected to each other';
         }
       }
@@ -425,8 +417,8 @@ export class BoardValidatorService implements OnDestroy {
         if (!Trie().hasWord(word)) {
           if (isPlayer) {
             if (!$document.querySelectorAll('#board .hot').length)
-              return this.isNot($document);
-            this.playError($document);
+              return this.isNot();
+            this.playError();
             throw `290) The word: '${word}' is INVALID `;
           } else {
             hasWords = false;
@@ -462,11 +454,15 @@ export class BoardValidatorService implements OnDestroy {
       pointTally = _.sum(pointTally);
 
       if (isPlayer) {
-        !$document.querySelectorAll('.square .hot').length
-          ? this.isNot($document)
-          : ($document.querySelector(
-              '#passPlay'
-            ).textContent = `Play ${pointTally}`);
+        const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
+
+        if (!$document.querySelectorAll('.square .hot').length)
+          return this.isNot();
+
+        btnAttrs.passPlay.text = `Play ${pointTally}`;
+        btnAttrs.passPlay.icon = '';
+
+        this.source.changeBtnAttr(btnAttrs);
       }
 
       if (hasWords) {

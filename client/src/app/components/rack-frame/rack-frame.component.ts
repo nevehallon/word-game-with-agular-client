@@ -9,6 +9,7 @@ import { CreateGridService } from 'src/app/services/create-grid.service';
 import { GameLogicService } from 'src/app/services/game-logic.service';
 import { Subscription } from 'rxjs';
 import { SourceService } from 'src/app/services/source.service';
+import { BoardValidatorService } from 'src/app/services/board-validator.service';
 
 @Component({
   selector: 'app-rack-frame',
@@ -50,12 +51,20 @@ export class RackFrameComponent implements OnInit, OnDestroy {
     }
     setTimeout(() => {
       this.gridService.updateGameState(document);
+      this.gameService.isValidMove = this.validate.validate(
+        this.gridService.gridState,
+        this.gameService.firstTurn,
+        this.gameService.wordsLogged,
+        true,
+        document
+      );
     }, 0);
   }
 
   constructor(
     private gridService: CreateGridService,
     private gameService: GameLogicService,
+    private validate: BoardValidatorService,
     private source: SourceService
   ) {}
 
