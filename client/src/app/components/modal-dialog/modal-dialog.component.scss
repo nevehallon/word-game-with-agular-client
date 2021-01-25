@@ -10,8 +10,9 @@
 .blankOptions {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: repeat(10, 1fr);
   justify-items: center;
-  width: 70%;
+  // width: 70%;
   margin: auto;
   row-gap: 2px;
 

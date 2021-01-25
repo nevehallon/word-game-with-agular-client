@@ -1,5 +1,5 @@
-<div *ngIf="data?.type === 'bag'">
-    <h2 [ngStyle]="{'text-align': 'center'}">Remaining Tiles in Bag:</h2>
+<div id="bagModal" *ngIf="data?.type === 'bag'">
+    <h2 class="center-align">Remaining Tiles in Bag:</h2>
     <div class="tilesLeft">
         <div *ngFor="let x of letterToPointsSorted" class="status-box">
             <div class="tile">
@@ -13,9 +13,9 @@
                     </svg>
                 </div>
             </div>
-            <span>
-                {{currentFreq()[(x.letter === "BLANK" ? "" : x.letter) + ""]}}
-            </span>
+            <svg viewBox="0 0 35 35">
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{currentFreq()[(x.letter === "BLANK" ? "" : x.letter) + ""]}}</text>
+            </svg>
         </div>
     </div>
     <mat-dialog-actions>

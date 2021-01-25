@@ -43,6 +43,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   showSettings() {
     this.dialog.open(ModalDialogComponent, {
       width: '75%',
+      // height: '100%',
       data: {
         type: 'settings',
       },
