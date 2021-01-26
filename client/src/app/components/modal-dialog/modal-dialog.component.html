@@ -28,10 +28,6 @@
     <h3 class="center-align">Current difficulty:</h3>
 
     <div>
-        <!-- 
-            <input type="range" class="custom-range" min="15" max="65" step="1" id="difficulty" value="${value}">
-            <input type="checkbox" id="showHints" ${hints.show ? "checked" : ""}> -->
-        <!-- [displayWith]="formatLabel" -->
         <label class="center-align" [ngStyle]="difficultyStyles" id="difficultyText" for="difficulty">{{difficultyText}}</label>
         <mat-slider [value]="value" (input)="giveFeedBack($event)" tickInterval="1" min="15" max="65"></mat-slider>
         <div [ngStyle]="difficultyStyles" id="difficultyPercentage" [class]="'center-align'">
@@ -47,5 +43,32 @@
     <mat-dialog-actions>
         <button mat-raised-button mat-dialog-close>Close</button>
         <button (click)="saveSettings()" color="primary" mat-raised-button mat-dialog-close>Save</button>
+    </mat-dialog-actions>
+</div>
+
+<div *ngIf="data?.type === 'swap'">
+    <h1 class="center-align">Swap Tiles</h1>
+    <h3 class="center-align">Select the tiles you want to exchange</h3>
+    <div class="center-align">
+        <small>(click a second time to undo)</small>
+    </div>
+
+    <div class="blankOptions" [ngStyle]="{'grid-template-columns': 'repeat(7, 1fr)','max-width': '100%', 'column-gap': '0.1em'}">
+        <div (click)="selectTile(tile)" [ngStyle]="{'cursor': 'pointer'}" [class]="tile.class" *ngFor="let tile of tiles" [class.selected]="tile.selected">
+            <svg viewBox="0 0 20 20">
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{tile.content.letter}}</text>
+            </svg>
+            <div>
+                <svg viewBox="0 0 40 40">
+                    <text x="82%" y="85%" dominant-baseline="middle" text-anchor="middle">{{tile.content.points ? tile.content.points : ''}}</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+
+    <mat-dialog-actions>
+        <button mat-raised-button mat-dialog-close>Close</button>
+        <button (click)="swapTiles()" color="primary" mat-raised-button mat-dialog-close>Confirm</button>
     </mat-dialog-actions>
 </div>

@@ -10,9 +10,8 @@
 .blankOptions {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: repeat(10, 1fr);
-  justify-items: center;
-  // width: 70%;
+  justify-content: space-between;
+  max-width: 380px;
   margin: auto;
   row-gap: 2px;
 
@@ -68,6 +67,19 @@ mat-slider {
   background: black;
   width: 50%;
   margin: 2em auto;
+}
+
+// *
+// * swap
+// *
+::ng-deep #swapModal {
+  padding: 24px 10px;
+}
+
+.selected {
+  box-shadow: inset 0px 0px 20px 1vmin;
+  color: navy;
+  transform: scale(0.95);
 }
 
 mat-dialog-actions {

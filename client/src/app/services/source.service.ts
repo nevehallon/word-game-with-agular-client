@@ -9,6 +9,8 @@ export class SourceService {
     console.log('source');
   }
 
+  public numSource = 101;
+
   private playerRackSource = new BehaviorSubject([]);
   currentPlayerRack = this.playerRackSource.asObservable();
 

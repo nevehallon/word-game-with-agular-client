@@ -5,6 +5,8 @@ import { LetterToPointsService } from 'src/app/services/letter-to-points.service
 import { ScrabbleLettersService } from 'src/app/services/scrabble-letters.service';
 import _ from 'lodash';
 import { MatSliderChange } from '@angular/material/slider';
+import { SourceService } from 'src/app/services/source.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-modal-dialog',
@@ -16,7 +18,8 @@ export class ModalDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data,
     private gameService: GameLogicService,
     private letters: ScrabbleLettersService,
-    private ltp: LetterToPointsService
+    private ltp: LetterToPointsService,
+    private source: SourceService
   ) {}
 
   // *
@@ -97,17 +100,6 @@ export class ModalDialogComponent implements OnInit {
     this.difficultyStyles = this.rangeValues[
       `${this.convertVal(this.value)}`
     ].style;
-
-    // this.value = value;
-
-    // $('#difficulty').on('input change', function () {
-    //   $('#difficultyText')
-    //     .html(rangeValues[convertVal(value)].text)
-    //     .attr('class', rangeValues[convertVal(value)].class);
-    //   $('#difficultyPercentage')
-    //     .html(((value - 15) * 100) / (65 - 15) + '%')
-    //     .attr('class', rangeValues[convertVal(value)].class);
-    // });
   }
 
   saveSettings() {
@@ -116,5 +108,59 @@ export class ModalDialogComponent implements OnInit {
     localStorage.setItem('hints', `{"show": ${this.checked}}`);
   }
 
-  ngOnInit(): void {}
+  // *
+  // * swap
+  // *
+  tiles: any[] = [];
+  rackSubscription: Subscription;
+  bodyElement: HTMLElement = document.body;
+
+  selectTile(tile) {
+    if (tile.selected) return (tile.selected = false);
+    tile.selected = true;
+  }
+
+  swapTiles() {
+    let remainingRack = this.tiles.filter((tile) => {
+      return tile.selected !== true;
+    });
+
+    let tilesToSwap = this.tiles
+      .filter((tile) => {
+        return tile.selected === true;
+      })
+      .map((tile) => {
+        return { letter: tile.content.letter, points: tile.content.points };
+      });
+
+    for (let i = 0; i < tilesToSwap.length; i++) {
+      if (this.gameService.bag.length) {
+        let newTile = _.pullAt(this.gameService.bag, [0])[0];
+        remainingRack.push({
+          content: newTile,
+          id: `tile${this.source.numSource}`,
+          class: ['tile', 'hot'],
+          'data-drag': this.source.numSource,
+        });
+        this.source.numSource += 1;
+      }
+    }
+
+    this.gameService.bag.push(...tilesToSwap);
+    this.gameService.bag = _.shuffle(_.shuffle(this.gameService.bag));
+
+    let newRack = remainingRack;
+
+    this.source.changePlayerRack(newRack);
+  }
+
+  ngOnInit(): void {
+    this.rackSubscription = this.source.currentPlayerRack.subscribe(
+      (tiles) => (this.tiles = tiles)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.rackSubscription.unsubscribe();
+  }
 }

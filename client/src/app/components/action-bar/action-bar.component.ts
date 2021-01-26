@@ -22,8 +22,6 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   btnAttributeSubscription: Subscription;
 
   mixTiles() {
-    console.log(this.btnAttributes);
-
     if (this.tiles.length < 2) return;
 
     let shuffledRack =
@@ -43,16 +41,26 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   showSettings() {
     this.dialog.open(ModalDialogComponent, {
       width: '75%',
-      // height: '100%',
       data: {
         type: 'settings',
       },
     });
   }
 
-  // $("#settingsBtn").click(showSettings);
-
+  swapRecall(action: 'Recall' | 'Swap') {
+    if (action === 'Recall') {
+      return;
+    }
+    this.dialog.open(ModalDialogComponent, {
+      maxWidth: '99vw',
+      id: 'swapModal',
+      data: {
+        type: 'swap',
+      },
+    });
+  }
   // $("#swapRecall").click(() => ($("#swapRecall").text().includes("Swap") ? swap() : recall()));
+
   // $("#scoresBtn").click(showScoreHistory);
   // $("#passPlay").click(() =>
   //   $("#passPlay").text().includes("Pass") ? prePass(true, false, false, playersTurn) : play()

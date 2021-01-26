@@ -76,7 +76,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
         document
       );
 
-      console.log(this.gridService.gridState);
+      // console.log(this.gridService.gridState);
     }, 0);
   }
 
