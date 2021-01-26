@@ -1,14 +1,24 @@
 #board {
   width: 100vmin;
   height: 100vmin;
+  max-height: 75vh;
+  max-width: 75vh;
   background: black;
   // min-width: 42.9vh;
   // min-height: 42.9vh;
-  max-height: 75vh;
-  max-width: 75vh;
   display: grid;
   grid-template-columns: repeat(15, 1fr);
   grid-template-rows: repeat(15, 1fr);
   justify-content: center;
   margin: 0 auto;
+}
+
+#board.default {
+}
+
+#board.zoomedIn {
+  width: 100vmax;
+  height: 100vmax;
+  max-height: unset;
+  max-width: unset;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GameLogicService } from 'src/app/services/game-logic.service';
 import { LetterToPointsService } from 'src/app/services/letter-to-points.service';
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './modal-dialog.component.html',
   styleUrls: ['./modal-dialog.component.scss'],
 })
-export class ModalDialogComponent implements OnInit {
+export class ModalDialogComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,
     private gameService: GameLogicService,
@@ -113,7 +113,6 @@ export class ModalDialogComponent implements OnInit {
   // *
   tiles: any[] = [];
   rackSubscription: Subscription;
-  bodyElement: HTMLElement = document.body;
 
   selectTile(tile) {
     if (tile.selected) return (tile.selected = false);

@@ -5,9 +5,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class SourceService {
-  constructor() {
-    console.log('source');
-  }
+  constructor() {}
 
   public numSource = 101;
 
@@ -16,6 +14,17 @@ export class SourceService {
 
   changePlayerRack(rack: any[]) {
     this.playerRackSource.next(rack);
+  }
+
+  private boardSource = new BehaviorSubject(
+    Array(225)
+      .fill('')
+      .map(() => ({ data: [] }))
+  );
+  currentBoard = this.boardSource.asObservable();
+
+  changeBoard(squares) {
+    this.boardSource.next(squares);
   }
 
   private btnAttrSource = new BehaviorSubject({

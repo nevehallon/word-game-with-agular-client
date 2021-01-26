@@ -11,6 +11,7 @@ import { CreateGridService } from 'src/app/services/create-grid.service';
 import { GameLogicService } from 'src/app/services/game-logic.service';
 import { BoardValidatorService } from 'src/app/services/board-validator.service';
 import { SourceService } from 'src/app/services/source.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-board',
@@ -18,9 +19,10 @@ import { SourceService } from 'src/app/services/source.service';
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit, AfterViewInit {
-  squares: any[] = Array(225)
-    .fill('')
-    .map((x, i) => ({ data: [] }));
+  squares: any[];
+  // = Array(225)
+  //   .fill('')
+  //   .map(() => ({ data: [] }));
 
   tw = [0, 7, 14, 105, 119, 210, 217, 224];
 
@@ -76,6 +78,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
         document
       );
 
+      this.source.changeBoard(this.squares);
       // console.log(this.gridService.gridState);
     }, 0);
   }
@@ -94,7 +97,17 @@ export class BoardComponent implements OnInit, AfterViewInit {
     validate.init(this.source);
   }
 
-  ngOnInit(): void {}
+  boardSubscription: Subscription;
+
+  ngOnInit(): void {
+    this.boardSubscription = this.source.currentBoard.subscribe(
+      (squares) => (this.squares = squares)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.boardSubscription.unsubscribe();
+  }
 
   ngAfterViewInit(): void {
     this.gridService.updateGameState(document);
