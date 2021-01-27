@@ -1,11 +1,11 @@
-<div id="bagModal" *ngIf="data?.type === 'bag'">
+<div *ngIf="data?.type === 'bag'">
     <h2 class="center-align">Remaining Tiles in Bag:</h2>
     <div class="tilesLeft">
         <div *ngFor="let x of letterToPointsSorted" class="status-box">
             <div class="tile">
 
                 <svg viewBox="0 0 20 20">
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{x.letter === "" ? "*" : x.letter}}</text>
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{x.letter === "" ? "" : x.letter}}</text>
                 </svg>
                 <div>
                     <svg viewBox="0 0 40 40">
@@ -29,7 +29,7 @@
 
     <div>
         <label class="center-align" [ngStyle]="difficultyStyles" id="difficultyText" for="difficulty">{{difficultyText}}</label>
-        <mat-slider [value]="value" (input)="giveFeedBack($event)" tickInterval="1" min="15" max="65"></mat-slider>
+        <mat-slider [value]="value" (input)="giveFeedBack($event)" step="1" min="15" max="65"></mat-slider>
         <div [ngStyle]="difficultyStyles" id="difficultyPercentage" [class]="'center-align'">
             {{((value - 15) * 100) / (65 - 15)}}%
         </div>
@@ -70,5 +70,38 @@
     <mat-dialog-actions>
         <button mat-raised-button mat-dialog-close>Close</button>
         <button (click)="swapTiles()" color="primary" mat-raised-button mat-dialog-close>Confirm</button>
+    </mat-dialog-actions>
+</div>
+
+
+
+<div id="blanks" *ngIf="data?.type === 'blankOptions'">
+    <h2 class="center-align">How would you like to use your blank tile?</h2>
+    <div class="blankOptions">
+        <div *ngFor="let x of letterToPointsSorted" class="status-box" [mat-dialog-close]="{letter: x.letter, points: 0}" [ngStyle]="x.points ? '' :{'display': 'none'}">
+            <div class="tile">
+
+                <svg viewBox="0 0 20 20">
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{x.letter === "" ? "" : x.letter}}</text>
+                </svg>
+                <div>
+                    <svg viewBox="0 0 40 40">
+                        <text x="82%" y="85%" dominant-baseline="middle" text-anchor="middle">0</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <mat-dialog-actions>
+        <button (click)="revert()" color="primary" mat-raised-button [mat-dialog-close]="false">Close</button>
+    </mat-dialog-actions>
+</div>
+
+<div id="confirmPass" *ngIf="data?.type === 'confirmPass'">
+    <h2 class="center-align">Are you sure you want to pass?</h2>
+
+    <mat-dialog-actions>
+        <button color="warn" mat-raised-button [mat-dialog-close]="false">Cancel</button>
+        <button color="primary" mat-raised-button [mat-dialog-close]="true">Confirm</button>
     </mat-dialog-actions>
 </div>

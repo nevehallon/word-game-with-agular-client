@@ -119,44 +119,6 @@ export class GameLogicService {
     );
   }
 
-  zoomIn(elm) {
-    if (!this.isZoomed) {
-      // $("#board").css({
-      //   height: "705px",
-      //   width: "unset",
-      //   "max-width": "unset",
-      //   "grid-template-columns": "repeat(15, 52px)",
-      //   "grid-template-rows": "repeat(15, 57px)",
-      //   "justify-content": "safe center",
-      //   margin: "0",
-      // });
-      // bigTile($("#board .tile"));
-      // isZoomed = true;
-      // if (elm) {
-      //   // $("body").addClass("stop-scrolling");
-      //   elm.scrollIntoView({ block: "center", inline: "center" });
-      //   setTimeout(() => {
-      //     // $("body").removeClass("stop-scrolling");
-      //   }, 500);
-      // }
-    }
-  }
-
-  zoomOut() {
-    if (!this.isZoomed) return;
-    // $("#board").css({
-    //   height: "412.5px",
-    //   width: "400px",
-    //   "max-width": "400px",
-    //   "grid-template-columns": "repeat(15, 27.5px)",
-    //   "grid-template-rows": "repeat(15, 27.5px)",
-    //   "justify-content": "center",
-    //   margin: "0 auto",
-    // });
-    // smallTile($("#board .tile"));
-    this.isZoomed = false;
-  }
-
   serverCheck = (async () => {
     //   if (!loaderShown) {
     //     loaderShown = true;
@@ -228,7 +190,7 @@ export class GameLogicService {
     // });
   }
 
-  pcPlay($document: HTMLDocument) {
+  pcPlay($document: HTMLDocument, boardData) {
     // toggleModal({
     //   modal: { class: "", content: "" },
     //   modalPlacer: { class: "modal-dialog-centered", content: "" },
@@ -249,7 +211,7 @@ export class GameLogicService {
     // }
     // rivalRack = Array(7).fill({ letter: "Q", points: 10 }); //[...rivalRack.slice(0, 6), { letter: "", points: 0 }]; //? uncomment for testing
 
-    this.zoomOut();
+    // this.zoomOut(); //TODO:
     this.rivalRack.sort((a, b) => (b.letter ? 1 : -1)); //make sure that blanks are last tile
     setTimeout(async () => {
       try {
@@ -258,7 +220,8 @@ export class GameLogicService {
           this.firstTurn,
           this.wordsLogged,
           this.rivalRack,
-          $document
+          $document,
+          boardData
         );
         // prettier-ignore
         !this.isValidMove && this.rivalRack.length && this.bag.length ? 
@@ -271,13 +234,13 @@ export class GameLogicService {
         }
 
         console.error(error);
-        this.pcPlay($document);
+        this.pcPlay($document, boardData);
       }
     }, 50);
   }
 
   endGame($document: HTMLDocument) {
-    this.zoomOut();
+    // this.zoomOut();//TODO:
     $document.querySelector('#startGame')[0].removeAttribute('disabled');
     $document.querySelector<HTMLElement>('#startGame').style.display =
       'inherit';
@@ -382,84 +345,8 @@ export class GameLogicService {
     //  offer rematch
   }
 
-  swap($document: HTMLDocument, bag) {
-    // toggleModal({
-    //   modal: { class: "text-center", content: "" },
-    //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-    //   modalHeader: { class: "d-none", content: "" },
-    //   body: {
-    //     class: "mh-100",
-    //     content:
-    //       ($("#rack .tile").length > bag.length
-    //         ? `<div class="alert alert-danger" role="alert">You can only swap up to ${bag.length} tile(s)</div>`
-    //         : ``) + generateRack($("#rack").children(".tile").toArray()),
-    //   },
-    //   footer: { class: "justify-content-center", content: "" },
-    //   actionButton: { class: "executeSwap", content: "Confirm" },
-    //   timeout: 0,
-    //   executeClose: false,
-    // });
-    $document.querySelectorAll<HTMLElement>('.selectTile').forEach((el) => {
-      el.addEventListener('click', function () {
-        let under = $document.querySelectorAll('.selected').length < bag.length;
-        if (under || this.classList.contains('selected')) {
-          this.classList.toggle('selected');
-        }
-      });
-    });
-    //show player's letters and ask which letters to swap
-    //->if cancel
-    //    close modal and return
-    //->if confirm
-    //    remove chosen letters
-    //    pick new letters in exchange and place them on player's rack
-    //    take chosen letters and insert in to bag
-    $document
-      .querySelector<HTMLElement>('.executeSwap')
-      .addEventListener('click', () => {
-        if (!$document.querySelectorAll('.selected').length) return;
-        // let { newBag, newRack } = this.doSwap(bag, $('.selectTile').toArray()); //TODO:
-        // bag = newBag; //TODO:
-        $document.querySelector<HTMLElement>(`#rack`).innerHTML = '';
-        // newRack.forEach((x) => {
-        //   $document.querySelector<HTMLElement>(`#rack`).append(`
-        // <div data-drag=${x.drag} class="tile hot ${x.points ? '' : 'blank'}">${
-        //     x.letter
-        //   }<div>${x.points ? x.points : ''}</div></div>
-        // `);
-        //   // setDraggable($(`[data-drag="${x.drag}"]`));
-        //   // e.stopImmediatePropagation();
-        // }); //TODO:
-
-        this.passCount = -1;
-        this.pass(true, true, false, undefined, $document);
-      });
-  }
-
-  recall($document: HTMLDocument) {
-    if (!$document.querySelectorAll('.square .hot').length) return;
-    //remove all "hot" tiles from ".square .hot" and re-add them to player's rack
-    let toBeRecalled = $document.querySelectorAll<HTMLElement>('.square .hot');
-    $document.querySelectorAll('.square .hot').forEach((el) => el.remove());
-    toBeRecalled.forEach((tile) => {
-      if (
-        tile.classList.contains('setBlank') &&
-        tile.classList.contains('hot')
-      ) {
-        tile.innerHTML = '<div></div>';
-        tile.classList.remove('setBlank');
-        tile.classList.add('blank');
-      }
-      $document.querySelector('#rack').append(tile);
-      // setDraggable($(tile));//TODO:
-    });
-    //trigger draggable "stop" in order to update game's state
-    this.repaintBoard($document);
-    $document.querySelector('#passPlay').textContent = 'Pass';
-  }
-
   pass(wasClicked = false, isSwap, isAI, legalClick, $document: HTMLDocument) {
-    if (legalClick === false) return;
+    if (legalClick === false) return false;
     //if param = true ->
     //    add to passCount
 
@@ -502,43 +389,21 @@ export class GameLogicService {
     }
     //if passCount = 4 ->
     //    end game
-    if (this.passCount === 4) return this.endGame($document);
+    if (this.passCount === 4) {
+      this.endGame($document);
+      return false;
+    }
     //    allow next turn
     // if (DEBUG_MODE) firstTurn = false;
-    setTimeout(() => {
-      if (this.playersTurn)
-        $document.querySelectorAll('#board .tile').forEach((el) => {
-          el.classList.remove('pcPlay');
-        });
-
-      this.playersTurn || this.DEBUG_MODE
-        ? this.pcPlay($document)
-        : (this.playersTurn = true);
-    }, 250);
-  }
-
-  prePass(wasClicked, isSwap, isAI, legalClick, $document: HTMLDocument) {
-    if (legalClick === false) return;
-    // toggleModal({
-    //   modal: { class: "text-center", content: "" },
-    //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-    //   modalHeader: { class: "d-none", content: "" },
-    //   body: { class: "", content: "Are you sure you want to pass?" },
-    //   footer: { class: "", content: "" },
-    //   actionButton: { class: "doPass", content: "Confirm" },
-    //   timeout: 0,
-    //   executeClose: false,
-    // });
-    let fn = (e) => {
-      // toggleModal({
-      //   executeClose: true,
-      // });
-      this.pass(wasClicked, isSwap, isAI, legalClick, $document);
-      // e.stopImmediatePropagation();
-    };
-
-    $document.querySelector('.doPass').removeEventListener('click', fn);
-    $document.querySelector('.doPass').addEventListener('click', fn);
+    if (this.playersTurn) {
+      setTimeout(() => {
+        // this.playersTurn || this.DEBUG_MODE
+        //   ? this.pcPlay($document)
+        //   : (this.playersTurn = true); //TODO:
+      }, 250);
+      return true; //? remove extra style from tiles that AI played
+    }
+    return false;
   }
 
   play(isAI = false, $document: HTMLDocument) {
@@ -550,7 +415,7 @@ export class GameLogicService {
       //   modalHeader: { class: "d-none", content: "" },
       //   title: { class: "", content: "" },
       //   body: {
-      //     class: "text-center",
+      //     class: "text-center", //TODO: show error when player tries to play something wrong
       //     content: `<div class="alert alert-danger" role="alert">${this.isValidMove.slice(4)}</div>`,
       //   },
       //   footer: { class: "justify-content-center", content: "" },
@@ -729,24 +594,6 @@ export class GameLogicService {
     this.pass(undefined, undefined, undefined, undefined, $document);
   }
 
-  showBagContent() {
-    // toggleModal({
-    //   executeClose: true,
-    // });
-    // toggleModal({
-    //   modal: { class: "text-center", content: "" },
-    //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-    //   modalHeader: { class: "d-none", content: "" },
-    //   title: { class: "", content: `` },
-    //   body: { class: "mh-100", content: generateRemainder(bag) },
-    //   footer: { class: "justify-content-center", content: "" },
-    //   actionButton: { class: "d-none", content: "" },
-    //   timeout: 0,
-    //   executeClose: false,
-    // });
-    // list letters + blank and how many remain of each tile
-  }
-
   showScoreHistory() {
     // toggleModal({
     //   executeClose: true,
@@ -771,110 +618,5 @@ export class GameLogicService {
     //   return this.scrollHeight;
     // });
     //show list of moves. who played what and how many points were earned
-  }
-
-  handleBlank(blank, $document: HTMLDocument) {
-    // toggleModal({
-    //   executeClose: true,
-    // });
-    // toggleModal({
-    //   modal: { class: "text-center", content: "" },
-    //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-    //   modalHeader: { class: "d-none", content: "" },
-    //   title: { class: "", content: `` },
-    //   body: { class: "mh-100", content: generateOptions() },
-    //   footer: { class: "justify-content-center", content: "" },
-    //   actionButton: { class: "d-none", content: "" },
-    //   timeout: 0,
-    //   executeClose: false,
-    // });
-    // setModalOptions("static", false); //prevents user from closing modal
-
-    let fn = (e) => {
-      if (blank.text() !== '') return;
-      this.zoomOut();
-      blank.appendTo('#rack');
-      this.repaintBoard($document);
-      $document.querySelector('#closeModal').removeEventListener('click', fn); //TODO: get rid?
-      // setModalOptions(true, true);/TODO:
-    };
-    let addClick = () => {
-      $document.querySelector('#closeModal').removeEventListener('click', fn);
-      $document.querySelector('#closeModal').addEventListener('click', fn);
-    };
-    $document.querySelector('#closeModal').removeEventListener('click', fn);
-
-    addClick();
-
-    $document.querySelectorAll('.blankChoices').forEach((el) => {
-      el.addEventListener('click', function (e) {
-        e.stopImmediatePropagation();
-
-        let letter = this.text().trim('').slice(0, 1);
-
-        blank.html(
-          `${letter}<div style="bottom: 12px; left: 32px; font-weight: bolder; font-size: small;">0</div>`
-        );
-        this.repaintBoard();
-        blank.removeClass('blank');
-        blank.addClass('setBlank');
-
-        blank[0].scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'center',
-        });
-
-        // toggleModal({
-        //   executeClose: true,
-        // });
-
-        $document.querySelector('#closeModal').classList.remove('closeBtn');
-        // setModalOptions(true, true);
-      });
-    });
-  }
-
-  showSettings($document: HTMLDocument) {
-    // toggleModal({
-    //   executeClose: true,
-    // });
-    // toggleModal({
-    //   modal: { class: "text-center", content: "" },
-    //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-    //   modalHeader: { class: "d-none", content: "" },
-    //   title: { class: "", content: `` },
-    //   body: { class: "mh-100", content: generateSettings() },
-    //   footer: { class: "justify-content-center", content: "" },
-    //   actionButton: { class: "saveSettings", content: "Save" },
-    //   timeout: 0,
-    //   executeClose: false,
-    // });
-
-    // $document.querySelector("#difficultyText")
-    //   .innerHTML = rangeValues[convertVal(+$document.querySelector<HTMLInputElement>("#difficulty").value].text);
-    //   $document.querySelector("#difficultyText").setAttribute("class", rangeValues[convertVal(+$document.querySelector<HTMLInputElement>("#difficulty").value)].class);
-    // giveFeedBack();//TODO:
-
-    let fn = (e) => {
-      localStorage.setItem(
-        'difficulty',
-        $document.querySelector<HTMLInputElement>('#difficulty').value
-      );
-      localStorage.setItem(
-        'hints',
-        `{"show": ${
-          $document.querySelector<HTMLInputElement>('#showHints').checked
-        }}`
-      );
-
-      // toggleModal({
-      //   executeClose: true,
-      // });
-      e.stopImmediatePropagation();
-    };
-
-    $document.querySelector('.saveSettings').removeEventListener('click', fn);
-    $document.querySelector('.saveSettings').addEventListener('click', fn);
   }
 }

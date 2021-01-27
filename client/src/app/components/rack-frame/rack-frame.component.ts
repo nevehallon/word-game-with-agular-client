@@ -42,6 +42,8 @@ export class RackFrameComponent implements OnInit, OnDestroy {
         event.currentIndex
       );
     } else {
+      let tileData: any = event.previousContainer.data[0];
+      if (tileData.content.points === 0) tileData.content.letter = '';
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,

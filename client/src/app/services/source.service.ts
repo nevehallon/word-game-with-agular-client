@@ -16,10 +16,33 @@ export class SourceService {
     this.playerRackSource.next(rack);
   }
 
+  wordArr = ['C', 'A', 'T'];
+
   private boardSource = new BehaviorSubject(
+    // Array(225)
+    //   .fill('')
+    //   .map(() => ({ data: [] }))
     Array(225)
       .fill('')
-      .map(() => ({ data: [] }))
+      .map((x, i) => {
+        if (i > 111 && i < 115)
+          return {
+            data: [
+              {
+                content: {
+                  letter: this.wordArr.splice(0, 1),
+                  points: 1,
+                },
+                id: `tile${++this.numSource}`,
+                class: ['tile'],
+                'data-drag': this.numSource,
+              },
+            ],
+          };
+        return {
+          data: [],
+        };
+      })
   );
   currentBoard = this.boardSource.asObservable();
 

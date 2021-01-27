@@ -3,12 +3,21 @@ import { BoardValidatorService } from './board-validator.service';
 import { GetRequestsService } from './get-requests.service';
 import { Trie } from '../../assets/trie-prefix-tree/index.js';
 import _ from 'lodash';
+import { SourceService } from './source.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ComputeService {
   //window.Trie = Trie; //? used only for debugging
+
+  boardData;
+
+  updateBoardData(squares) {
+    let tempSquares = _.cloneDeep(squares);
+    this.boardData = [];
+    while (tempSquares.length) this.boardData.push(tempSquares.splice(0, 15));
+  }
 
   abc = [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
   idCount = 122;
@@ -18,8 +27,11 @@ export class ComputeService {
     firstTurn,
     wordsLogged,
     rivalRack,
-    $document: HTMLDocument
+    $document: HTMLDocument,
+    boardData
   ) {
+    firstTurn = false; //TODO: remove me
+    this.updateBoardData(boardData);
     let difficultlyLimit = +localStorage.getItem('difficulty')
       ? +localStorage.getItem('difficulty')
       : 15;
@@ -116,20 +128,20 @@ export class ComputeService {
           gridState.gridLetters[7][bestWord.start + index].hot = false;
           gridState.gridLetters[7][bestWord.start + index].id = this.idCount;
 
-          letter = !tiles[index].points
-            ? `font-style: italic;">${letter}`
-            : `">${letter}`;
+          let classes = ['tile', 'pcPlay'];
+          if (!tiles[index].points) classes.push('italicize');
 
-          $document
-            .querySelector(`[data-location="7,${bestWord.start + index}"]`)
-            .append(
-              `<div data-drag="${++this
-                .idCount}" class="tile hot pcPlay ui-draggable ui-draggable-handle" style="z-index: 7; left: 0px; top: 0px; position: relative; font-weight: bolder; font-size: medium; width: 50px; height: 55px;${letter}<div style="bottom: 9px; left: 16px; font-weight: bolder; font-size: 8px;">${
-                tiles[index].points
-              }</div></div>`
-            );
+          this.boardData[7][bestWord.start + index].data = [
+            {
+              content: { letter, points: tiles[index].points },
+              id: `tile${++this.source.numSource}`,
+              class: classes,
+              'data-drag': this.source.numSource,
+            },
+          ];
         }
       });
+      this.source.changeBoard(this.boardData.flat());
       wordsLogged.push(bestWord.word);
       return {
         rivalRack: rivalRack,
@@ -1869,21 +1881,29 @@ export class ComputeService {
             gridState.gridLetters[bestWord.gridOrder[i].x][
               bestWord.gridOrder[i].y
             ].hot = true;
-            let letter = !bestWord.points[i]
-              ? `font-style: italic;">${bestWord.word[i]}`
-              : `">${bestWord.word[i]}`;
+            let letter = bestWord.word[i];
 
-            $document
-              .querySelector(
-                `[data-location="${bestWord.gridOrder[i].x},${bestWord.gridOrder[i].y}"]`
-              )
-              .append(
-                `<div data-drag="${
-                  ++this.idCount * 2
-                }" class="tile hot pcPlay ui-draggable ui-draggable-handle" style="z-index: 7; left: 0px; top: 0px; position: relative; font-weight: bolder; font-size: medium; width: 50px; height: 55px;${letter}<div style="bottom: 9px; left: 16px; font-weight: bolder; font-size: 8px;">${
-                  bestWord.points[i]
-                }</div></div>`
-              );
+            let classes = ['tile', 'pcPlay'];
+            if (!bestWord.points[i]) classes.push('italicize');
+
+            console.log({
+              content: { letter, points: bestWord.points[i] },
+              id: `tile${this.source.numSource}`,
+              class: classes,
+              'data-drag': this.source.numSource,
+            });
+
+            this.boardData[bestWord.gridOrder[i].x][
+              bestWord.gridOrder[i].y
+            ].data = [
+              {
+                content: { letter, points: bestWord.points[i] },
+                id: `tile${++this.source.numSource}`,
+                class: classes,
+                'data-drag': this.source.numSource,
+              },
+            ];
+            this.source.changeBoard(this.boardData.flat());
           }
         }
       }
@@ -1901,6 +1921,7 @@ export class ComputeService {
 
   constructor(
     private http: GetRequestsService,
-    private validate: BoardValidatorService
+    private validate: BoardValidatorService,
+    private source: SourceService
   ) {}
 }

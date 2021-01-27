@@ -30,7 +30,7 @@
     </button>
 </div>
 
-<button mat-raised-button color="primary" id="passPlay" matTooltip="Click me to play a word OR pass your turn" [ngStyle]="{'background': btnAttributes.passPlay.bgColor}">
+<button #passPlayRef (click)="passPlay(passPlayRef._elementRef.nativeElement.innerText.trim())" mat-raised-button color="primary" id="passPlay" matTooltip="Click me to play a word OR pass your turn" [ngStyle]="{'background': btnAttributes.passPlay.bgColor}">
     <svg *ngIf="btnAttributes.passPlay.icon" [attr.data-src]="'https://s.svgbox.net/materialui.svg?ic=' + btnAttributes.passPlay.icon" width="25" height="25" fill="currentColor"></svg>
     {{btnAttributes.passPlay.text}}
 </button>

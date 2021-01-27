@@ -153,6 +153,15 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
     this.source.changePlayerRack(newRack);
   }
 
+  // *
+  // * blankOptions
+  // *
+
+  revert() {
+    let originalRack = [...this.tiles, this.data.tileInfo];
+    this.source.changePlayerRack(originalRack);
+  }
+
   ngOnInit(): void {
     this.rackSubscription = this.source.currentPlayerRack.subscribe(
       (tiles) => (this.tiles = tiles)

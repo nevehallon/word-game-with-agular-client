@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+
 import { BtnAttrs } from 'src/app/interfaces/btn-attrs';
 import { SourceService } from 'src/app/services/source.service';
 import _ from 'lodash';
@@ -52,6 +54,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
   showSettings() {
     this.dialog.open(ModalDialogComponent, {
+      maxWidth: '75vh',
       width: '75%',
       data: {
         type: 'settings',
@@ -59,12 +62,73 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     });
   }
 
+  prePass(wasClicked, isSwap, isAI, legalClick) {
+    legalClick = true; //TODO: remove me!!
+
+    if (legalClick === false) return;
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      data: {
+        type: 'confirmPass',
+      },
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe(
+        (result) => {
+          if (result === false) {
+            return;
+          }
+          let remove: boolean = this.gameService.pass(
+            wasClicked,
+            isSwap,
+            isAI,
+            legalClick,
+            document
+          );
+          this.zoomOut();
+          if (remove === true) {
+            let newBoard = this.squares.map((square) => {
+              if (square.data[0]?.class.includes('pcPlay')) {
+                let obj = square.data[0];
+                return {
+                  data: [
+                    {
+                      ...obj,
+                      class: obj.class.filter((klass) => klass !== 'pcPlay'),
+                    },
+                  ],
+                };
+              }
+              return square;
+            });
+
+            this.source.changeBoard(newBoard);
+          }
+        },
+        console.error,
+        () => this.gameService.pcPlay(document, this.squares)
+      );
+  }
+
+  passPlay(action: 'Pass' | 'Play') {
+    if (action === 'Pass') {
+      this.prePass(true, false, false, this.gameService.playersTurn);
+
+      return;
+    }
+  }
+
   swapRecall(action: 'Recall' | 'Swap') {
     if (action === 'Recall') {
       let tilesToReturn: any[] = [];
       let newBoard = this.squares.map((square) => {
         if (square.data[0]?.class.includes('hot')) {
-          // console.dir(square.data[0].class);
+          if (square.data[0].content.points === 0) {
+            square.data[0].content.letter = '';
+          }
+
           tilesToReturn.push(square.data[0]);
           return { data: [] };
         }
@@ -84,9 +148,9 @@ export class ActionBarComponent implements OnInit, OnDestroy {
           true,
           document
         );
-
-        console.log(this.gridService.gridState);
       }, 0);
+
+      this.zoomOut();
 
       return;
     }

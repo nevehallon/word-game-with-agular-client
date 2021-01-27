@@ -86,3 +86,18 @@ mat-dialog-actions {
   display: flex;
   justify-content: space-around;
 }
+
+// *
+// * bank options
+// *
+
+#blanks {
+  .blankOptions {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+
+    .status-box {
+      grid-template-columns: 1fr;
+    }
+  }
+}
