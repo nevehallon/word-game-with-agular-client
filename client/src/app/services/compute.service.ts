@@ -13,8 +13,8 @@ export class ComputeService {
 
   boardData;
 
-  updateBoardData(squares) {
-    let tempSquares = _.cloneDeep(squares);
+  updateBoardData() {
+    let tempSquares = _.cloneDeep(this.source.getBoard());
     this.boardData = [];
     while (tempSquares.length) this.boardData.push(tempSquares.splice(0, 15));
   }
@@ -27,11 +27,10 @@ export class ComputeService {
     firstTurn,
     wordsLogged,
     rivalRack,
-    $document: HTMLDocument,
-    boardData
+    $document: HTMLDocument
   ) {
-    firstTurn = false; //TODO: remove me
-    this.updateBoardData(boardData);
+    // firstTurn = false; //TODO: remove me
+    this.updateBoardData();
     let difficultlyLimit = +localStorage.getItem('difficulty')
       ? +localStorage.getItem('difficulty')
       : 15;
@@ -137,6 +136,7 @@ export class ComputeService {
               id: `tile${++this.source.numSource}`,
               class: classes,
               'data-drag': this.source.numSource,
+              coords: [7, bestWord.start + index],
             },
           ];
         }
@@ -1886,12 +1886,12 @@ export class ComputeService {
             let classes = ['tile', 'pcPlay'];
             if (!bestWord.points[i]) classes.push('italicize');
 
-            console.log({
-              content: { letter, points: bestWord.points[i] },
-              id: `tile${this.source.numSource}`,
-              class: classes,
-              'data-drag': this.source.numSource,
-            });
+            // console.log({
+            //   content: { letter, points: bestWord.points[i] },
+            //   id: `tile${this.source.numSource}`,
+            //   class: classes,
+            //   'data-drag': this.source.numSource,
+            // });
 
             this.boardData[bestWord.gridOrder[i].x][
               bestWord.gridOrder[i].y
@@ -1901,6 +1901,7 @@ export class ComputeService {
                 id: `tile${++this.source.numSource}`,
                 class: classes,
                 'data-drag': this.source.numSource,
+                coords: [bestWord.gridOrder[i].x, bestWord.gridOrder[i].y],
               },
             ];
             this.source.changeBoard(this.boardData.flat());

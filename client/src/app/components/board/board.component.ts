@@ -25,6 +25,7 @@ import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit, AfterViewInit {
+  Math = Math;
   squares: any[] = [];
   // = Array(225)
   //   .fill('')
@@ -32,22 +33,12 @@ export class BoardComponent implements OnInit, AfterViewInit {
   btnAttributes: BtnAttrs = null;
   btnAttributeSubscription: Subscription;
 
-  tw = [0, 7, 14, 105, 119, 210, 217, 224];
-
-  //prettier-ignore
-  dw = [16, 28, 32, 42, 48, 56, 64, 70, 112, 154, 160, 168, 176, 182, 192, 196, 208];
-
-  tl = [20, 24, 76, 80, 84, 88, 136, 140, 144, 148, 200, 204];
-
-  //prettier-ignore
-  dl = [3, 11, 36, 38, 45, 52, 59, 92, 96, 98, 102, 108, 116, 122, 126, 128, 132, 165, 172, 179, 186, 188, 213, 221];
-
   multiplier(num) {
     return {
-      tw: this.tw.includes(num) ? true : false,
-      dw: this.dw.includes(num) ? true : false,
-      tl: this.tl.includes(num) ? true : false,
-      dl: this.dl.includes(num) ? true : false,
+      tw: this.source.tw.includes(num) ? true : false,
+      dw: this.source.dw.includes(num) ? true : false,
+      tl: this.source.tl.includes(num) ? true : false,
+      dl: this.source.dl.includes(num) ? true : false,
     };
   }
 
@@ -62,7 +53,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
       if (new Date().getTime() - this.touchTime < 800) {
         // double click occurred
         this.touchTime = 0;
-        if (!this.gameService.isZoomed) {
+        if (!this.source.isZoomed) {
           return this.zoomIn(e.target as HTMLElement);
         }
         return this.zoomOut();
@@ -74,13 +65,13 @@ export class BoardComponent implements OnInit, AfterViewInit {
   }
 
   zoomOut() {
-    if (!this.gameService.isZoomed) return;
+    if (!this.source.isZoomed) return;
     const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
 
     let $board: HTMLElement = document.querySelector('#board');
 
     $board.classList.remove('zoomedIn');
-    this.gameService.isZoomed = false;
+    this.source.isZoomed = false;
 
     btnAttrs.zoomBtn.isIn = true;
 
@@ -88,11 +79,11 @@ export class BoardComponent implements OnInit, AfterViewInit {
   }
 
   zoomIn(target: HTMLElement, overRide: boolean = false) {
-    if (this.gameService.isZoomed && !overRide) return;
+    if (this.source.isZoomed && !overRide) return;
     const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
     let $board: HTMLElement = document.querySelector('#board');
     $board.classList.add('zoomedIn');
-    this.gameService.isZoomed = true;
+    this.source.isZoomed = true;
     btnAttrs.zoomBtn.isIn = false;
     this.source.changeBtnAttr(btnAttrs);
 
@@ -158,6 +149,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
                   'data-number'
                 );
                 this.squares[index].data = [];
+                this.zoomOut();
                 return this.source.changeBoard(this.squares);
               }
               data.content = result;
@@ -177,12 +169,12 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
   repaintBoard() {
     setTimeout(() => {
-      this.gameService.isValidMove = false;
+      this.source.isValidMove = false;
       this.gridService.updateGameState(document);
-      this.gameService.isValidMove = this.validate.validate(
+      this.source.isValidMove = this.validate.validate(
         this.gridService.gridState,
-        this.gameService.firstTurn,
-        this.gameService.wordsLogged,
+        this.source.firstTurn,
+        this.source.wordsLogged,
         true,
         document
       );
@@ -207,9 +199,13 @@ export class BoardComponent implements OnInit, AfterViewInit {
   boardSubscription: Subscription;
 
   ngOnInit(): void {
-    this.boardSubscription = this.source.currentBoard.subscribe(
-      (squares) => (this.squares = squares)
-    );
+    this.boardSubscription = this.source.currentBoard.subscribe((squares) => {
+      this.squares = squares;
+      // if (this.gameService.lettersUsed === 0) return;
+      // setTimeout(() => {
+      //   this.gridService.updateGameState(document);
+      // }, 0);
+    });
     this.btnAttributeSubscription = this.source.currentBtnAttr.subscribe(
       (attrs) => {
         this.btnAttributes = attrs;

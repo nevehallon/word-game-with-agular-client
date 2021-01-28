@@ -1,36 +1,129 @@
-<button mat-raised-button color="primary" id="bagBtn" matTooltip="Click me to see what tiles remain" (click)="showBagContent()">100</button>
-<button mat-raised-button id="scoresBtn" matTooltip="Click me to see words played and their definitions">
+<button
+    mat-raised-button
+    color="primary"
+    id="bagBtn"
+    matTooltip="Click me to see what tiles remain"
+    (click)="showBagContent()"
+>
+    {{remainingTiles}}
+</button>
+<button
+    mat-raised-button
+    id="scoresBtn"
+    matTooltip="Click me to see words played and their definitions"
+>
     <div>
-        <span>player:</span><span id="playerScore">0</span>
+        <span>player:</span><span id="playerScore">{{source.playerScore}}</span>
     </div>
     <div>
-        <span>pc:</span><span id="pcScore">0</span>
+        <span>pc:</span><span id="pcScore">{{source.computerScore}}</span>
     </div>
 </button>
-<button mat-raised-button color="primary" id="startGame">Rematch</button>
-<button (click)="mixTiles()" mat-raised-button color="primary" matTooltip="Click me to shuffle the tiles on your rack">
-    <svg data-src="https://s.svgbox.net/materialui.svg?ic=sync" width="25" height="25" fill="currentColor"></svg>
+<button
+    mat-raised-button
+    color="primary"
+    id="startGame"
+>Rematch</button>
+<button
+    (click)="mixTiles()"
+    mat-raised-button
+    color="primary"
+    matTooltip="Click me to shuffle the tiles on your rack"
+>
+    <svg
+        data-src="https://s.svgbox.net/materialui.svg?ic=sync"
+        width="25"
+        height="25"
+        fill="currentColor"
+    ></svg>
     Mix
 </button>
-<button #swapRecallRef (click)="swapRecall(swapRecallRef._elementRef.nativeElement.innerText.trim())" mat-raised-button color="primary" id="swapRecall" matTooltip="Click me to trade in for new letters OR return your unplayed tiles from the board">
-    <svg *ngIf="onOff" [attr.data-src]="'https://s.svgbox.net/materialui.svg?ic=' + btnAttributes.swapRecall.icon" width="25" height="25" fill="currentColor"></svg>
+<button
+    #swapRecallRef
+    (click)="swapRecall(swapRecallRef._elementRef.nativeElement.innerText.trim())"
+    mat-raised-button
+    color="primary"
+    id="swapRecall"
+    matTooltip="Click me to trade in for new letters OR return your unplayed tiles from the board"
+>
+    <svg
+        *ngIf="btnAttributes.swapRecall.icon.isUndo"
+        data-src="https://s.svgbox.net/materialui.svg?ic=undo"
+        width="25"
+        height="25"
+        fill="currentColor"
+    ></svg>
+    <svg
+        *ngIf="!btnAttributes.swapRecall.icon.isUndo"
+        data-src="https://s.svgbox.net/materialui.svg?ic=swap_vertical_circle"
+        width="25"
+        height="25"
+        fill="currentColor"
+    ></svg>
+
     {{btnAttributes.swapRecall.text}}
 </button>
-<button (click)="showSettings()" mat-raised-button id="settingsBtn" matTooltip="Click me to check and change game settings">
-    <svg data-src="https://s.svgbox.net/materialui.svg?ic=settings" width="32" height="32" fill="currentColor"></svg>
+<button
+    (click)="showSettings()"
+    mat-raised-button
+    id="settingsBtn"
+    matTooltip="Click me to check and change game settings"
+>
+    <svg
+        data-src="https://s.svgbox.net/materialui.svg?ic=settings"
+        width="32"
+        height="32"
+        fill="currentColor"
+    ></svg>
     Settings
 </button>
 
 <div id="zoomBtns">
-    <button (click)="zoomOut()" *ngIf="!btnAttributes.zoomBtn.isIn" mat-raised-button id="zoomOut" matTooltip="Click me to zoom out and see the whole board">
-        <svg data-src="https://s.svgbox.net/hero-outline.svg?ic=zoom-out" width="25" height="25" stroke="currentColor"></svg>
+    <button
+        (click)="zoomOut()"
+        *ngIf="!btnAttributes.zoomBtn.isIn"
+        mat-raised-button
+        id="zoomOut"
+        matTooltip="Click me to zoom out and see the whole board"
+    >
+        <svg
+            data-src="https://s.svgbox.net/hero-outline.svg?ic=zoom-out"
+            width="25"
+            height="25"
+            stroke="currentColor"
+        ></svg>
     </button>
-    <button (click)="zoomIn()" *ngIf="btnAttributes.zoomBtn.isIn" mat-raised-button id="zoomIn" matTooltip="Click me to zoom in to the center of the board">
-        <svg data-src="https://s.svgbox.net/hero-outline.svg?ic=zoom-in" width="25" height="25" stroke="currentColor"></svg>
+    <button
+        (click)="zoomIn()"
+        *ngIf="btnAttributes.zoomBtn.isIn"
+        mat-raised-button
+        id="zoomIn"
+        matTooltip="Click me to zoom in to the center of the board"
+    >
+        <svg
+            data-src="https://s.svgbox.net/hero-outline.svg?ic=zoom-in"
+            width="25"
+            height="25"
+            stroke="currentColor"
+        ></svg>
     </button>
 </div>
 
-<button #passPlayRef (click)="passPlay(passPlayRef._elementRef.nativeElement.innerText.trim())" mat-raised-button color="primary" id="passPlay" matTooltip="Click me to play a word OR pass your turn" [ngStyle]="{'background': btnAttributes.passPlay.bgColor}">
-    <svg *ngIf="btnAttributes.passPlay.icon" [attr.data-src]="'https://s.svgbox.net/materialui.svg?ic=' + btnAttributes.passPlay.icon" width="25" height="25" fill="currentColor"></svg>
+<button
+    #passPlayRef
+    (click)="passPlay(passPlayRef._elementRef.nativeElement.innerText.trim())"
+    mat-raised-button
+    color="primary"
+    id="passPlay"
+    matTooltip="Click me to play a word OR pass your turn"
+    [ngStyle]="{'background': btnAttributes.passPlay.bgColor}"
+>
+    <svg
+        *ngIf="btnAttributes.passPlay.icon"
+        [attr.data-src]="'https://s.svgbox.net/materialui.svg?ic=' + btnAttributes.passPlay.icon"
+        width="25"
+        height="25"
+        fill="currentColor"
+    ></svg>
     {{btnAttributes.passPlay.text}}
 </button>

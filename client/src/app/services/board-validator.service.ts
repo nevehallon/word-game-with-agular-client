@@ -55,7 +55,7 @@ export class BoardValidatorService implements OnDestroy {
     btnAttrs.passPlay.bgColor = 'rgb(30, 126, 52)';
 
     btnAttrs.swapRecall.text = 'Recall';
-    btnAttrs.swapRecall.icon = 'undo';
+    btnAttrs.swapRecall.icon.isUndo = true;
 
     this.source.changeBtnAttr(btnAttrs);
   }
@@ -68,7 +68,7 @@ export class BoardValidatorService implements OnDestroy {
     btnAttrs.passPlay.icon = '';
 
     btnAttrs.swapRecall.text = 'Swap';
-    btnAttrs.swapRecall.icon = 'swap_vertical_circle';
+    btnAttrs.swapRecall.icon.isUndo = false;
 
     this.source.changeBtnAttr(btnAttrs);
   }

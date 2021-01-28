@@ -18,12 +18,14 @@ import { BoardValidatorService } from 'src/app/services/board-validator.service'
 })
 export class ActionBarComponent implements OnInit, OnDestroy {
   constructor(
-    private source: SourceService,
+    public source: SourceService,
     public dialog: MatDialog,
     private gridService: CreateGridService,
-    private gameService: GameLogicService,
+    public gameService: GameLogicService,
     private validate: BoardValidatorService
   ) {}
+
+  remainingTiles;
 
   tiles: any[] = [];
   rackSubscription: Subscription;
@@ -31,7 +33,6 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   squares: any[];
   boardSubscription: Subscription;
 
-  onOff = true;
   btnAttributes: BtnAttrs = null;
   btnAttributeSubscription: Subscription;
 
@@ -63,7 +64,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   prePass(wasClicked, isSwap, isAI, legalClick) {
-    legalClick = true; //TODO: remove me!!
+    // legalClick = true; //TODO: remove me!!
 
     if (legalClick === false) return;
     const dialogRef = this.dialog.open(ModalDialogComponent, {
@@ -89,35 +90,21 @@ export class ActionBarComponent implements OnInit, OnDestroy {
           );
           this.zoomOut();
           if (remove === true) {
-            let newBoard = this.squares.map((square) => {
-              if (square.data[0]?.class.includes('pcPlay')) {
-                let obj = square.data[0];
-                return {
-                  data: [
-                    {
-                      ...obj,
-                      class: obj.class.filter((klass) => klass !== 'pcPlay'),
-                    },
-                  ],
-                };
-              }
-              return square;
-            });
-
-            this.source.changeBoard(newBoard);
+            // console.log(this.gridService.gridState);
           }
         },
         console.error,
-        () => this.gameService.pcPlay(document, this.squares)
+        () => this.gameService.pcPlay(document)
       );
   }
 
   passPlay(action: 'Pass' | 'Play') {
     if (action === 'Pass') {
-      this.prePass(true, false, false, this.gameService.playersTurn);
+      this.prePass(true, false, false, this.source.playersTurn);
 
       return;
     }
+    this.gameService.play(false, document);
   }
 
   swapRecall(action: 'Recall' | 'Swap') {
@@ -139,12 +126,12 @@ export class ActionBarComponent implements OnInit, OnDestroy {
       this.source.changePlayerRack([...this.tiles, ...tilesToReturn]);
 
       setTimeout(() => {
-        this.gameService.isValidMove = false;
+        this.source.isValidMove = false;
         this.gridService.updateGameState(document);
-        this.gameService.isValidMove = this.validate.validate(
+        this.source.isValidMove = this.validate.validate(
           this.gridService.gridState,
-          this.gameService.firstTurn,
-          this.gameService.wordsLogged,
+          this.source.firstTurn,
+          this.source.wordsLogged,
           true,
           document
         );
@@ -165,26 +152,26 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   zoomOut() {
-    if (!this.gameService.isZoomed) return;
+    if (!this.source.isZoomed) return;
     const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
 
     let $board: HTMLElement = document.querySelector('#board');
 
     $board.classList.remove('zoomedIn');
-    this.gameService.isZoomed = false;
+    this.source.isZoomed = false;
 
     btnAttrs.zoomBtn.isIn = true;
 
     this.source.changeBtnAttr(btnAttrs);
   }
   zoomIn() {
-    if (this.gameService.isZoomed) return;
+    if (this.source.isZoomed) return;
     const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
     let $board: HTMLElement = document.querySelector('#board');
     let centerSquare = document.querySelector('[data-location="7,7"]');
     $board.classList.add('zoomedIn');
     centerSquare.scrollIntoView({ block: 'center', inline: 'center' });
-    this.gameService.isZoomed = true;
+    this.source.isZoomed = true;
 
     btnAttrs.zoomBtn.isIn = false;
 
@@ -212,17 +199,12 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     this.btnAttributeSubscription = this.source.currentBtnAttr.subscribe(
       (attrs) => {
         this.btnAttributes = attrs;
-        setTimeout(() => {
-          this.onOff = false;
-        }, 0);
-        setTimeout(() => {
-          this.onOff = true;
-        }, 0);
       }
     );
-    this.boardSubscription = this.source.currentBoard.subscribe(
-      (squares) => (this.squares = squares)
-    );
+    this.boardSubscription = this.source.currentBoard.subscribe((squares) => {
+      this.squares = squares;
+      this.remainingTiles = 100 - this.source.lettersUsed;
+    });
   }
 
   ngOnDestroy(): void {

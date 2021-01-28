@@ -39,7 +39,7 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
   }
 
   currentFreq() {
-    let currentFreq = _.countBy(this.gameService.bag, 'letter');
+    let currentFreq = _.countBy(this.source.bag, 'letter');
 
     _.mergeWith(currentFreq, this.lettersByFreq, this.customizer);
 
@@ -133,8 +133,8 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
       });
 
     for (let i = 0; i < tilesToSwap.length; i++) {
-      if (this.gameService.bag.length) {
-        let newTile = _.pullAt(this.gameService.bag, [0])[0];
+      if (this.source.bag.length) {
+        let newTile = _.pullAt(this.source.bag, [0])[0];
         remainingRack.push({
           content: newTile,
           id: `tile${this.source.numSource}`,
@@ -145,8 +145,8 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.gameService.bag.push(...tilesToSwap);
-    this.gameService.bag = _.shuffle(_.shuffle(this.gameService.bag));
+    this.source.bag.push(...tilesToSwap);
+    this.source.bag = _.shuffle(_.shuffle(this.source.bag));
 
     let newRack = remainingRack;
 

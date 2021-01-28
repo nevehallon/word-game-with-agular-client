@@ -1,5 +1,7 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import _ from 'lodash';
+import { Square } from '../interfaces/square';
+import { SourceService } from './source.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +30,7 @@ export class CreateGridService {
       for (let j = 0; j < 15; j++) {
         let $element = $document.querySelectorAll('.square')[count];
         // console.log($element);
-        $element.setAttribute('data-location', `${i},${j}`);
+        // $element.setAttribute('data-location', `${i},${j}`);
         gridLetters[i].push(' ');
         // prettier-ignore
         gridMultipliers[i].push(
@@ -50,6 +52,8 @@ export class CreateGridService {
   }
 
   updateGameState($document: HTMLDocument) {
+    let board = this.source.getBoard();
+
     this.$document = $document;
     this.gridState = this.createGrid($document);
     this.cleanGrid = _.cloneDeep(this.gridState);
@@ -61,19 +65,20 @@ export class CreateGridService {
       gridLetters.push([]);
       for (let j = 0; j < 15; j++) {
         let $element = $document.querySelectorAll('.square')[count];
+
+        let square: Square = board[count];
+        let squareRef = square.data[0];
         // console.log($element);
         let letter;
-        if ($element.querySelector('.tile')?.innerHTML) {
-          letter = $element.querySelector('.tile').textContent.slice(0, 1);
+        if (squareRef) {
+          letter = squareRef.content.letter;
         }
         // prettier-ignore
-        let hot = letter ? $element.querySelector(".tile").classList.contains("hot") : " ";
+        let hot = letter ? squareRef.class.includes("hot") : " ";
         let id = letter
           ? $element.querySelector('.tile').getAttribute('data-drag')
           : ' ';
-        let pointVal = letter
-          ? $element.querySelector('.tile')?.textContent.slice(1)
-          : ' ';
+        let pointVal = letter ? squareRef.content.points : ' ';
         gridLetters[i].push(
           letter
             ? { letter, id, pointVal, hot }
@@ -86,5 +91,5 @@ export class CreateGridService {
     this.gridState.gridLetters = gridLetters;
   }
 
-  constructor() {}
+  constructor(private source: SourceService) {}
 }

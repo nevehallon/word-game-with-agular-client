@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { ScrabbleLettersService } from './scrabble-letters.service';
 import _ from 'lodash';
-// import { GetRequestsService } from './get-requests.service';
 import { ComputeService } from './compute.service';
 import { CreateGridService } from './create-grid.service';
 import { BoardValidatorService } from './board-validator.service';
 import { SourceService } from './source.service';
+import { Square } from '../interfaces/square';
+import { BtnAttrs } from '../interfaces/btn-attrs';
 @Injectable({
   providedIn: 'root',
 })
 export class GameLogicService {
   constructor(
-    private letters: ScrabbleLettersService,
     // private http: GetRequestsService,
     private calc: ComputeService,
     private gridService: CreateGridService,
@@ -19,31 +18,10 @@ export class GameLogicService {
     private source: SourceService
   ) {}
 
-  DEBUG_MODE = false; //? change to true for the AI to play it self
-
-  loaderShown = false;
-  playerScore = 0;
-  computerScore = 0;
-  lettersUsed = 0;
-  passCount = 0;
-  isZoomed = false;
-  fired = false;
-  overRack = false;
-  firstTurn = true;
-  isValidMove: any = false;
-  playersTurn = false;
-  wordsLogged = [];
-  history = [];
-  rivalRack = [];
-  // hints = JSON.parse(localStorage.getItem('hints')) || { show: true };
-
-  bag = _.shuffle(_.shuffle(this.letters.get()));
-  // bag = _.drop(bag, 86); //? uncomment for doing tests on a shorter game
-
   deal2Player() {
     let playerRack = [];
     for (let i = 0; i < 7; i++) {
-      let tile = _.pullAt(this.bag, [0])[0];
+      let tile = _.pullAt(this.source.bag, [0])[0];
       playerRack.push(tile);
     }
     return playerRack;
@@ -51,12 +29,12 @@ export class GameLogicService {
 
   deal2PC() {
     for (let i = 0; i < 7; i++) {
-      this.rivalRack.push(_.pullAt(this.bag, [0])[0]);
+      this.source.rivalRack.push(_.pullAt(this.source.bag, [0])[0]);
     }
   }
 
   whoStarts() {
-    let bagSim = _.shuffle(this.bag);
+    let bagSim = _.shuffle(this.source.bag);
     return {
       player: _.pullAt(bagSim, [0])[0].letter,
       pc: _.pullAt(bagSim, [0])[0].letter,
@@ -69,10 +47,7 @@ export class GameLogicService {
     let { player, pc } = this.whoStarts();
     if (player === pc) return this.startGame($document);
 
-    this.lettersUsed = 14;
-    $document.querySelector<HTMLElement>('#bagBtn').innerText = String(
-      100 - this.lettersUsed
-    );
+    this.source.lettersUsed = 14;
 
     $document
       .querySelector<HTMLElement>('#startGame')
@@ -82,19 +57,19 @@ export class GameLogicService {
     if (player < pc) {
       playerRack = this.deal2Player();
       this.deal2PC();
-      this.playersTurn = true;
-      // this.alertStarter("You won the draw and will start"); //TODO:
-      if (this.DEBUG_MODE) {
-        this.playersTurn = true;
-        // this.pcPlay();TODO:
+      this.source.playersTurn = true;
+      alert('You won the draw and will start'); //TODO:
+      if (this.source.DEBUG_MODE) {
+        this.source.playersTurn = true;
+        this.pcPlay($document); //TODO:
       }
     } else {
-      this.playersTurn = false;
+      this.source.playersTurn = false;
       this.deal2PC();
       playerRack = this.deal2Player();
-      // this.alertStarter("Opponent won the draw and will start"); TODO:
+      alert('Opponent won the draw and will start'); // TODO:
       setTimeout(() => {
-        // this.pcPlay(); //TODO:
+        this.pcPlay($document); //TODO:
       }, 3000);
     }
     playerRack = playerRack.map((x, i) => ({
@@ -108,12 +83,12 @@ export class GameLogicService {
   }
 
   repaintBoard($document: HTMLDocument) {
-    this.isValidMove = false;
+    this.source.isValidMove = false;
     this.gridService.updateGameState($document);
-    this.isValidMove = this.validate.validate(
+    this.source.isValidMove = this.validate.validate(
       this.gridService.gridState,
-      this.firstTurn,
-      this.wordsLogged,
+      this.source.firstTurn,
+      this.source.wordsLogged,
       true,
       $document
     );
@@ -152,27 +127,27 @@ export class GameLogicService {
 
   pcSwap($document: HTMLDocument) {
     //? .sort((a,b) => b > a ? -1 : 1).filter(x => x !== 0) //for sorting by point value and removing blank tiles
-    let numTilesLeftInBag = this.bag.slice(0, 7).length;
-    let tilesLeftInRivalRack = this.rivalRack.slice(0, 7);
-    let numTilesLeftInRivalRack = this.rivalRack.slice(0, 7).length;
+    let numTilesLeftInBag = this.source.bag.slice(0, 7).length;
+    let tilesLeftInRivalRack = this.source.rivalRack.slice(0, 7);
+    let numTilesLeftInRivalRack = this.source.rivalRack.slice(0, 7).length;
 
     let bool = numTilesLeftInBag <= numTilesLeftInRivalRack;
     let maxNumTilesToSwap = bool ? numTilesLeftInBag : numTilesLeftInRivalRack;
 
-    this.rivalRack = bool
-      ? this.rivalRack.slice(0, 7 - maxNumTilesToSwap)
-      : this.rivalRack.slice(7 - maxNumTilesToSwap);
+    this.source.rivalRack = bool
+      ? this.source.rivalRack.slice(0, 7 - maxNumTilesToSwap)
+      : this.source.rivalRack.slice(7 - maxNumTilesToSwap);
 
     for (let i = 0; i < maxNumTilesToSwap; i++) {
-      if (this.bag.length) {
-        this.rivalRack.push(_.pullAt(this.bag, [0])[0]);
+      if (this.source.bag.length) {
+        this.source.rivalRack.push(_.pullAt(this.source.bag, [0])[0]);
       }
     }
 
-    this.bag.push(...tilesLeftInRivalRack.slice(0, maxNumTilesToSwap));
-    this.bag = _.shuffle(_.shuffle(this.bag));
-    console.log(this.rivalRack, this.bag);
-    this.passCount = -1;
+    this.source.bag.push(...tilesLeftInRivalRack.slice(0, maxNumTilesToSwap));
+    this.source.bag = _.shuffle(_.shuffle(this.source.bag));
+    console.log(this.source.rivalRack, this.source.bag);
+    this.source.passCount = -1;
     this.pass(true, true, true, undefined, $document);
 
     // toggleModal({
@@ -190,7 +165,25 @@ export class GameLogicService {
     // });
   }
 
-  pcPlay($document: HTMLDocument, boardData) {
+  pcPlay($document: HTMLDocument) {
+    let board = this.source.getBoard();
+    let newBoard = board.map((square) => {
+      if (square.data[0]?.class.includes('pcPlay')) {
+        let obj = square.data[0];
+        return {
+          data: [
+            {
+              ...obj,
+              class: obj.class.filter((klass) => klass !== 'pcPlay'),
+            },
+          ],
+        };
+      }
+      return square;
+    });
+
+    this.source.changeBoard(newBoard);
+    this.gridService.updateGameState($document);
     // toggleModal({
     //   modal: { class: "", content: "" },
     //   modalPlacer: { class: "modal-dialog-centered", content: "" },
@@ -204,7 +197,7 @@ export class GameLogicService {
     //   timeout: 0,
     //   executeClose: false,
     // });
-    this.playersTurn = false;
+    this.source.playersTurn = false;
 
     // if (rivalRack.length < 7 && !bag.length && prompt()) {
     //   rivalRack = Array(7).fill({ letter: "Q", points: 10 });
@@ -212,21 +205,20 @@ export class GameLogicService {
     // rivalRack = Array(7).fill({ letter: "Q", points: 10 }); //[...rivalRack.slice(0, 6), { letter: "", points: 0 }]; //? uncomment for testing
 
     // this.zoomOut(); //TODO:
-    this.rivalRack.sort((a, b) => (b.letter ? 1 : -1)); //make sure that blanks are last tile
+    this.source.rivalRack.sort((a, b) => (b.letter ? 1 : -1)); //make sure that blanks are last tile
     setTimeout(async () => {
       try {
-        this.isValidMove = await this.calc.calcPcMove(
+        this.source.isValidMove = await this.calc.calcPcMove(
           this.gridService.gridState,
-          this.firstTurn,
-          this.wordsLogged,
-          this.rivalRack,
-          $document,
-          boardData
+          this.source.firstTurn,
+          this.source.wordsLogged,
+          this.source.rivalRack,
+          $document
         );
         // prettier-ignore
-        !this.isValidMove && this.rivalRack.length && this.bag.length ? 
-        this.pcSwap($document) : this.isValidMove ? 
-        this.play(true, $document) : this.DEBUG_MODE ? 
+        !this.source.isValidMove && this.source.rivalRack.length && this.source.bag.length ? 
+        this.pcSwap($document) : this.source.isValidMove ? 
+        this.play(true, $document) : this.source.DEBUG_MODE ? 
         false : this.pass(true, false, true, undefined, $document);
       } catch (error) {
         if (error?.message?.includes('ranch')) {
@@ -234,14 +226,15 @@ export class GameLogicService {
         }
 
         console.error(error);
-        this.pcPlay($document, boardData);
+        // this.pcPlay($document);
       }
     }, 50);
   }
 
   endGame($document: HTMLDocument) {
+    let board: Square[] = this.source.getBoard();
     // this.zoomOut();//TODO:
-    $document.querySelector('#startGame')[0].removeAttribute('disabled');
+    $document.querySelector('#startGame').removeAttribute('disabled');
     $document.querySelector<HTMLElement>('#startGame').style.display =
       'inherit';
     $document
@@ -252,75 +245,88 @@ export class GameLogicService {
         Object.assign(el.style, { 'pointer-events': 'none', display: 'none' })
       ); //?prevent players from continuing (can still see the score history, and shows a button for a rematch)
 
-    $document.querySelectorAll<HTMLElement>('#board .hot').forEach((el) => {
-      el.classList.remove('hot');
-      el.parentElement.classList.remove('dw', 'tw', 'dl', 'tl');
+    // $document.querySelectorAll<HTMLElement>('#board .hot').forEach((el) => {
+    //   el.classList.remove('hot');
+    // }); TODO:
+
+    board.forEach((x, i) => {
+      if (x.data[0].coords) {
+        this.source.dl = this.source.dl.filter((num) => num !== i);
+        this.source.dw = this.source.dw.filter((num) => num !== i);
+        this.source.tl = this.source.tl.filter((num) => num !== i);
+        this.source.tw = this.source.tw.filter((num) => num !== i);
+      }
     });
 
     //?remove hot tiles from board
 
-    if (!this.rivalRack.length) {
+    if (!this.source.rivalRack.length) {
       let sum = Array.from(
         $document.querySelectorAll('#rack .tile div')
       ).reduce((acc, cur) => acc + +cur.innerHTML, 0);
 
-      this.history.push({
+      this.source.history.push({
         isAI: true,
         word: 'Opponent Won',
         points: '',
         score: {
-          computerScore: `${this.computerScore} + ${sum}`,
-          playerScore: `${this.playerScore} - ${sum}`,
+          computerScore: `${this.source.computerScore} + ${sum}`,
+          playerScore: `${this.source.playerScore} - ${sum}`,
         },
         skip: false,
       });
       // generateTable(history);//TODO:
 
-      this.playerScore -= sum;
-      this.computerScore += sum;
+      this.source.playerScore -= sum;
+      this.source.computerScore += sum;
 
-      this.playerScore = this.playerScore < 0 ? 0 : this.playerScore;
-      this.computerScore = this.computerScore < 0 ? 0 : this.computerScore;
+      this.source.playerScore =
+        this.source.playerScore < 0 ? 0 : this.source.playerScore;
+      this.source.computerScore =
+        this.source.computerScore < 0 ? 0 : this.source.computerScore;
       $document.querySelector('#playerScore').textContent = String(
-        this.playerScore
+        this.source.playerScore
       );
       $document.querySelector('#pcScore').textContent = String(
-        this.computerScore
+        this.source.computerScore
       );
       //? deduct points from player and give them to AI
     }
 
     if (!$document.querySelectorAll('#rack .tile').length) {
-      let sum = this.rivalRack.reduce((acc, cur) => acc + cur, 0);
+      let sum = this.source.rivalRack.reduce((acc, cur) => acc + cur, 0);
 
-      this.history.push({
+      this.source.history.push({
         isAI: false,
         word: 'Player Won',
         points: '',
         score: {
-          computerScore: `${this.computerScore} - ${sum}`,
-          playerScore: `${this.playerScore} + ${sum}`,
+          computerScore: `${this.source.computerScore} - ${sum}`,
+          playerScore: `${this.source.playerScore} + ${sum}`,
         },
         skip: false,
       });
       // generateTable(history);//TODO:
 
-      this.playerScore += sum;
-      this.computerScore -= sum;
+      this.source.playerScore += sum;
+      this.source.computerScore -= sum;
 
-      this.playerScore = this.playerScore < 0 ? 0 : this.playerScore;
-      this.computerScore = this.computerScore < 0 ? 0 : this.computerScore;
+      this.source.playerScore =
+        this.source.playerScore < 0 ? 0 : this.source.playerScore;
+      this.source.computerScore =
+        this.source.computerScore < 0 ? 0 : this.source.computerScore;
 
       $document.querySelector('#playerScore').textContent = String(
-        this.playerScore
+        this.source.playerScore
       );
       $document.querySelector('#pcScore').textContent = String(
-        this.computerScore
+        this.source.computerScore
       );
       //? deduct points from AI and give them to player
     }
 
-    let winner = this.playerScore > this.computerScore ? 'You' : 'Opponent';
+    let winner =
+      this.source.playerScore > this.source.computerScore ? 'You' : 'Opponent';
 
     setTimeout(() => {
       // toggleModal({
@@ -351,11 +357,11 @@ export class GameLogicService {
     //    add to passCount
 
     if (isSwap !== undefined) {
-      this.history.push({
+      this.source.history.push({
         isAI: isAI,
         score: {
-          computerScore: this.computerScore,
-          playerScore: this.playerScore,
+          computerScore: this.source.computerScore,
+          playerScore: this.source.playerScore,
         },
         skip: { isSwap: isSwap },
       });
@@ -372,34 +378,34 @@ export class GameLogicService {
         //   modalPlacer: { class: "modal-dialog-centered", content: "" },
         //   title: { class: "", content: "Opponent chose to pass" },
         //   body: { class: "d-none", content: "" },
-        //   footer: { class: "d-none", content: "" },
+        //   footer: { class: "d-none", content: "" }, //TODO:
         //   actionButton: { class: "", content: "" },
         //   timeout: 2250,
         //   executeClose: false,
         // });
       }
-      this.passCount++;
+      this.source.passCount++;
     }
     //if param = false ->
     //    make sure firstTurn is set to false
     //    reset passCount to equal 0
     if (!wasClicked) {
-      if (this.firstTurn) this.firstTurn = false;
-      this.passCount = 0;
+      if (this.source.firstTurn) this.source.firstTurn = false;
+      this.source.passCount = 0;
     }
     //if passCount = 4 ->
     //    end game
-    if (this.passCount === 4) {
+    if (this.source.passCount === 4) {
       this.endGame($document);
       return false;
     }
     //    allow next turn
-    // if (DEBUG_MODE) firstTurn = false;
-    if (this.playersTurn) {
+    if (this.source.DEBUG_MODE) this.source.firstTurn = false;
+    if (this.source.playersTurn) {
       setTimeout(() => {
-        // this.playersTurn || this.DEBUG_MODE
-        //   ? this.pcPlay($document)
-        //   : (this.playersTurn = true); //TODO:
+        this.source.playersTurn || this.source.DEBUG_MODE
+          ? this.pcPlay($document)
+          : (this.source.playersTurn = true); //TODO:
       }, 250);
       return true; //? remove extra style from tiles that AI played
     }
@@ -407,8 +413,11 @@ export class GameLogicService {
   }
 
   play(isAI = false, $document: HTMLDocument) {
-    if (!this.isValidMove.words && this.DEBUG_MODE) this.playersTurn = true;
-    if (!this.isValidMove.words) {
+    if (!this.source.isValidMove.words && this.source.DEBUG_MODE)
+      this.source.playersTurn = true;
+    let board: Square[] = this.source.getBoard();
+
+    if (!this.source.isValidMove.words) {
       // return toggleModal({
       //   modal: { class: "", content: "" },
       //   modalPlacer: { class: "modal-dialog-centered", content: "" },
@@ -416,7 +425,7 @@ export class GameLogicService {
       //   title: { class: "", content: "" },
       //   body: {
       //     class: "text-center", //TODO: show error when player tries to play something wrong
-      //     content: `<div class="alert alert-danger" role="alert">${this.isValidMove.slice(4)}</div>`,
+      //     content: `<div class="alert alert-danger" role="alert">${this.source.isValidMove.slice(4)}</div>`,
       //   },
       //   footer: { class: "justify-content-center", content: "" },
       //   actionButton: { class: "d-none", content: "" },
@@ -425,49 +434,43 @@ export class GameLogicService {
       // });
     }
 
-    if (this.isValidMove.hasOwnProperty('rivalRack')) {
-      this.computerScore += this.isValidMove.pointTally;
-      $document.querySelector('#pcScore').textContent = String(
-        this.computerScore
-      );
-      this.history.push({
+    if (this.source.isValidMove.hasOwnProperty('rivalRack')) {
+      this.source.computerScore += this.source.isValidMove.pointTally;
+      this.source.history.push({
         isAI: true,
-        word: this.isValidMove.wordsPlayed
+        word: this.source.isValidMove.wordsPlayed
           .map((x) => {
             let word = x[0].toUpperCase() + x.slice(1).toLowerCase();
             return `<a title="See definition for: ${word}" class="text-danger" href="https://www.yourdictionary.com/${x.toLowerCase()}" target="_blank">${word}</a>`;
           })
           .join(', '),
-        points: this.isValidMove.pointTally,
+        points: this.source.isValidMove.pointTally,
         score: {
-          computerScore: this.computerScore,
-          playerScore: this.playerScore,
+          computerScore: this.source.computerScore,
+          playerScore: this.source.playerScore,
         },
         skip: false,
       });
       // generateTable(history); //TODO:
       // add and display pc's score
     } else {
-      this.playersTurn = true;
+      this.source.playersTurn = true;
     }
-    if (this.playersTurn) {
-      this.playerScore += this.isValidMove.pointTally;
-      $document.querySelector('#playerScore').textContent = String(
-        this.playerScore
-      );
+    if (this.source.playersTurn) {
+      this.source.playerScore += this.source.isValidMove.pointTally;
 
-      this.history.push({
+      this.source.history.push({
         isAI: false,
-        word: this.isValidMove.bestWord
+        word: this.source.isValidMove.bestWord
           .map((x) => {
             let word = x[0].toUpperCase() + x.slice(1).toLowerCase();
             return `<a title="See definition for: ${word}" href="https://www.yourdictionary.com/${x.toLowerCase()}" target="_blank">${word}</a>`;
           })
           .join(', '),
-        points: this.isValidMove.pointTally,
+        points: this.source.isValidMove.pointTally,
         score: {
-          computerScore: this.computerScore,
-          playerScore: this.playerScore,
+          computerScore: this.source.computerScore,
+          playerScore: this.source.playerScore,
         },
         skip: false,
       });
@@ -475,85 +478,121 @@ export class GameLogicService {
       //calculate and add points to "player"
     }
 
-    this.wordsLogged = this.isValidMove.words; //adding to the words that have been played
+    this.source.wordsLogged = this.source.isValidMove.words; //adding to the words that have been played
 
-    if (this.playersTurn && !isAI) {
+    if (this.source.playersTurn && !isAI) {
       let refill = $document.querySelectorAll('#board .hot').length;
       let tilesPlayed = Array.from(
         $document.querySelectorAll('#board .hot')
       ).map((el) => el.parentElement);
+
+      let newBoard: Square[] = _.cloneDeep(board);
       //fill rack back up to 7 or what ever is left in bag
       for (let i = 0; i < refill; i++) {
-        //remove multipliers from gridMultipliers
-        let coords = tilesPlayed[i].getAttribute('data-location').split(',');
+        let coords: string[] = tilesPlayed[i]
+          .getAttribute('data-location')
+          .split(',');
+
+        //?disable drag on "hot" tiles, remove "hot" & "multiplier" class from ".column .hot" and call pass()
+
+        let index = +coords[0] * 15 + +coords[1];
+        let data = newBoard[index].data[0];
+
+        newBoard[index].data = [
+          {
+            ...data,
+            class: ['tile'],
+          },
+        ];
+
+        this.source.dl = this.source.dl.filter((num) => num !== index);
+        this.source.dw = this.source.dw.filter((num) => num !== index);
+        this.source.tl = this.source.tl.filter((num) => num !== index);
+        this.source.tw = this.source.tw.filter((num) => num !== index);
+
+        //?remove multipliers from gridMultipliers
         this.gridService.gridState.gridMultipliers[+coords[0]][+coords[1]] =
           ' ';
         this.gridService.gridState.gridLetters[+coords[0]][
           +coords[1]
         ].hot = false;
 
-        if (this.bag.length) {
-          let { letter, points } = _.pullAt(this.bag, [0])[0];
-          $document.querySelector(`#rack`).append(`
-      <div data-drag=${++this.lettersUsed} class="tile hot ${
-            points ? '' : 'blank'
-          }">${letter}<div>${points ? points : ''}</div></div>
-      `);
-          // setDraggable($(`[data-drag="${this.lettersUsed}"]`));//TODO:
+        if (this.source.bag.length) {
+          // let { letter, points } = _.pullAt(this.source.bag, [0])[0];
+          this.source.addToPlayerRack({
+            content: _.pullAt(this.source.bag, [0])[0],
+            id: `tile${++this.source.numSource}`,
+            class: ['tile', 'hot'],
+            'data-drag': this.source.numSource,
+          });
+          ++this.source.lettersUsed;
+          //     $document.querySelector(`#rack`).append(`
+          // <div data-drag=${++this.source.lettersUsed} class="tile hot ${
+          //       points ? '' : 'blank'
+          //     }">${letter}<div>${points ? points : ''}</div></div>
+          // `);
+          // setDraggable($(`[data-drag="${this.source.lettersUsed}"]`));//TODO:
         }
       }
 
+      this.source.changeBoard(newBoard);
+
       if (
-        !this.bag.length &&
+        !this.source.bag.length &&
         (!$document.querySelectorAll('#rack .tile').length ||
-          !this.rivalRack.length)
+          !this.source.rivalRack.length)
       ) {
         return this.endGame($document);
       }
 
-      $document.querySelector('#bagBtn').textContent = String(
-        100 - this.lettersUsed
-      );
+      // $document.querySelector('#bagBtn').textContent = String(
+      //   100 - this.source.lettersUsed
+      // );
       // resetSortable();//TODO:
 
-      //disable drag on "hot" tiles, remove "hot" & "multiplier" class from ".column .hot" and call pass()
-      $document.querySelectorAll('#board .hot').forEach((el) => {
-        el.classList.remove('hot');
-        el.parentElement.classList.remove('dw', 'tw', 'dl', 'tl');
-      });
+      //?disable drag on "hot" tiles, remove "hot" & "multiplier" class from ".column .hot" and call pass()
+      // $document.querySelectorAll('#board .hot').forEach((el) => {
+      //   el.classList.remove('hot');
+      //   el.parentElement.classList.remove('dw', 'tw', 'dl', 'tl');
+      // }); TODO:
     } else {
-      let wordUsed = this.isValidMove.bestWord;
+      let wordUsed = this.source.isValidMove.bestWord;
 
-      this.rivalRack = this.isValidMove.rivalRack;
-      let refill = $document.querySelectorAll('#board .hot').length;
-      let tilesPlayed = Array.from(
-        $document.querySelectorAll('#board .hot')
-      ).map((el) => el.parentElement);
+      this.source.rivalRack = this.source.isValidMove.rivalRack;
+      let tilesPlayed = board.filter((x) =>
+        x.data[0]?.class.includes('pcPlay')
+      );
+      let refill = tilesPlayed.length;
+      // let refill = $document.querySelectorAll('#board .pcPlay').length;
+      // let tilesPlayed = Array.from(
+      //   $document.querySelectorAll('#board .pcPlay')
+      // ).map((el) => el.parentElement);
       //fill rack back up to 7 or what ever is left in bag
       for (let i = 0; i < refill; i++) {
         //remove multipliers from gridMultipliers
-        let coords = tilesPlayed[i].getAttribute('data-location').split(',');
-        this.gridService.gridState.gridMultipliers[+coords[0]][+coords[1]] =
-          ' ';
-        this.gridService.gridState.gridLetters[+coords[0]][
-          +coords[1]
+        let coords = tilesPlayed[i].data[0].coords;
+        this.gridService.gridState.gridMultipliers[coords[0]][coords[1]] = ' ';
+        this.gridService.gridState.gridLetters[coords[0]][
+          coords[1]
         ].hot = false;
 
-        if (this.bag.length) {
-          this.rivalRack.push(_.pullAt(this.bag, [0])[0]);
-          ++this.lettersUsed;
+        if (this.source.bag.length) {
+          this.source.rivalRack.push(_.pullAt(this.source.bag, [0])[0]);
+          // console.log(this.source.rivalRack);
         }
+        ++this.source.lettersUsed;
       }
+
       if (
-        !this.bag.length &&
+        !this.source.bag.length &&
         (!$document.querySelectorAll('#rack .tile').length ||
-          !this.rivalRack.length)
+          !this.source.rivalRack.length)
       ) {
         setTimeout(() => {
           // toggleModal({
           //   modal: { class: "", content: "" },
           //   modalPlacer: { class: "", content: "" },
-          //   title: { class: "text-primary", content: `Opponent played: <b>"${wordUsed}"</b>` },
+          //   title: { class: "text-primary", content: `Opponent played: <b>"${wordUsed}"</b>` },TODO:
           //   body: { class: "d-none", content: "" },
           //   footer: { class: "d-none", content: "" },
           //   actionButton: { class: "", content: "" },
@@ -564,20 +603,25 @@ export class GameLogicService {
         return this.endGame($document);
       }
 
-      $document.querySelector('#bagBtn').textContent = String(
-        100 - this.lettersUsed
-      );
+      // $document.querySelector('#bagBtn').textContent = String(
+      //   100 - this.source.lettersUsed
+      // ); TODO:
+
       //disable drag on "hot" tiles, remove "hot" & "multiplier" class from ".column .hot" and call pass()
-      $document.querySelectorAll('#board .hot').forEach((el) => {
-        el.classList.remove('hot');
-        el.parentElement.classList.remove('dw', 'tw', 'dl', 'tl');
+      board.forEach((x, i) => {
+        if (x.data[0]?.coords) {
+          this.source.dl = this.source.dl.filter((num) => num !== i);
+          this.source.dw = this.source.dw.filter((num) => num !== i);
+          this.source.tl = this.source.tl.filter((num) => num !== i);
+          this.source.tw = this.source.tw.filter((num) => num !== i);
+        }
       });
 
       setTimeout(() => {
         // toggleModal({
         //   modal: { class: "", content: "" },
         //   modalPlacer: { class: "", content: "" },
-        //   title: { class: "text-primary", content: `Opponent played: <b>"${wordUsed}"</b>` },
+        //   title: { class: "text-primary", content: `Opponent played: <b>"${wordUsed}"</b>` },TODO:
         //   body: { class: "d-none", content: "" },
         //   footer: { class: "d-none", content: "" },
         //   actionButton: { class: "", content: "" },
@@ -586,11 +630,23 @@ export class GameLogicService {
         // });
       }, 1650);
     }
-    //set firstTurn & isValidMove to false
-    if (this.firstTurn) this.firstTurn = false;
-    this.isValidMove = false;
 
-    $document.querySelector('#passPlay').textContent = 'Pass';
+    this.source.changeBoard(this.source.getBoard());
+    //set firstTurn & isValidMove to false
+    if (this.source.firstTurn) this.source.firstTurn = false;
+    this.source.isValidMove = false;
+
+    // $document.querySelector('#passPlay').textContent = 'Pass';
+    const btnAttrs: BtnAttrs = _.cloneDeep(this.source.getBtnAttr());
+
+    btnAttrs.passPlay.text = 'Pass';
+    btnAttrs.passPlay.bgColor = '';
+    btnAttrs.passPlay.icon = '';
+
+    btnAttrs.swapRecall.text = 'Swap';
+    btnAttrs.swapRecall.icon.isUndo = false;
+
+    this.source.changeBtnAttr(btnAttrs);
     this.pass(undefined, undefined, undefined, undefined, $document);
   }
 

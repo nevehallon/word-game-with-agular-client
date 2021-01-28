@@ -9,7 +9,7 @@ export interface ScoresBtn {
 
 export interface SwapRecall {
   text: string;
-  icon: string;
+  icon: { isUndo: boolean };
 }
 
 export interface PassPlay {
