@@ -93,17 +93,19 @@ export class ActionBarComponent implements OnInit, OnDestroy {
             // console.log(this.gridService.gridState);
           }
         },
-        console.error,
-        () => this.gameService.pcPlay(document)
+        console.error
+        // () => this.gameService.pcPlay(document)
       );
   }
 
-  passPlay(action: 'Pass' | 'Play') {
+  passPlay(action) {
     if (action === 'Pass') {
       this.prePass(true, false, false, this.source.playersTurn);
 
       return;
     }
+
+    this.zoomOut();
     this.gameService.play(false, document);
   }
 

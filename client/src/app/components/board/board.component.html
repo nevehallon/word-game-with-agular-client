@@ -17,6 +17,7 @@
 
         <div
             cdkDrag
+            [cdkDragDisabled]="!tile.class.includes('hot')"
             *ngFor="let tile of squares[i].data"
             [class]="tile.class"
             [id]="tile.id"
