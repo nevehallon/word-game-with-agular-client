@@ -228,7 +228,7 @@ export class GameLogicService {
         console.error(error);
         // this.pcPlay($document);
       }
-    }, 50);
+    }, 250);
   }
 
   endGame($document: HTMLDocument) {
@@ -284,12 +284,12 @@ export class GameLogicService {
         this.source.playerScore < 0 ? 0 : this.source.playerScore;
       this.source.computerScore =
         this.source.computerScore < 0 ? 0 : this.source.computerScore;
-      $document.querySelector('#playerScore').textContent = String(
-        this.source.playerScore
-      );
-      $document.querySelector('#pcScore').textContent = String(
-        this.source.computerScore
-      );
+      // $document.querySelector('#playerScore').textContent = String(
+      //   this.source.playerScore
+      // );
+      // $document.querySelector('#pcScore').textContent = String(
+      //   this.source.computerScore
+      // );
       //? deduct points from player and give them to AI
     }
 
@@ -316,12 +316,12 @@ export class GameLogicService {
       this.source.computerScore =
         this.source.computerScore < 0 ? 0 : this.source.computerScore;
 
-      $document.querySelector('#playerScore').textContent = String(
-        this.source.playerScore
-      );
-      $document.querySelector('#pcScore').textContent = String(
-        this.source.computerScore
-      );
+      // $document.querySelector('#playerScore').textContent = String(
+      //   this.source.playerScore
+      // );
+      // $document.querySelector('#pcScore').textContent = String(
+      //   this.source.computerScore
+      // );
       //? deduct points from AI and give them to player
     }
 
@@ -401,15 +401,12 @@ export class GameLogicService {
     }
     //    allow next turn
     if (this.source.DEBUG_MODE) this.source.firstTurn = false;
-    if (this.source.playersTurn) {
-      setTimeout(() => {
-        this.source.playersTurn || this.source.DEBUG_MODE
-          ? this.pcPlay($document)
-          : (this.source.playersTurn = true); //TODO:
-      }, 250);
-      return true; //? remove extra style from tiles that AI played
-    }
-    return false;
+    setTimeout(() => {
+      this.source.playersTurn || this.source.DEBUG_MODE
+        ? this.pcPlay($document)
+        : (this.source.playersTurn = true); //TODO:
+    }, 250);
+    return false; //? remove extra style from tiles that AI played
   }
 
   play(isAI = false, $document: HTMLDocument) {

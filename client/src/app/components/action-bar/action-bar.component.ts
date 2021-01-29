@@ -64,6 +64,8 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   prePass(wasClicked, isSwap, isAI, legalClick) {
+    // console.log(wasClicked, isSwap, isAI, legalClick);
+
     // legalClick = true; //TODO: remove me!!
 
     if (legalClick === false) return;
@@ -78,10 +80,10 @@ export class ActionBarComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe(
         (result) => {
-          if (result === false) {
+          if (!result) {
             return;
           }
-          let remove: boolean = this.gameService.pass(
+          /* let remove: boolean =  */ this.gameService.pass(
             wasClicked,
             isSwap,
             isAI,
@@ -89,9 +91,9 @@ export class ActionBarComponent implements OnInit, OnDestroy {
             document
           );
           this.zoomOut();
-          if (remove === true) {
-            // console.log(this.gridService.gridState);
-          }
+          // if (remove === true) {
+          // console.log(this.gridService.gridState);
+          // }
         },
         console.error
         // () => this.gameService.pcPlay(document)
