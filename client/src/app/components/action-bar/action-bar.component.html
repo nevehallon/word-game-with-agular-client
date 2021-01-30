@@ -7,7 +7,9 @@
 >
     {{remainingTiles}}
 </button>
+
 <button
+    (click)="showScoreHistory()"
     mat-raised-button
     id="scoresBtn"
     matTooltip="Click me to see words played and their definitions"
@@ -19,11 +21,13 @@
         <span>pc:</span><span id="pcScore">{{source.computerScore}}</span>
     </div>
 </button>
+
 <button
     mat-raised-button
     color="primary"
     id="startGame"
 >Rematch</button>
+
 <button
     (click)="mixTiles()"
     mat-raised-button
@@ -38,6 +42,7 @@
     ></svg>
     Mix
 </button>
+
 <button
     #swapRecallRef
     (click)="swapRecall(swapRecallRef._elementRef.nativeElement.innerText.trim())"
@@ -63,6 +68,7 @@
 
     {{btnAttributes.swapRecall.text}}
 </button>
+
 <button
     (click)="showSettings()"
     mat-raised-button
@@ -93,6 +99,7 @@
             stroke="currentColor"
         ></svg>
     </button>
+
     <button
         (click)="zoomIn()"
         *ngIf="btnAttributes.zoomBtn.isIn"

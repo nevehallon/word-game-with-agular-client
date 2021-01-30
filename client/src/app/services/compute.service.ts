@@ -24,11 +24,14 @@ export class ComputeService {
 
   async calcPcMove(
     gridState,
-    firstTurn,
-    wordsLogged,
-    rivalRack,
+    // firstTurn,
+    // wordsLogged,
+    // rivalRack,
     $document: HTMLDocument
   ) {
+    let firstTurn = this.source.firstTurn;
+    let wordsLogged = this.source.wordsLogged;
+    let rivalRack = _.cloneDeep(this.source.rivalRack);
     // firstTurn = false; //TODO: remove me
     this.updateBoardData();
     let difficultlyLimit = +localStorage.getItem('difficulty')
@@ -95,8 +98,7 @@ export class ComputeService {
 
         let { words, pointTally } = this.validate.validate(
           cleanGrid,
-          firstTurn,
-          wordsLogged,
+          this.source,
           false,
           $document
         );
@@ -1830,10 +1832,10 @@ export class ComputeService {
           }
           gridOrder.push({ x: start[0] + x, y: start[1] + y, taken: !isHot });
         });
+
         let { words, pointTally, bestWord } = this.validate.validate(
           cleanGrid,
-          firstTurn,
-          wordsLogged,
+          this.source,
           false,
           $document
         );

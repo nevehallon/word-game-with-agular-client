@@ -55,8 +55,7 @@ export class RackFrameComponent implements OnInit, OnDestroy {
       this.gridService.updateGameState(document);
       this.source.isValidMove = this.validate.validate(
         this.gridService.gridState,
-        this.source.firstTurn,
-        this.source.wordsLogged,
+        this.source,
         true,
         document
       );

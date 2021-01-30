@@ -3,7 +3,6 @@ import { Trie } from '../../assets/trie-prefix-tree/index.js';
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
 import { BtnAttrs } from '../interfaces/btn-attrs.js';
-import { SourceService } from './source.service.js';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +14,9 @@ export class BoardValidatorService implements OnDestroy {
   init(source) {
     this.source = source;
     this.btnAttributeSubscription = this.source.currentBtnAttr.subscribe(
-      (attrs) => (this.btnAttributes = attrs)
+      (attrs) => {
+        this.btnAttributes = attrs;
+      }
     );
   }
 
@@ -86,13 +87,11 @@ export class BoardValidatorService implements OnDestroy {
     // }, 0);
   }
 
-  validate(
-    gridState,
-    firstTurn,
-    wordsLogged,
-    isPlayer,
-    $document: HTMLDocument
-  ) {
+  validate(gridState, source, isPlayer, $document: HTMLDocument) {
+    this.source = source;
+    let firstTurn = this.source.firstTurn;
+    let wordsLogged = this.source.wordsLogged;
+
     let { gridLetters: board, gridMultipliers: multiplierMatrix } = gridState;
     try {
       let hasWords = true;

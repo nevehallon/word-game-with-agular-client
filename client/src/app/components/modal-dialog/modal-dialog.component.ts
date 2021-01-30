@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { MatSliderChange } from '@angular/material/slider';
 import { SourceService } from 'src/app/services/source.service';
 import { Subscription } from 'rxjs';
+import { DialogData } from 'src/app/interfaces/dialog-data';
 
 @Component({
   selector: 'app-modal-dialog',
@@ -15,8 +16,7 @@ import { Subscription } from 'rxjs';
 })
 export class ModalDialogComponent implements OnInit, OnDestroy {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data,
-    private gameService: GameLogicService,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private letters: ScrabbleLettersService,
     private ltp: LetterToPointsService,
     private source: SourceService

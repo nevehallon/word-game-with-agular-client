@@ -101,3 +101,58 @@ mat-dialog-actions {
     }
   }
 }
+
+// *
+// * loading...
+// *
+
+.spinner-container {
+  box-shadow: inset 0 0 8px 2px black;
+  border-radius: 50%;
+  width: 65px;
+  height: 65px;
+  margin: auto;
+}
+.spinner {
+  box-shadow: inset 0 0 8px 2px black;
+  padding: 15px;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  color: blue;
+  transform: translateZ(0);
+  animation: spin 3s infinite linear alternate-reverse;
+}
+@-webkit-keyframes spin {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.35) rotate(360deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.35) rotate(360deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+// *
+// * history
+// *
+::ng-deep #historyModal {
+  padding: 24px 0;
+}
+
+.last {
+  font-weight: bold;
+}

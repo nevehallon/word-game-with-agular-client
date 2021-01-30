@@ -4,6 +4,7 @@ import { take } from 'rxjs/operators';
 import { Square } from '../interfaces/square';
 import { ScrabbleLettersService } from './scrabble-letters.service';
 import _ from 'lodash';
+import { HistoryEntry } from '../interfaces/history-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -113,7 +114,7 @@ export class SourceService {
   public isValidMove: any = false;
   public playersTurn = false;
   public wordsLogged = [];
-  public history = [];
+  public history: HistoryEntry[] = [];
   public rivalRack = [];
   // hints = JSON.parse(localStorage.getItem('hints')) || { show: true };
 

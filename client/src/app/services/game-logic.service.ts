@@ -6,17 +6,34 @@ import { BoardValidatorService } from './board-validator.service';
 import { SourceService } from './source.service';
 import { Square } from '../interfaces/square';
 import { BtnAttrs } from '../interfaces/btn-attrs';
+
+import { take } from 'rxjs/operators';
+
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ModalDialogComponent } from '../components/modal-dialog/modal-dialog.component';
+import { DialogData } from '../interfaces/dialog-data';
+
 @Injectable({
   providedIn: 'root',
 })
 export class GameLogicService {
   constructor(
+    public dialog: MatDialog,
     // private http: GetRequestsService,
     private calc: ComputeService,
     private gridService: CreateGridService,
     private validate: BoardValidatorService,
     private source: SourceService
   ) {}
+
+  dialogRef;
+
+  closeDialog(timeOut: number = 0) {
+    if (!timeOut) return this.dialogRef.close();
+    setTimeout(() => {
+      this.dialogRef.close();
+    }, timeOut);
+  }
 
   deal2Player() {
     let playerRack = [];
@@ -54,11 +71,20 @@ export class GameLogicService {
       .setAttribute('disabled', 'disabled');
 
     let playerRack;
+    let data: DialogData;
     if (player < pc) {
       playerRack = this.deal2Player();
       this.deal2PC();
       this.source.playersTurn = true;
-      alert('You won the draw and will start'); //TODO:
+      data = {
+        type: 'message',
+        message: 'You won the draw and will start',
+      };
+
+      this.dialogRef = this.dialog.open(ModalDialogComponent, {
+        data: data,
+      });
+      this.closeDialog(2250);
       if (this.source.DEBUG_MODE) {
         this.source.playersTurn = true;
         this.pcPlay($document); //TODO:
@@ -67,7 +93,15 @@ export class GameLogicService {
       this.source.playersTurn = false;
       this.deal2PC();
       playerRack = this.deal2Player();
-      alert('Opponent won the draw and will start'); // TODO:
+      data = {
+        type: 'message',
+        message: 'Opponent won the draw and will start',
+      };
+
+      this.dialogRef = this.dialog.open(ModalDialogComponent, {
+        data: data,
+      });
+      this.closeDialog(2250);
       setTimeout(() => {
         this.pcPlay($document); //TODO:
       }, 3000);
@@ -87,8 +121,7 @@ export class GameLogicService {
     this.gridService.updateGameState($document);
     this.source.isValidMove = this.validate.validate(
       this.gridService.gridState,
-      this.source.firstTurn,
-      this.source.wordsLogged,
+      this.source,
       true,
       $document
     );
@@ -150,19 +183,15 @@ export class GameLogicService {
     this.source.passCount = -1;
     this.pass(true, true, true, undefined, $document);
 
-    // toggleModal({
-    //   executeClose: true,
-    // });
-    // toggleModal({
-    //   modal: { class: "", content: "" },
-    //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-    //   title: { class: "", content: "Opponent chose to swap tiles" },
-    //   body: { class: "d-none", content: "" },
-    //   footer: { class: "d-none", content: "" },
-    //   actionButton: { class: "", content: "" },
-    //   timeout: 2250,
-    //   executeClose: false,
-    // });
+    //toggle modal
+    this.closeDialog();
+    this.dialogRef = this.dialog.open(ModalDialogComponent, {
+      data: {
+        type: 'message',
+        message: 'Opponent chose to swap tiles',
+      },
+    });
+    this.closeDialog(2250);
   }
 
   pcPlay($document: HTMLDocument) {
@@ -184,19 +213,14 @@ export class GameLogicService {
 
     this.source.changeBoard(newBoard);
     this.gridService.updateGameState($document);
-    // toggleModal({
-    //   modal: { class: "", content: "" },
-    //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-    //   title: { class: "", content: "Opponent is thinking..." },
-    //   body: {
-    //     class: "text-center",
-    //     content: `<div class="spinner-container my-2"><svg class="spinner" data-src="https://s.svgbox.net/loaders.svg?ic=circles" fill="currentColor"></svg></div>`,
-    //   },
-    //   footer: { class: "d-none", content: "" },
-    //   actionButton: { class: "", content: "" },
-    //   timeout: 0,
-    //   executeClose: false,
-    // });
+
+    this.dialogRef = this.dialog.open(ModalDialogComponent, {
+      data: {
+        type: 'loading',
+        message: 'Opponent chose to swap tiles',
+      },
+    });
+    //^^ toggle modal
     this.source.playersTurn = false;
 
     // if (rivalRack.length < 7 && !bag.length && prompt()) {
@@ -210,9 +234,6 @@ export class GameLogicService {
       try {
         this.source.isValidMove = await this.calc.calcPcMove(
           this.gridService.gridState,
-          this.source.firstTurn,
-          this.source.wordsLogged,
-          this.source.rivalRack,
           $document
         );
         // prettier-ignore
@@ -329,20 +350,26 @@ export class GameLogicService {
       this.source.playerScore > this.source.computerScore ? 'You' : 'Opponent';
 
     setTimeout(() => {
-      // toggleModal({
-      //   modal: { class: "text-center", content: "" },
-      //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-      //   modalHeader: { class: "d-none", content: `` },
-      //   body: {
-      //     class: "",
-      //     content: `<h4 class="mb-2">${winner} Won, Good Game</h4><div class="text-primary font-weight-bold">Player: ${playerScore}</div><div class="text-danger font-weight-bold">Opponent: ${computerScore}</div>`,
-      //   },
-      //   footer: { class: "", content: "" },
-      //   actionButton: { class: "rematch", content: "Rematch" },
-      //   timeout: 0,
-      //   executeClose: false,
-      // });
-      // $(".rematch").click(rematch);
+      this.dialogRef = this.dialog.open(ModalDialogComponent, {
+        data: {
+          type: 'message',
+          message: `${winner} Won, Good Game`,
+          player: `Player: ${this.source.playerScore}`,
+          opponent: `Opponent: ${this.source.computerScore}`,
+          buttons: ['Rematch'],
+          btnCloseData: [true],
+        },
+      });
+
+      this.dialogRef
+        .afterClosed()
+        .pipe(take(1))
+        .subscribe((result) => {
+          if (!result) {
+            return;
+          }
+          window.location.reload(); //TODO: make all data, services and components reinitialize
+        });
     }, 1650);
 
     //in modal display:
@@ -370,19 +397,14 @@ export class GameLogicService {
 
     if (wasClicked) {
       if (isAI) {
-        // toggleModal({
-        //   executeClose: true,
-        // });
-        // toggleModal({
-        //   modal: { class: "", content: "" },
-        //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-        //   title: { class: "", content: "Opponent chose to pass" },
-        //   body: { class: "d-none", content: "" },
-        //   footer: { class: "d-none", content: "" }, //TODO:
-        //   actionButton: { class: "", content: "" },
-        //   timeout: 2250,
-        //   executeClose: false,
-        // });
+        this.closeDialog();
+        this.dialogRef = this.dialog.open(ModalDialogComponent, {
+          data: {
+            type: 'message',
+            message: 'Opponent chose to pass',
+          },
+        });
+        this.closeDialog(2250);
       }
       this.source.passCount++;
     }
@@ -410,25 +432,22 @@ export class GameLogicService {
   }
 
   play(isAI = false, $document: HTMLDocument) {
-    if (!this.source.isValidMove.words && this.source.DEBUG_MODE)
+    if (!this.source.isValidMove.words && this.source.DEBUG_MODE) {
       this.source.playersTurn = true;
+    }
     let board: Square[] = this.source.getBoard();
 
     if (!this.source.isValidMove.words) {
-      // return toggleModal({
-      //   modal: { class: "", content: "" },
-      //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-      //   modalHeader: { class: "d-none", content: "" },
-      //   title: { class: "", content: "" },
-      //   body: {
-      //     class: "text-center", //TODO: show error when player tries to play something wrong
-      //     content: `<div class="alert alert-danger" role="alert">${this.source.isValidMove.slice(4)}</div>`,
-      //   },
-      //   footer: { class: "justify-content-center", content: "" },
-      //   actionButton: { class: "d-none", content: "" },
-      //   timeout: 0,
-      //   executeClose: false,
-      // });
+      let data: DialogData = {
+        type: 'message',
+        message: `${this.source.isValidMove.slice(4)}`,
+        buttons: ['close'],
+        btnCloseData: [false],
+      };
+      this.dialogRef = this.dialog.open(ModalDialogComponent, {
+        data: data,
+      });
+      return true;
     }
 
     if (this.source.isValidMove.hasOwnProperty('rivalRack')) {
@@ -438,7 +457,7 @@ export class GameLogicService {
         word: this.source.isValidMove.wordsPlayed
           .map((x) => {
             let word = x[0].toUpperCase() + x.slice(1).toLowerCase();
-            return `<a title="See definition for: ${word}" class="text-danger" href="https://www.yourdictionary.com/${x.toLowerCase()}" target="_blank">${word}</a>`;
+            return `${word}`;
           })
           .join(', '),
         points: this.source.isValidMove.pointTally,
@@ -453,7 +472,8 @@ export class GameLogicService {
     } else {
       this.source.playersTurn = true;
     }
-    if (this.source.playersTurn) {
+
+    if (this.source.playersTurn && this.source.isValidMove.pointTally) {
       this.source.playerScore += this.source.isValidMove.pointTally;
 
       this.source.history.push({
@@ -461,7 +481,7 @@ export class GameLogicService {
         word: this.source.isValidMove.bestWord
           .map((x) => {
             let word = x[0].toUpperCase() + x.slice(1).toLowerCase();
-            return `<a title="See definition for: ${word}" href="https://www.yourdictionary.com/${x.toLowerCase()}" target="_blank">${word}</a>`;
+            return `${word}`;
           })
           .join(', '),
         points: this.source.isValidMove.pointTally,
@@ -586,16 +606,16 @@ export class GameLogicService {
           !this.source.rivalRack.length)
       ) {
         setTimeout(() => {
-          // toggleModal({
-          //   modal: { class: "", content: "" },
-          //   modalPlacer: { class: "", content: "" },
-          //   title: { class: "text-primary", content: `Opponent played: <b>"${wordUsed}"</b>` },TODO:
-          //   body: { class: "d-none", content: "" },
-          //   footer: { class: "d-none", content: "" },
-          //   actionButton: { class: "", content: "" },
-          //   timeout: 2200,
-          //   executeClose: false,
-          // });
+          this.closeDialog();
+
+          let data: DialogData = {
+            type: 'message',
+            message: `Opponent played: "${wordUsed}"`,
+          };
+          this.dialogRef = this.dialog.open(ModalDialogComponent, {
+            data: data,
+          });
+          this.closeDialog(2250);
         }, 1650);
         return this.endGame($document);
       }
@@ -615,16 +635,16 @@ export class GameLogicService {
       });
 
       setTimeout(() => {
-        // toggleModal({
-        //   modal: { class: "", content: "" },
-        //   modalPlacer: { class: "", content: "" },
-        //   title: { class: "text-primary", content: `Opponent played: <b>"${wordUsed}"</b>` },TODO:
-        //   body: { class: "d-none", content: "" },
-        //   footer: { class: "d-none", content: "" },
-        //   actionButton: { class: "", content: "" },
-        //   timeout: 2200,
-        //   executeClose: false,
-        // });
+        this.closeDialog();
+
+        let data: DialogData = {
+          type: 'message',
+          message: `Opponent played: "${wordUsed}"`,
+        };
+        this.dialogRef = this.dialog.open(ModalDialogComponent, {
+          data: data,
+        });
+        this.closeDialog(2250);
       }, 1650);
     }
 
@@ -645,31 +665,5 @@ export class GameLogicService {
 
     this.source.changeBtnAttr(btnAttrs);
     this.pass(undefined, undefined, undefined, undefined, $document);
-  }
-
-  showScoreHistory() {
-    // toggleModal({
-    //   executeClose: true,
-    // });
-    // toggleModal({
-    //   modal: { class: "text-center", content: "" },
-    //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-    //   modalHeader: { class: "d-none", content: "" },
-    //   title: { class: "", content: `` },
-    //   body: {
-    //     class: "",
-    //     content:
-    //       generateTable(history) +
-    //       "<div class='text-info font-weight-bolder'><u>* Click on word to see definition *</u></div>",
-    //   },
-    //   footer: { class: "justify-content-center", content: "" },
-    //   actionButton: { class: "d-none", content: "" },
-    //   timeout: 0,
-    //   executeClose: false,
-    // });
-    // $(".modal-body").scrollTop(function () {
-    //   return this.scrollHeight;
-    // });
-    //show list of moves. who played what and how many points were earned
   }
 }

@@ -1,0 +1,56 @@
+<div class="container mat-elevation-z8">
+    <table
+        mat-table
+        [dataSource]="dataSource"
+    >
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="word">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+            > Words </th>
+            <td
+                mat-cell
+                *matCellDef="let element"
+            > {{element.word}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="opponent">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+            > Opponent </th>
+            <td
+                [ngStyle]="{'color': 'red'}"
+                mat-cell
+                *matCellDef="let element; last as last"
+                [ngClass]="{'last': last}"
+            > {{element.score.computerScore}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="player">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+            > Player </th>
+            <td
+                [ngStyle]="{'color': 'blue'}"
+                mat-cell
+                *matCellDef="let element; last as last"
+                [ngClass]="{'last': last}"
+            > {{element.score.playerScore}} </td>
+        </ng-container>
+
+        <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: true"
+        ></tr>
+        <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns;"
+        ></tr>
+    </table>
+</div>

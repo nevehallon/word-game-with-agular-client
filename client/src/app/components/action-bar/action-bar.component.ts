@@ -46,6 +46,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   showBagContent() {
+    if (!this.source.playersTurn) return;
     this.dialog.open(ModalDialogComponent, {
       data: {
         type: 'bag',
@@ -54,6 +55,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   showSettings() {
+    if (!this.source.playersTurn) return;
     this.dialog.open(ModalDialogComponent, {
       maxWidth: '75vh',
       width: '75%',
@@ -64,10 +66,6 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   prePass(wasClicked, isSwap, isAI, legalClick) {
-    // console.log(wasClicked, isSwap, isAI, legalClick);
-
-    // legalClick = true; //TODO: remove me!!
-
     if (legalClick === false) return;
     const dialogRef = this.dialog.open(ModalDialogComponent, {
       data: {
@@ -101,17 +99,22 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   passPlay(action) {
+    if (!this.source.playersTurn) return;
+
     if (action === 'Pass') {
       this.prePass(true, false, false, this.source.playersTurn);
 
       return;
     }
 
+    let notPlayable = this.gameService.play(false, document);
+    if (notPlayable) return;
     this.zoomOut();
-    this.gameService.play(false, document);
   }
 
   swapRecall(action: 'Recall' | 'Swap') {
+    if (!this.source.playersTurn) return;
+
     if (action === 'Recall') {
       let tilesToReturn: any[] = [];
       let newBoard = this.squares.map((square) => {
@@ -134,8 +137,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
         this.gridService.updateGameState(document);
         this.source.isValidMove = this.validate.validate(
           this.gridService.gridState,
-          this.source.firstTurn,
-          this.source.wordsLogged,
+          this.source,
           true,
           document
         );
@@ -182,17 +184,40 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     this.source.changeBtnAttr(btnAttrs);
   }
 
-  // $("#zoomOut").click(zoomOut);
-  // $("#zoomIn").click(() => zoomIn($('[data-location="7,7"]')[0]));
-  // $("#board .column").dblclick((e) => {
-  //   isZoomed ? zoomOut() : zoomIn(e.target);
-  //   e.stopImmediatePropagation();
-  // });
+  showScoreHistory() {
+    if (!this.source.playersTurn) return;
 
-  // $("#scoresBtn").click(showScoreHistory);
-  // $("#passPlay").click(() =>
-  //   $("#passPlay").text().includes("Pass") ? prePass(true, false, false, playersTurn) : play()
-  // );
+    this.dialog.closeAll();
+
+    this.dialog.open(ModalDialogComponent, {
+      id: 'historyModal',
+      maxWidth: '75vh',
+      width: '99vmax',
+      data: {
+        type: 'history',
+      },
+    });
+    // toggleModal({
+    //   modal: { class: "text-center", content: "" },
+    //   modalPlacer: { class: "modal-dialog-centered", content: "" },
+    //   modalHeader: { class: "d-none", content: "" },
+    //   title: { class: "", content: `` },
+    //   body: {
+    //     class: "",
+    //     content:
+    //       generateTable(history) +
+    //       "<div class='text-info font-weight-bolder'><u>* Click on word to see definition *</u></div>",
+    //   },
+    //   footer: { class: "justify-content-center", content: "" },
+    //   actionButton: { class: "d-none", content: "" },
+    //   timeout: 0,
+    //   executeClose: false,
+    // });
+    // $(".modal-body").scrollTop(function () {
+    //   return this.scrollHeight;
+    // });
+    //show list of moves. who played what and how many points were earned
+  }
 
   // $("#startGame").click(rematch);
 

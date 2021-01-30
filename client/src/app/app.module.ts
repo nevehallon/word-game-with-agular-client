@@ -7,6 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
 
 import { AppComponent } from './app.component';
 import { ContainerComponent } from './components/container/container.component';
@@ -17,6 +18,7 @@ import { RackFrameComponent } from './components/rack-frame/rack-frame.component
 import { ModalDialogComponent } from './components/modal-dialog/modal-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
+import { HistoryTableComponent } from './components/history-table/history-table.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import { MatSliderModule } from '@angular/material/slider';
     ActionBarComponent,
     RackFrameComponent,
     ModalDialogComponent,
+    HistoryTableComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,6 +42,7 @@ import { MatSliderModule } from '@angular/material/slider';
     MatCheckboxModule,
     FormsModule,
     MatSliderModule,
+    MatTableModule,
   ],
   entryComponents: [ModalDialogComponent],
   // providers: [],
