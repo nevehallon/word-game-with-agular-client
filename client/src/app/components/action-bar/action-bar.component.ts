@@ -76,26 +76,22 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     dialogRef
       .afterClosed()
       .pipe(take(1))
-      .subscribe(
-        (result) => {
-          if (!result) {
-            return;
-          }
-          /* let remove: boolean =  */ this.gameService.pass(
-            wasClicked,
-            isSwap,
-            isAI,
-            legalClick,
-            document
-          );
-          this.zoomOut();
-          // if (remove === true) {
-          // console.log(this.gridService.gridState);
-          // }
-        },
-        console.error
-        // () => this.gameService.pcPlay(document)
-      );
+      .subscribe((result) => {
+        if (!result) {
+          return;
+        }
+        /* let remove: boolean =  */ this.gameService.pass(
+          wasClicked,
+          isSwap,
+          isAI,
+          legalClick,
+          document
+        );
+        this.zoomOut();
+        // if (remove === true) {
+        // console.log(this.gridService.gridState);
+        // }
+      }, console.error);
   }
 
   passPlay(action) {
@@ -148,13 +144,22 @@ export class ActionBarComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       maxWidth: '99vw',
       id: 'swapModal',
       data: {
         type: 'swap',
       },
     });
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((result) => {
+        if (!result) {
+          return;
+        }
+        this.gameService.pass(true, true, false, undefined, document);
+      }, console.error);
   }
 
   zoomOut() {

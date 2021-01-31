@@ -3,6 +3,40 @@
   overflow: auto;
 }
 
+::-webkit-scrollbar {
+  width: 0; /* Remove scrollbar space */
+  height: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+  background: #000000;
+}
+
 table {
   width: 100%;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.player {
+  color: rgb(30, 126, 52);
+}
+
+.opponent {
+  color: #c82333;
+}
+
+.mat-footer-cell {
+  border: none;
+}
+
+.cdk-column-player {
+  text-align: center;
+}
+
+.cdk-column-opponent {
+  text-align: center;
 }
