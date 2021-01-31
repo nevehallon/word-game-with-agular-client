@@ -46,7 +46,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   showBagContent() {
-    if (!this.source.playersTurn) return;
+    if (!this.source.playersTurn && !this.source.gameOver) return;
     this.dialog.open(ModalDialogComponent, {
       data: {
         type: 'bag',
@@ -55,7 +55,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   showSettings() {
-    if (!this.source.playersTurn) return;
+    if (!this.source.playersTurn && !this.source.gameOver) return;
     this.dialog.open(ModalDialogComponent, {
       maxWidth: '75vh',
       width: '75%',
@@ -95,7 +95,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   passPlay(action) {
-    if (!this.source.playersTurn) return;
+    if (!this.source.playersTurn && !this.source.gameOver) return;
 
     if (action === 'Pass') {
       this.prePass(true, false, false, this.source.playersTurn);
@@ -109,7 +109,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   swapRecall(action: 'Recall' | 'Swap') {
-    if (!this.source.playersTurn) return;
+    if (!this.source.playersTurn && !this.source.gameOver) return;
 
     if (action === 'Recall') {
       let tilesToReturn: any[] = [];
@@ -144,20 +144,20 @@ export class ActionBarComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const dialogRef = this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       maxWidth: '99vw',
       id: 'swapModal',
       data: {
         type: 'swap',
+        bagLength: this.source.bag.length,
       },
     });
     dialogRef
       .afterClosed()
       .pipe(take(1))
       .subscribe((result) => {
-        if (!result) {
-          return;
-        }
+        if (!result) return;
+
         this.gameService.pass(true, true, false, undefined, document);
       }, console.error);
   }
@@ -190,7 +190,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
 
   showScoreHistory() {
-    if (!this.source.playersTurn) return;
+    if (!this.source.playersTurn && !this.source.gameOver) return;
 
     this.dialog.closeAll();
 
@@ -202,29 +202,12 @@ export class ActionBarComponent implements OnInit, OnDestroy {
         type: 'history',
       },
     });
-    // toggleModal({
-    //   modal: { class: "text-center", content: "" },
-    //   modalPlacer: { class: "modal-dialog-centered", content: "" },
-    //   modalHeader: { class: "d-none", content: "" },
-    //   title: { class: "", content: `` },
-    //   body: {
-    //     class: "",
-    //     content:
-    //       generateTable(history) +
-    //       "<div class='text-info font-weight-bolder'><u>* Click on word to see definition *</u></div>",
-    //   },
-    //   footer: { class: "justify-content-center", content: "" },
-    //   actionButton: { class: "d-none", content: "" },
-    //   timeout: 0,
-    //   executeClose: false,
-    // });
-    // $(".modal-body").scrollTop(function () {
-    //   return this.scrollHeight;
-    // });
     //show list of moves. who played what and how many points were earned
   }
 
-  // $("#startGame").click(rematch);
+  rematch() {
+    window.location.reload();
+  }
 
   ngOnInit(): void {
     this.rackSubscription = this.source.currentPlayerRack.subscribe(

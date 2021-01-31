@@ -9,7 +9,7 @@ import { BtnAttrs } from '../interfaces/btn-attrs';
 
 import { take } from 'rxjs/operators';
 
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../components/modal-dialog/modal-dialog.component';
 import { DialogData } from '../interfaces/dialog-data';
 
@@ -19,14 +19,13 @@ import { DialogData } from '../interfaces/dialog-data';
 export class GameLogicService {
   constructor(
     public dialog: MatDialog,
-    // private http: GetRequestsService,
     private calc: ComputeService,
     private gridService: CreateGridService,
     private validate: BoardValidatorService,
     private source: SourceService
   ) {}
 
-  dialogRef;
+  dialogRef: MatDialogRef<any>;
 
   closeDialog(timeOut: number = 0) {
     if (!timeOut) return this.dialogRef.close();
@@ -59,16 +58,10 @@ export class GameLogicService {
   }
 
   startGame($document: HTMLDocument) {
-    $document.querySelector<HTMLElement>('#startGame').style.display = 'none';
-
     let { player, pc } = this.whoStarts();
     if (player === pc) return this.startGame($document);
 
     this.source.lettersUsed = 14;
-
-    $document
-      .querySelector<HTMLElement>('#startGame')
-      .setAttribute('disabled', 'disabled');
 
     let playerRack;
     let data: DialogData;
@@ -253,25 +246,13 @@ export class GameLogicService {
   }
 
   endGame($document: HTMLDocument) {
+    this.source.gameOver = true;
     let board: Square[] = this.source.getBoard();
-    // this.zoomOut();//TODO:
-    $document.querySelector('#startGame').removeAttribute('disabled');
-    $document.querySelector<HTMLElement>('#startGame').style.display =
-      'inherit';
-    $document
-      .querySelectorAll<HTMLElement>(
-        '#actionBar .btn:not(#scoresBtn, #startGame)'
-      )
-      .forEach((el) =>
-        Object.assign(el.style, { 'pointer-events': 'none', display: 'none' })
-      ); //?prevent players from continuing (can still see the score history, and shows a button for a rematch)
 
-    // $document.querySelectorAll<HTMLElement>('#board .hot').forEach((el) => {
-    //   el.classList.remove('hot');
-    // }); TODO:
+    //?prevent players from continuing
 
     board.forEach((x, i) => {
-      if (x.data[0].coords) {
+      if (x?.data[0]?.coords) {
         this.source.dl = this.source.dl.filter((num) => num !== i);
         this.source.dw = this.source.dw.filter((num) => num !== i);
         this.source.tl = this.source.tl.filter((num) => num !== i);
@@ -280,76 +261,62 @@ export class GameLogicService {
     });
 
     //?remove hot tiles from board
+    let playerScore = this.source.playerScore;
+    let computerScore = this.source.computerScore;
 
     if (!this.source.rivalRack.length) {
-      let sum = Array.from(
-        $document.querySelectorAll('#rack .tile div')
-      ).reduce((acc, cur) => acc + +cur.innerHTML, 0);
+      let sum = this.source
+        .getPlayerRack()
+        .reduce((acc, cur) => acc + cur.content.points, 0);
 
       this.source.history.push({
         isAI: true,
-        word: 'Opponent Won',
         points: '',
         score: {
-          computerScore: `${this.source.computerScore} + ${sum}`,
-          playerScore: `${this.source.playerScore} - ${sum}`,
+          computerScore: `${computerScore} + ${sum}`,
+          playerScore: `${playerScore} - ${sum}`,
         },
+        word:
+          (playerScore -= sum) < (computerScore += sum)
+            ? 'Opponent Won'
+            : 'Player Won',
         skip: false,
       });
-      // generateTable(history);//TODO:
 
-      this.source.playerScore -= sum;
-      this.source.computerScore += sum;
-
-      this.source.playerScore =
-        this.source.playerScore < 0 ? 0 : this.source.playerScore;
-      this.source.computerScore =
-        this.source.computerScore < 0 ? 0 : this.source.computerScore;
-      // $document.querySelector('#playerScore').textContent = String(
-      //   this.source.playerScore
-      // );
-      // $document.querySelector('#pcScore').textContent = String(
-      //   this.source.computerScore
-      // );
+      this.source.playerScore = playerScore < 0 ? 0 : playerScore;
+      this.source.computerScore = computerScore < 0 ? 0 : computerScore;
       //? deduct points from player and give them to AI
     }
 
     if (!$document.querySelectorAll('#rack .tile').length) {
-      let sum = this.source.rivalRack.reduce((acc, cur) => acc + cur, 0);
+      let sum = this.source.rivalRack.reduce((acc, cur) => acc + cur.points, 0);
 
       this.source.history.push({
         isAI: false,
-        word: 'Player Won',
         points: '',
         score: {
-          computerScore: `${this.source.computerScore} - ${sum}`,
-          playerScore: `${this.source.playerScore} + ${sum}`,
+          computerScore: `${computerScore} - ${sum}`,
+          playerScore: `${playerScore} + ${sum}`,
         },
+        word:
+          (playerScore += sum) > (computerScore -= sum)
+            ? 'Player Won'
+            : 'Opponent',
         skip: false,
       });
-      // generateTable(history);//TODO:
 
-      this.source.playerScore += sum;
-      this.source.computerScore -= sum;
-
-      this.source.playerScore =
-        this.source.playerScore < 0 ? 0 : this.source.playerScore;
-      this.source.computerScore =
-        this.source.computerScore < 0 ? 0 : this.source.computerScore;
-
-      // $document.querySelector('#playerScore').textContent = String(
-      //   this.source.playerScore
-      // );
-      // $document.querySelector('#pcScore').textContent = String(
-      //   this.source.computerScore
-      // );
+      this.source.playerScore = playerScore < 0 ? 0 : playerScore;
+      this.source.computerScore = computerScore < 0 ? 0 : computerScore;
       //? deduct points from AI and give them to player
     }
 
-    let winner =
-      this.source.playerScore > this.source.computerScore ? 'You' : 'Opponent';
+    let winner = playerScore > computerScore ? 'You' : 'Opponent';
 
+    let time = 1650;
+    if (!this.dialogRef.getState()) time *= 3;
     setTimeout(() => {
+      this.closeDialog();
+
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
         data: {
           type: 'message',
@@ -370,7 +337,7 @@ export class GameLogicService {
           }
           window.location.reload(); //TODO: make all data, services and components reinitialize
         });
-    }, 1650);
+    }, time);
 
     //in modal display:
     //  both players points
@@ -392,7 +359,6 @@ export class GameLogicService {
         },
         skip: { isSwap: isSwap },
       });
-      // generateTable(history); TODO:
     }
 
     if (wasClicked) {
@@ -441,7 +407,7 @@ export class GameLogicService {
       let data: DialogData = {
         type: 'message',
         message: `${this.source.isValidMove.slice(4)}`,
-        buttons: ['close'],
+        buttons: ['Close'],
         btnCloseData: [false],
       };
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
@@ -467,7 +433,6 @@ export class GameLogicService {
         },
         skip: false,
       });
-      // generateTable(history); //TODO:
       // add and display pc's score
     } else {
       this.source.playersTurn = true;
@@ -491,7 +456,6 @@ export class GameLogicService {
         },
         skip: false,
       });
-      // generateTable(history); //TODO:
       //calculate and add points to "player"
     }
 
@@ -535,7 +499,6 @@ export class GameLogicService {
         ].hot = false;
 
         if (this.source.bag.length) {
-          // let { letter, points } = _.pullAt(this.source.bag, [0])[0];
           this.source.addToPlayerRack({
             content: _.pullAt(this.source.bag, [0])[0],
             id: `tile${++this.source.numSource}`,
@@ -543,12 +506,6 @@ export class GameLogicService {
             'data-drag': this.source.numSource,
           });
           ++this.source.lettersUsed;
-          //     $document.querySelector(`#rack`).append(`
-          // <div data-drag=${++this.source.lettersUsed} class="tile hot ${
-          //       points ? '' : 'blank'
-          //     }">${letter}<div>${points ? points : ''}</div></div>
-          // `);
-          // setDraggable($(`[data-drag="${this.source.lettersUsed}"]`));//TODO:
         }
       }
 
@@ -562,16 +519,7 @@ export class GameLogicService {
         return this.endGame($document);
       }
 
-      // $document.querySelector('#bagBtn').textContent = String(
-      //   100 - this.source.lettersUsed
-      // );
-      // resetSortable();//TODO:
-
       //?disable drag on "hot" tiles, remove "hot" & "multiplier" class from ".column .hot" and call pass()
-      // $document.querySelectorAll('#board .hot').forEach((el) => {
-      //   el.classList.remove('hot');
-      //   el.parentElement.classList.remove('dw', 'tw', 'dl', 'tl');
-      // }); TODO:
     } else {
       let wordUsed = this.source.isValidMove.bestWord;
 
@@ -580,10 +528,6 @@ export class GameLogicService {
         x.data[0]?.class.includes('pcPlay')
       );
       let refill = tilesPlayed.length;
-      // let refill = $document.querySelectorAll('#board .pcPlay').length;
-      // let tilesPlayed = Array.from(
-      //   $document.querySelectorAll('#board .pcPlay')
-      // ).map((el) => el.parentElement);
       //fill rack back up to 7 or what ever is left in bag
       for (let i = 0; i < refill; i++) {
         //remove multipliers from gridMultipliers
@@ -620,10 +564,6 @@ export class GameLogicService {
         return this.endGame($document);
       }
 
-      // $document.querySelector('#bagBtn').textContent = String(
-      //   100 - this.source.lettersUsed
-      // ); TODO:
-
       //disable drag on "hot" tiles, remove "hot" & "multiplier" class from ".column .hot" and call pass()
       board.forEach((x, i) => {
         if (x.data[0]?.coords) {
@@ -653,7 +593,6 @@ export class GameLogicService {
     if (this.source.firstTurn) this.source.firstTurn = false;
     this.source.isValidMove = false;
 
-    // $document.querySelector('#passPlay').textContent = 'Pass';
     const btnAttrs: BtnAttrs = _.cloneDeep(this.source.getBtnAttr());
 
     btnAttrs.passPlay.text = 'Pass';

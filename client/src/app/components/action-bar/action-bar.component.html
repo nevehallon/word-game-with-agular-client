@@ -23,12 +23,16 @@
 </button>
 
 <button
+    (click)="rematch()"
+    *ngIf="source.gameOver"
     mat-raised-button
     color="primary"
     id="startGame"
 >Rematch</button>
 
 <button
+    *ngIf="!source.gameOver"
+    [disabled]="source.gameOver"
     (click)="mixTiles()"
     mat-raised-button
     color="primary"
@@ -44,6 +48,8 @@
 </button>
 
 <button
+    *ngIf="!source.gameOver"
+    [disabled]="source.gameOver"
     #swapRecallRef
     (click)="swapRecall(swapRecallRef._elementRef.nativeElement.innerText.trim())"
     mat-raised-button
@@ -117,6 +123,8 @@
 </div>
 
 <button
+    *ngIf="!source.gameOver"
+    [disabled]="source.gameOver"
     #passPlayRef
     (click)="passPlay(passPlayRef._elementRef.nativeElement.innerText.trim())"
     mat-raised-button

@@ -7,4 +7,6 @@ export interface DialogData {
   btnCloseData?: any[];
 
   tileInfo?: any;
+
+  bagLength?: number;
 }

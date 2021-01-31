@@ -1,9 +1,11 @@
 import {
-  AfterContentInit,
+  AfterViewInit,
   Component,
+  ElementRef,
   OnInit,
+  QueryList,
   ViewChild,
-  ViewContainerRef,
+  ViewChildren,
 } from '@angular/core';
 import { HistoryEntry } from 'src/app/interfaces/history-entry';
 import { SourceService } from 'src/app/services/source.service';
@@ -13,31 +15,28 @@ import { SourceService } from 'src/app/services/source.service';
   templateUrl: './history-table.component.html',
   styleUrls: ['./history-table.component.scss'],
 })
-export class HistoryTableComponent implements OnInit, AfterContentInit {
-  constructor(private source: SourceService) {
-    // console.log(source.history);
-  }
+export class HistoryTableComponent implements OnInit, AfterViewInit {
+  constructor(private source: SourceService) {}
 
-  @ViewChild('table', { read: ViewContainerRef }) table;
+  @ViewChildren('td') td: QueryList<ElementRef>;
 
-  // dataSource: HistoryEntry[] = this.source.history;
-  dataSource: HistoryEntry[] = history.slice(0, -1);
+  firstTurn = this.source.firstTurn;
+  gameOver = this.source.gameOver;
+
+  dataSource: HistoryEntry[] = this.source.history.slice(0, -1);
   displayedColumns = ['move', 'opponent', 'player'];
 
-  lastEntry: any = history[history.length - 1];
+  lastEntry: any = this.source.history[this.source.history.length - 1];
 
-  scrollTo(el) {
-    console.log(el);
-    // el.scrollIntoView({
-    //   behavior: 'smooth',
-    //   block: 'center',
-    //   inline: 'center',
-    // });
-  }
   ngOnInit(): void {}
-
-  ngAfterContentInit(): void {
-    this.scrollTo(this.table);
+  ngAfterViewInit(): void {
+    let el = this.td.last?.nativeElement;
+    if (!el) return;
+    setTimeout(() => {
+      el.scrollIntoView({
+        behavior: 'smooth',
+      });
+    }, 500);
   }
 }
 

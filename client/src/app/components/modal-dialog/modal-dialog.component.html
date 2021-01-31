@@ -146,7 +146,7 @@
             (click)="swapTiles()"
             color="primary"
             mat-raised-button
-            [mat-dialog-close]="true"
+            [mat-dialog-close]="data.bagLength ? true : false"
         >Confirm</button>
     </mat-dialog-actions>
 </div>

@@ -22,11 +22,13 @@ table {
 }
 
 .player {
-  color: rgb(30, 126, 52);
+  color: #1e7e34;
+  text-shadow: #c82333 0px 0px 1px;
 }
 
 .opponent {
   color: #c82333;
+  text-shadow: #1e7e34 0px 0px 1px;
 }
 
 .mat-footer-cell {

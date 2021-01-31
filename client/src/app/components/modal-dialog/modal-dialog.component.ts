@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { GameLogicService } from 'src/app/services/game-logic.service';
 import { LetterToPointsService } from 'src/app/services/letter-to-points.service';
 import { ScrabbleLettersService } from 'src/app/services/scrabble-letters.service';
 import _ from 'lodash';
@@ -8,6 +7,7 @@ import { MatSliderChange } from '@angular/material/slider';
 import { SourceService } from 'src/app/services/source.service';
 import { Subscription } from 'rxjs';
 import { DialogData } from 'src/app/interfaces/dialog-data';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-modal-dialog',
@@ -17,6 +17,7 @@ import { DialogData } from 'src/app/interfaces/dialog-data';
 export class ModalDialogComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    public dialog: MatDialog,
     private letters: ScrabbleLettersService,
     private ltp: LetterToPointsService,
     private source: SourceService
@@ -131,6 +132,23 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
       .map((tile) => {
         return { letter: tile.content.letter, points: tile.content.points };
       });
+
+    if (tilesToSwap.length > this.source.bag.length) {
+      let TO;
+      let dialogRef = this.dialog.open(ModalDialogComponent, {
+        data: {
+          type: 'message',
+          message: `There are not enough tiles left in the bag for that`,
+          buttons: ['Close'],
+          btnCloseData: [null],
+        },
+      });
+      clearTimeout(TO);
+      TO = setTimeout(() => {
+        dialogRef.close();
+      }, 3250);
+      return;
+    }
 
     for (let i = 0; i < tilesToSwap.length; i++) {
       if (this.source.bag.length) {

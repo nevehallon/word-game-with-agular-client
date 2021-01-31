@@ -10,12 +10,22 @@ import { HistoryEntry } from '../interfaces/history-entry';
   providedIn: 'root',
 })
 export class SourceService {
-  constructor(private letters: ScrabbleLettersService) {}
+  constructor(private letters: ScrabbleLettersService) {
+    this.bag = _.drop(this.bag, 86); //? uncomment for doing tests on a shorter game
+  }
 
   public numSource = 101;
 
   private playerRackSource = new BehaviorSubject([]);
   currentPlayerRack = this.playerRackSource.asObservable();
+
+  getPlayerRack() {
+    let playerRack;
+    this.currentPlayerRack.pipe(take(1)).subscribe((result: any[]) => {
+      playerRack = result;
+    });
+    return playerRack;
+  }
 
   changePlayerRack(rack: any[]) {
     this.playerRackSource.next(rack);
@@ -116,8 +126,7 @@ export class SourceService {
   public wordsLogged = [];
   public history: HistoryEntry[] = [];
   public rivalRack = [];
-  // hints = JSON.parse(localStorage.getItem('hints')) || { show: true };
+  public gameOver = false;
 
   public bag = _.shuffle(_.shuffle(this.letters.get()));
-  // bag = _.drop(bag, 86); //? uncomment for doing tests on a shorter game
 }
