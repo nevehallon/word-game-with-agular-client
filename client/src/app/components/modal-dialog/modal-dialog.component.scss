@@ -106,6 +106,12 @@ mat-dialog-actions {
 // * loading...
 // *
 
+::ng-deep #loading::-webkit-scrollbar {
+  width: 0; /* Remove scrollbar space */
+  height: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
+
 .spinner-container {
   box-shadow: inset 0 0 8px 2px black;
   border-radius: 50%;
@@ -151,4 +157,30 @@ mat-dialog-actions {
 // *
 ::ng-deep #historyModal {
   padding: 24px 0;
+}
+
+// *
+// * error message
+// *
+::ng-deep #error {
+  padding: 24px 12px;
+  background: #c82333d9;
+}
+
+// *
+// * message
+// *
+
+.bold {
+  font-weight: bold;
+}
+
+.player {
+  color: #1e7e34;
+  text-shadow: #c82333 0px 0px 1px;
+}
+
+.opponent {
+  color: #c82333;
+  text-shadow: #1e7e34 0px 0px 1px;
 }

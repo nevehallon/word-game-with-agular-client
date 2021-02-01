@@ -32,11 +32,6 @@ export class GetRequestsService {
   }
 
   async getWordTrieStr() {
-    let data: Promise<any> = this.http
-      .get(`${this.url}/wordTrieStr`, {
-        observe: 'response',
-      })
-      .toPromise();
     try {
       if (
         (await localforage.getItem('wordTrieStr')) &&
@@ -44,6 +39,13 @@ export class GetRequestsService {
       ) {
         return;
       }
+
+      let data: Promise<any> = this.http
+        .get(`${this.url}/wordTrieStr`, {
+          observe: 'response',
+        })
+        .toPromise();
+
       let {
         body: { wordTrieStr, reverseWordTrieStr },
       } = await data;

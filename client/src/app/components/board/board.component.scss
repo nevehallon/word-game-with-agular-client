@@ -83,11 +83,22 @@ $wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-t
 }
 
 .cdk-drag-placeholder {
-  opacity: 0;
+  background: black;
+  opacity: 0.75;
   border: 0;
+  box-shadow: 0 0 12px inset white;
   font-size: 0;
+  * {
+    font-size: 0;
+  }
 }
 
 .cdk-drag-animating {
   transition: transform 350ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-preview {
+  width: 8vh !important;
+  height: 8vh !important;
+  opacity: 0.5;
 }

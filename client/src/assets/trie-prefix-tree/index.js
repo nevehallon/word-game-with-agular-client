@@ -15,9 +15,13 @@ let myTrie;
 let myReverseTrie;
 
 async function getTrie() {
-  myTrie = JSON.parse(await localforage.getItem("wordTrieStr"));
-  trie = myTrie;
-  myReverseTrie = JSON.parse(await localforage.getItem("reverseWordTrieStr"));
+  try {
+    myTrie = JSON.parse(await localforage.getItem("wordTrieStr"));
+    trie = myTrie;
+    myReverseTrie = JSON.parse(await localforage.getItem("reverseWordTrieStr"));
+  } catch (error) {
+    console.error(error);
+  }
 }
 getTrie();
 

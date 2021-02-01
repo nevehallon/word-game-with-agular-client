@@ -220,7 +220,9 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     );
     this.boardSubscription = this.source.currentBoard.subscribe((squares) => {
       this.squares = squares;
-      this.remainingTiles = 100 - this.source.lettersUsed;
+      setTimeout(() => {
+        this.remainingTiles = this.source.bag.length;
+      }, 1000);
     });
   }
 

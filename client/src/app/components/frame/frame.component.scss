@@ -3,9 +3,9 @@
   height: 100vmin;
   max-height: 75vh;
   max-width: 75vh;
+  min-height: 42vh;
+  min-width: 42vh;
   background: black;
-  // min-width: 42.9vh;
-  // min-height: 42.9vh;
   display: grid;
   grid-template-columns: repeat(15, 1fr);
   grid-template-rows: repeat(15, 1fr);
@@ -13,12 +13,9 @@
   margin: 0 auto;
 }
 
-#board.default {
-}
-
 #board.zoomedIn {
-  width: 95vmax;
-  height: 95vmax;
-  max-height: 754.4px;
-  max-width: 754.4px;
+  width: 200vmin;
+  height: 200vmin;
+  max-height: 120vh;
+  max-width: 120vh;
 }

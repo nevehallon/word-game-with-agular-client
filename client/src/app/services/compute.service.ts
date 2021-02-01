@@ -1888,13 +1888,6 @@ export class ComputeService {
             let classes = ['tile', 'pcPlay'];
             if (!bestWord.points[i]) classes.push('italicize');
 
-            // console.log({
-            //   content: { letter, points: bestWord.points[i] },
-            //   id: `tile${this.source.numSource}`,
-            //   class: classes,
-            //   'data-drag': this.source.numSource,
-            // });
-
             this.boardData[bestWord.gridOrder[i].x][
               bestWord.gridOrder[i].y
             ].data = [

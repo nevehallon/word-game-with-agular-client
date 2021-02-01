@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import * as localforage from 'localforage';
-// import { CreateGridService } from './services/create-grid.service';
 import { GetRequestsService } from './services/get-requests.service';
 
 @Component({

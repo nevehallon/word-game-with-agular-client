@@ -12,6 +12,7 @@ import { take } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../components/modal-dialog/modal-dialog.component';
 import { DialogData } from '../interfaces/dialog-data';
+import { GetRequestsService } from './get-requests.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,8 @@ export class GameLogicService {
     private calc: ComputeService,
     private gridService: CreateGridService,
     private validate: BoardValidatorService,
-    private source: SourceService
+    private source: SourceService,
+    private http: GetRequestsService
   ) {}
 
   dialogRef: MatDialogRef<any>;
@@ -61,7 +63,7 @@ export class GameLogicService {
     let { player, pc } = this.whoStarts();
     if (player === pc) return this.startGame($document);
 
-    this.source.lettersUsed = 14;
+    // this.source.lettersUsed = 14;
 
     let playerRack;
     let data: DialogData;
@@ -120,36 +122,68 @@ export class GameLogicService {
     );
   }
 
-  serverCheck = (async () => {
-    //   if (!loaderShown) {
-    //     loaderShown = true;
-    //     toggleModal({
-    //       modal: { class: "", content: "" },
-    //       modalPlacer: { class: "modal-dialog-centered", content: "" },
-    //       modalHeader: { class: "d-none", content: "" },
-    //       body: {
-    //         class: "text-center",
-    //         content: `<h4 class="mb-2">Loading Resources...</h4><div class="spinner-container my-2"><svg class="spinner" data-src="https://s.svgbox.net/loaders.svg?ic=circles" fill="currentColor"></svg></div>`,
-    //       },
-    //       footer: { class: "d-none", content: "" },
-    //       actionButton: { class: "", content: "" },
-    //       timeout: 0,
-    //       executeClose: false,
-    //     });
-    //     setModalOptions("static", false); //prevents user from closing modal
-    //   }
-    //   let status = await checkServerStatus();
-    //   if (status) {
-    //     toggleModal({
-    //       executeClose: true,
-    //     });
-    //     setModalOptions(true, true);
-    //     return startGame();
-    //   }
-    //   setTimeout(() => {
-    //     serverCheck();
-    //   }, 1500);
-  })();
+  storageAvailable(type) {
+    let storage;
+    try {
+      storage = window[type];
+      let x = '__storage_test__';
+      storage.setItem(x, x);
+      storage.removeItem(x);
+      return true;
+    } catch (e) {
+      return (
+        e instanceof DOMException &&
+        // everything except Firefox
+        (e.code === 22 ||
+          // Firefox
+          e.code === 1014 ||
+          // test name field too, because code might not be present
+          // everything except Firefox
+          e.name === 'QuotaExceededError' ||
+          // Firefox
+          e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+        // acknowledge QuotaExceededError only if there's something already stored
+        storage &&
+        storage.length !== 0
+      );
+    }
+  }
+
+  serverCheck = async ($document) => {
+    if (this.storageAvailable('localStorage') !== true) {
+      // not available
+      let data: DialogData = {
+        type: 'message',
+        message: `Oops! Insufficient storage on your device or browser. Please consider fixing this if you want to enjoy the game.`,
+      };
+      this.dialogRef = this.dialog.open(ModalDialogComponent, {
+        disableClose: true,
+        id: 'error',
+        maxWidth: '99vw',
+        data: data,
+      });
+      return;
+    }
+    if (!this.source.loaderShown) {
+      this.source.loaderShown = true;
+      this.dialogRef = this.dialog.open(ModalDialogComponent, {
+        disableClose: true,
+        id: 'loading',
+        data: {
+          type: 'loading',
+          message: 'Loading Resources...',
+        },
+      });
+    }
+    let status = await this.http.checkServerStatus();
+    if (status) {
+      this.closeDialog();
+      return this.startGame($document);
+    }
+    setTimeout(() => {
+      this.serverCheck($document);
+    }, 2222);
+  };
 
   pcSwap($document: HTMLDocument) {
     //? .sort((a,b) => b > a ? -1 : 1).filter(x => x !== 0) //for sorting by point value and removing blank tiles
@@ -208,9 +242,11 @@ export class GameLogicService {
     this.gridService.updateGameState($document);
 
     this.dialogRef = this.dialog.open(ModalDialogComponent, {
+      disableClose: true,
+      id: 'loading',
       data: {
         type: 'loading',
-        message: 'Opponent chose to swap tiles',
+        message: 'Opponent is thinking...',
       },
     });
     //^^ toggle modal
@@ -323,8 +359,8 @@ export class GameLogicService {
           message: `${winner} Won, Good Game`,
           player: `Player: ${this.source.playerScore}`,
           opponent: `Opponent: ${this.source.computerScore}`,
-          buttons: ['Rematch'],
-          btnCloseData: [true],
+          buttons: ['Close', 'Rematch'],
+          btnCloseData: [false, true],
         },
       });
 
@@ -411,6 +447,8 @@ export class GameLogicService {
         btnCloseData: [false],
       };
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
+        id: 'error',
+        maxWidth: '99vw',
         data: data,
       });
       return true;
@@ -505,7 +543,7 @@ export class GameLogicService {
             class: ['tile', 'hot'],
             'data-drag': this.source.numSource,
           });
-          ++this.source.lettersUsed;
+          // ++this.source.lettersUsed;
         }
       }
 
@@ -541,7 +579,7 @@ export class GameLogicService {
           this.source.rivalRack.push(_.pullAt(this.source.bag, [0])[0]);
           // console.log(this.source.rivalRack);
         }
-        ++this.source.lettersUsed;
+        // ++this.source.lettersUsed;
       }
 
       if (

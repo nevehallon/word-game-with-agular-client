@@ -73,7 +73,7 @@ export class RackFrameComponent implements OnInit, OnDestroy {
     this.rackSubscription = this.source.currentPlayerRack.subscribe(
       (tiles) => (this.tiles = tiles)
     );
-    this.gameService.startGame(document);
+    this.gameService.serverCheck(document);
   }
 
   ngOnDestroy(): void {
