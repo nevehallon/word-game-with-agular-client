@@ -8,6 +8,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { HistoryEntry } from 'src/app/interfaces/history-entry';
+import { GetRequestsService } from 'src/app/services/get-requests.service';
 import { SourceService } from 'src/app/services/source.service';
 
 @Component({
@@ -16,7 +17,9 @@ import { SourceService } from 'src/app/services/source.service';
   styleUrls: ['./history-table.component.scss'],
 })
 export class HistoryTableComponent implements OnInit, AfterViewInit {
-  constructor(private source: SourceService) {}
+  constructor(private source: SourceService, private http: GetRequestsService) {
+    http.getDefinitions('haste,fast');
+  }
 
   @ViewChildren('td') td: QueryList<ElementRef>;
 

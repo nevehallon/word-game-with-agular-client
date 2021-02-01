@@ -95,6 +95,25 @@ export class GetRequestsService {
     }
   }
 
+  async getDefinitions(words) {
+    let data: Promise<any> = this.http
+      .get(`${this.url}/defineWords?words=${words}`, {
+        observe: 'response',
+      })
+      .toPromise();
+
+    try {
+      let {
+        body: { words },
+      } = await data;
+      console.log(words);
+
+      return words;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   constructor(
     private letters: LetterToPointsService,
     private http: HttpClient
