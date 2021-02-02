@@ -118,7 +118,7 @@
         ></tr>
         <tr
             mat-footer-row
-            *matFooterRowDef="displayedColumns; sticky: true; let element"
+            *matFooterRowDef="displayedColumns; sticky: true;"
             [class.expanded-row]="expandedElement === element"
             (click)="expandedElement = expandedElement === element ? null : element"
             (click)="log(expandedElement, element)"
