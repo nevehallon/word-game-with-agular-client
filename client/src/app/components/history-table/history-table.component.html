@@ -78,17 +78,55 @@
             > {{lastEntry?.score.playerScore || 0}} </td>
         </ng-container>
 
+
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+            <td
+                mat-cell
+                *matCellDef="let element"
+                [attr.colspan]="displayedColumns.length"
+            >
+                <div
+                    class="element-detail"
+                    [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'"
+                    (click)="log(expandedElement, element)"
+                >
+                    <div class="element-diagram">
+                        <div class="element-position"> {{element | json}} </div>
+                        <!-- <div class="element-symbol"> {{expandedElement}} </div>
+                        <div class="element-name"> {{expandedElement}} </div>
+                        <div class="element-weight"> {{expandedElement}} </div> -->
+                    </div>
+                    <div class="element-description">
+                        <!-- {{expandedElement}} -->
+                        <!-- <span class="element-description-attribution"> -- Wikipedia </span> -->
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
         <tr
             mat-header-row
             *matHeaderRowDef="displayedColumns; sticky: true"
         ></tr>
         <tr
             mat-row
-            *matRowDef="let row; columns: displayedColumns;"
+            *matRowDef="let element; columns: displayedColumns;"
+            [class.expanded-row]="expandedElement === element"
+            (click)="expandedElement = expandedElement === element ? null : element"
+            (click)="log(expandedElement, element)"
         ></tr>
         <tr
             mat-footer-row
-            *matFooterRowDef="displayedColumns; sticky: true"
+            *matFooterRowDef="displayedColumns; sticky: true; let element"
+            [class.expanded-row]="expandedElement === element"
+            (click)="expandedElement = expandedElement === element ? null : element"
+            (click)="log(expandedElement, element)"
+        ></tr>
+        <tr
+            mat-row
+            *matRowDef="let row; columns: ['expandedDetail']"
+            class="detail-row"
         ></tr>
     </table>
 </div>

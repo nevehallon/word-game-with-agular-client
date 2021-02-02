@@ -96,6 +96,8 @@ export class GetRequestsService {
   }
 
   async getDefinitions(words) {
+    words = words.replaceAll(' ', '').toLowerCase();
+
     let data: Promise<any> = this.http
       .get(`${this.url}/defineWords?words=${words}`, {
         observe: 'response',

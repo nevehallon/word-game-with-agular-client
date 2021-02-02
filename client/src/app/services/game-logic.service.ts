@@ -433,7 +433,7 @@ export class GameLogicService {
     return false; //? remove extra style from tiles that AI played
   }
 
-  play(isAI = false, $document: HTMLDocument) {
+  async play(isAI = false, $document: HTMLDocument) {
     if (!this.source.isValidMove.words && this.source.DEBUG_MODE) {
       this.source.playersTurn = true;
     }
@@ -456,14 +456,16 @@ export class GameLogicService {
 
     if (this.source.isValidMove.hasOwnProperty('rivalRack')) {
       this.source.computerScore += this.source.isValidMove.pointTally;
+      let word = this.source.isValidMove.wordsPlayed
+        .map((x) => {
+          let word = x[0].toUpperCase() + x.slice(1).toLowerCase();
+          return `${word}`;
+        })
+        .join(', ');
       this.source.history.push({
         isAI: true,
-        word: this.source.isValidMove.wordsPlayed
-          .map((x) => {
-            let word = x[0].toUpperCase() + x.slice(1).toLowerCase();
-            return `${word}`;
-          })
-          .join(', '),
+        word,
+        definitions: await this.http.getDefinitions(word),
         points: this.source.isValidMove.pointTally,
         score: {
           computerScore: this.source.computerScore,
@@ -479,14 +481,17 @@ export class GameLogicService {
     if (this.source.playersTurn && this.source.isValidMove.pointTally) {
       this.source.playerScore += this.source.isValidMove.pointTally;
 
+      let word = this.source.isValidMove.bestWord
+        .map((x) => {
+          let word = x[0].toUpperCase() + x.slice(1).toLowerCase();
+          return `${word}`;
+        })
+        .join(', ');
+
       this.source.history.push({
         isAI: false,
-        word: this.source.isValidMove.bestWord
-          .map((x) => {
-            let word = x[0].toUpperCase() + x.slice(1).toLowerCase();
-            return `${word}`;
-          })
-          .join(', '),
+        word,
+        definitions: await this.http.getDefinitions(word),
         points: this.source.isValidMove.pointTally,
         score: {
           computerScore: this.source.computerScore,

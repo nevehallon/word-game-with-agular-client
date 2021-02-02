@@ -4,22 +4,37 @@ import {
   ElementRef,
   OnInit,
   QueryList,
-  ViewChild,
   ViewChildren,
 } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+
 import { HistoryEntry } from 'src/app/interfaces/history-entry';
-import { GetRequestsService } from 'src/app/services/get-requests.service';
 import { SourceService } from 'src/app/services/source.service';
+import { DefinitionElement } from 'src/app/interfaces/definition-element';
 
 @Component({
   selector: 'app-history-table',
   templateUrl: './history-table.component.html',
   styleUrls: ['./history-table.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
+    ]),
+  ],
 })
 export class HistoryTableComponent implements OnInit, AfterViewInit {
-  constructor(private source: SourceService, private http: GetRequestsService) {
-    http.getDefinitions('haste,fast');
-  }
+  constructor(private source: SourceService) {}
 
   @ViewChildren('td') td: QueryList<ElementRef>;
 
@@ -30,6 +45,14 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
   displayedColumns = ['move', 'opponent', 'player'];
 
   lastEntry: any = this.source.history[this.source.history.length - 1];
+  log(expandedElement, element) {
+    console.log(expandedElement, element);
+  }
+  expandedElement:
+    | DefinitionElement[]
+    | null; /* = this.source.history.map(
+    (x) => x.definitions
+  ) */
 
   ngOnInit(): void {}
   ngAfterViewInit(): void {
@@ -43,89 +66,20 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
   }
 }
 
-let history = [
+let def = [
   {
-    isAI: false,
-    score: { computerScore: 0, playerScore: 0 },
-    skip: { isSwap: false },
-  },
-  {
-    isAI: true,
-    word: 'Algin',
-    points: 14,
-    score: { computerScore: 14, playerScore: 0 },
-    skip: false,
-  },
-  {
-    isAI: false,
-    score: { computerScore: 0, playerScore: 0 },
-    skip: { isSwap: false },
-  },
-  {
-    isAI: true,
-    word: 'Algin',
-    points: 14,
-    score: { computerScore: 14, playerScore: 0 },
-    skip: false,
-  },
-  {
-    isAI: false,
-    score: { computerScore: 0, playerScore: 0 },
-    skip: { isSwap: false },
-  },
-  {
-    isAI: true,
-    word: 'Algin',
-    points: 14,
-    score: { computerScore: 14, playerScore: 0 },
-    skip: false,
-  },
-  {
-    isAI: false,
-    score: { computerScore: 0, playerScore: 0 },
-    skip: { isSwap: false },
-  },
-  {
-    isAI: true,
-    word: 'Algin',
-    points: 14,
-    score: { computerScore: 14, playerScore: 0 },
-    skip: false,
-  },
-  {
-    isAI: false,
-    score: { computerScore: 0, playerScore: 0 },
-    skip: { isSwap: false },
-  },
-  {
-    isAI: true,
-    word: 'Algin',
-    points: 14,
-    score: { computerScore: 14, playerScore: 0 },
-    skip: false,
-  },
-  {
-    isAI: false,
-    score: { computerScore: 0, playerScore: 0 },
-    skip: { isSwap: false },
-  },
-  {
-    isAI: true,
-    word: 'Algin',
-    points: 14,
-    score: { computerScore: 14, playerScore: 0 },
-    skip: false,
-  },
-  {
-    isAI: false,
-    score: { computerScore: 0, playerScore: 0 },
-    skip: { isSwap: false },
-  },
-  {
-    isAI: true,
-    word: 'Algin',
-    points: 14,
-    score: { computerScore: 14, playerScore: 0 },
-    skip: false,
+    definition: 'speech you make to yourself',
+    partOfSpeech: 'noun',
+    synonyms: ['monologue'],
+    typeOf: [
+      'speech',
+      'voice communication',
+      'speech communication',
+      'spoken communication',
+      'spoken language',
+      'language',
+      'oral communication',
+    ],
+    derivation: ['soliloquize'],
   },
 ];
