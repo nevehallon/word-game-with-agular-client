@@ -41,12 +41,14 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
   firstTurn = this.source.firstTurn;
   gameOver = this.source.gameOver;
 
-  dataSource: HistoryEntry[] = this.source.history.slice(0, -1);
+  dataSource: HistoryEntry[] = def.slice(0, -1);
   displayedColumns = ['move', 'opponent', 'player'];
 
-  lastEntry: any = this.source.history[this.source.history.length - 1];
-  log(expandedElement, element) {
-    console.log(expandedElement, element);
+  // lastEntry: any = this.source.history[this.source.history.length - 1];
+  lastEntry: any = def[def.length - 1];
+  log(expandedElement, element, last) {
+    console.log(expandedElement, element, last);
+    console.log(this.source.history);
   }
   expandedElement:
     | DefinitionElement[]
@@ -68,18 +70,435 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
 
 let def = [
   {
-    definition: 'speech you make to yourself',
-    partOfSpeech: 'noun',
-    synonyms: ['monologue'],
-    typeOf: [
-      'speech',
-      'voice communication',
-      'speech communication',
-      'spoken communication',
-      'spoken language',
-      'language',
-      'oral communication',
+    isAI: true,
+    word: 'Doge',
+    definitions: [
+      {
+        doge: [
+          {
+            definition:
+              'formerly the chief magistrate in the republics of Venice and Genoa',
+            partOfSpeech: 'noun',
+            typeOf: ['judge', 'jurist', 'justice'],
+          },
+        ],
+      },
     ],
-    derivation: ['soliloquize'],
+    points: 12,
+    score: { computerScore: 12, playerScore: 0 },
+    skip: false,
+  },
+  {
+    isAI: false,
+    word: 'Pow',
+    definitions: [
+      {
+        pow: [
+          {
+            definition:
+              'a person who surrenders to (or is taken by) the enemy in time of war',
+            partOfSpeech: 'noun',
+            synonyms: ['prisoner of war'],
+            typeOf: ['captive', 'prisoner'],
+          },
+        ],
+      },
+    ],
+    points: 15,
+    score: { computerScore: 12, playerScore: 15 },
+    skip: false,
+  },
+  {
+    isAI: true,
+    word: 'Ne',
+    definitions: [
+      {
+        ne: [
+          {
+            definition:
+              'the compass point midway between north and east; at 45 degrees',
+            partOfSpeech: 'noun',
+            synonyms: ["nor'-east", 'northeast', 'northeastward'],
+            typeOf: ['point', 'compass point'],
+          },
+          {
+            definition:
+              'a colorless odorless gaseous element that give a red glow in a vacuum tube; one of the six inert gasses; occurs in the air in small amounts',
+            partOfSpeech: 'noun',
+            synonyms: ['atomic number 10', 'neon'],
+            typeOf: [
+              'argonon',
+              'noble gas',
+              'element',
+              'chemical element',
+              'inert gas',
+            ],
+            substanceOf: ['air'],
+          },
+          {
+            definition: 'a midwestern state on the Great Plains',
+            partOfSpeech: 'noun',
+            synonyms: ['cornhusker state', 'neb.', 'nebraska'],
+            instanceOf: ['american state'],
+            hasParts: [
+              'north platte',
+              'bad lands',
+              'badlands',
+              'capital of nebraska',
+              'grand island',
+              'lincoln',
+              'north platte river',
+              'omaha',
+              'platte',
+              'platte river',
+              'republican',
+              'republican river',
+              'south platte',
+              'south platte river',
+            ],
+            partOf: [
+              'u.s.',
+              'the states',
+              'u.s.a.',
+              'united states',
+              'united states of america',
+              'middle west',
+              'midwest',
+              'midwestern united states',
+              'america',
+              'us',
+              'usa',
+            ],
+          },
+        ],
+      },
+    ],
+    points: 3,
+    score: { computerScore: 15, playerScore: 15 },
+    skip: false,
+  },
+  {
+    isAI: true,
+    word: 'Doge',
+    definitions: [
+      {
+        doge: [
+          {
+            definition:
+              'formerly the chief magistrate in the republics of Venice and Genoa',
+            partOfSpeech: 'noun',
+            typeOf: ['judge', 'jurist', 'justice'],
+          },
+        ],
+      },
+    ],
+    points: 12,
+    score: { computerScore: 12, playerScore: 0 },
+    skip: false,
+  },
+  {
+    isAI: false,
+    word: 'Pow',
+    definitions: [
+      {
+        pow: [
+          {
+            definition:
+              'a person who surrenders to (or is taken by) the enemy in time of war',
+            partOfSpeech: 'noun',
+            synonyms: ['prisoner of war'],
+            typeOf: ['captive', 'prisoner'],
+          },
+        ],
+      },
+    ],
+    points: 15,
+    score: { computerScore: 12, playerScore: 15 },
+    skip: false,
+  },
+  {
+    isAI: true,
+    word: 'Ne',
+    definitions: [
+      {
+        ne: [
+          {
+            definition:
+              'the compass point midway between north and east; at 45 degrees',
+            partOfSpeech: 'noun',
+            synonyms: ["nor'-east", 'northeast', 'northeastward'],
+            typeOf: ['point', 'compass point'],
+          },
+          {
+            definition:
+              'a colorless odorless gaseous element that give a red glow in a vacuum tube; one of the six inert gasses; occurs in the air in small amounts',
+            partOfSpeech: 'noun',
+            synonyms: ['atomic number 10', 'neon'],
+            typeOf: [
+              'argonon',
+              'noble gas',
+              'element',
+              'chemical element',
+              'inert gas',
+            ],
+            substanceOf: ['air'],
+          },
+          {
+            definition: 'a midwestern state on the Great Plains',
+            partOfSpeech: 'noun',
+            synonyms: ['cornhusker state', 'neb.', 'nebraska'],
+            instanceOf: ['american state'],
+            hasParts: [
+              'north platte',
+              'bad lands',
+              'badlands',
+              'capital of nebraska',
+              'grand island',
+              'lincoln',
+              'north platte river',
+              'omaha',
+              'platte',
+              'platte river',
+              'republican',
+              'republican river',
+              'south platte',
+              'south platte river',
+            ],
+            partOf: [
+              'u.s.',
+              'the states',
+              'u.s.a.',
+              'united states',
+              'united states of america',
+              'middle west',
+              'midwest',
+              'midwestern united states',
+              'america',
+              'us',
+              'usa',
+            ],
+          },
+        ],
+      },
+    ],
+    points: 3,
+    score: { computerScore: 15, playerScore: 15 },
+    skip: false,
+  },
+  {
+    isAI: true,
+    word: 'Doge',
+    definitions: [
+      {
+        doge: [
+          {
+            definition:
+              'formerly the chief magistrate in the republics of Venice and Genoa',
+            partOfSpeech: 'noun',
+            typeOf: ['judge', 'jurist', 'justice'],
+          },
+        ],
+      },
+    ],
+    points: 12,
+    score: { computerScore: 12, playerScore: 0 },
+    skip: false,
+  },
+  {
+    isAI: false,
+    word: 'Pow',
+    definitions: [
+      {
+        pow: [
+          {
+            definition:
+              'a person who surrenders to (or is taken by) the enemy in time of war',
+            partOfSpeech: 'noun',
+            synonyms: ['prisoner of war'],
+            typeOf: ['captive', 'prisoner'],
+          },
+        ],
+      },
+    ],
+    points: 15,
+    score: { computerScore: 12, playerScore: 15 },
+    skip: false,
+  },
+  {
+    isAI: true,
+    word: 'Ne',
+    definitions: [
+      {
+        ne: [
+          {
+            definition:
+              'the compass point midway between north and east; at 45 degrees',
+            partOfSpeech: 'noun',
+            synonyms: ["nor'-east", 'northeast', 'northeastward'],
+            typeOf: ['point', 'compass point'],
+          },
+          {
+            definition:
+              'a colorless odorless gaseous element that give a red glow in a vacuum tube; one of the six inert gasses; occurs in the air in small amounts',
+            partOfSpeech: 'noun',
+            synonyms: ['atomic number 10', 'neon'],
+            typeOf: [
+              'argonon',
+              'noble gas',
+              'element',
+              'chemical element',
+              'inert gas',
+            ],
+            substanceOf: ['air'],
+          },
+          {
+            definition: 'a midwestern state on the Great Plains',
+            partOfSpeech: 'noun',
+            synonyms: ['cornhusker state', 'neb.', 'nebraska'],
+            instanceOf: ['american state'],
+            hasParts: [
+              'north platte',
+              'bad lands',
+              'badlands',
+              'capital of nebraska',
+              'grand island',
+              'lincoln',
+              'north platte river',
+              'omaha',
+              'platte',
+              'platte river',
+              'republican',
+              'republican river',
+              'south platte',
+              'south platte river',
+            ],
+            partOf: [
+              'u.s.',
+              'the states',
+              'u.s.a.',
+              'united states',
+              'united states of america',
+              'middle west',
+              'midwest',
+              'midwestern united states',
+              'america',
+              'us',
+              'usa',
+            ],
+          },
+        ],
+      },
+    ],
+    points: 3,
+    score: { computerScore: 15, playerScore: 15 },
+    skip: false,
+  },
+  {
+    isAI: true,
+    word: 'Doge',
+    definitions: [
+      {
+        doge: [
+          {
+            definition:
+              'formerly the chief magistrate in the republics of Venice and Genoa',
+            partOfSpeech: 'noun',
+            typeOf: ['judge', 'jurist', 'justice'],
+          },
+        ],
+      },
+    ],
+    points: 12,
+    score: { computerScore: 12, playerScore: 0 },
+    skip: false,
+  },
+  {
+    isAI: false,
+    word: 'Pow',
+    definitions: [
+      {
+        pow: [
+          {
+            definition:
+              'a person who surrenders to (or is taken by) the enemy in time of war',
+            partOfSpeech: 'noun',
+            synonyms: ['prisoner of war'],
+            typeOf: ['captive', 'prisoner'],
+          },
+        ],
+      },
+    ],
+    points: 15,
+    score: { computerScore: 12, playerScore: 15 },
+    skip: false,
+  },
+  {
+    isAI: true,
+    word: 'last',
+    definitions: [
+      {
+        ne: [
+          {
+            definition:
+              'the compass point midway between north and east; at 45 degrees',
+            partOfSpeech: 'noun',
+            synonyms: ["nor'-east", 'northeast', 'northeastward'],
+            typeOf: ['point', 'compass point'],
+          },
+          {
+            definition:
+              'a colorless odorless gaseous element that give a red glow in a vacuum tube; one of the six inert gasses; occurs in the air in small amounts',
+            partOfSpeech: 'noun',
+            synonyms: ['atomic number 10', 'neon'],
+            typeOf: [
+              'argonon',
+              'noble gas',
+              'element',
+              'chemical element',
+              'inert gas',
+            ],
+            substanceOf: ['air'],
+          },
+          {
+            definition: 'a midwestern state on the Great Plains',
+            partOfSpeech: 'noun',
+            synonyms: ['cornhusker state', 'neb.', 'nebraska'],
+            instanceOf: ['american state'],
+            hasParts: [
+              'north platte',
+              'bad lands',
+              'badlands',
+              'capital of nebraska',
+              'grand island',
+              'lincoln',
+              'north platte river',
+              'omaha',
+              'platte',
+              'platte river',
+              'republican',
+              'republican river',
+              'south platte',
+              'south platte river',
+            ],
+            partOf: [
+              'u.s.',
+              'the states',
+              'u.s.a.',
+              'united states',
+              'united states of america',
+              'middle west',
+              'midwest',
+              'midwestern united states',
+              'america',
+              'us',
+              'usa',
+            ],
+          },
+        ],
+      },
+    ],
+    points: 3,
+    score: { computerScore: 15, playerScore: 15 },
+    skip: false,
   },
 ];

@@ -118,10 +118,10 @@
         ></tr>
         <tr
             mat-footer-row
-            *matFooterRowDef="displayedColumns; sticky: true;"
-            [class.expanded-row]="expandedElement === element"
-            (click)="expandedElement = expandedElement === element ? null : element"
-            (click)="log(expandedElement, element)"
+            *matFooterRowDef="[displayedColumns, 'expandedDetail']; sticky: true"
+            [class.expanded-row]="expandedElement === lastEntry"
+            (click)="expandedElement = expandedElement === lastEntry ? null : lastEntry"
+            (click)="log(expandedElement, lastEntry)"
         ></tr>
         <tr
             mat-row
