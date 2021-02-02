@@ -41,7 +41,7 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
   firstTurn = this.source.firstTurn;
   gameOver = this.source.gameOver;
 
-  dataSource: HistoryEntry[] = def.slice(0, -1);
+  dataSource: HistoryEntry[] = def /* .slice(0, -1) */;
   displayedColumns = ['move', 'opponent', 'player'];
 
   // lastEntry: any = this.source.history[this.source.history.length - 1];
@@ -58,7 +58,7 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {}
   ngAfterViewInit(): void {
-    let el = this.td.last?.nativeElement;
+    let el = this.td._results[this.dataSource.length - 2].nativeElement;
     if (!el) return;
     setTimeout(() => {
       el.scrollIntoView({
