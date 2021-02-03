@@ -1,17 +1,37 @@
-import { DefinitionElement } from './definition-element';
+export interface Definition {
+  word?: DefinitionElement;
+}
+
+export interface Score {
+  computerScore?: number | string;
+  playerScore?: number | string;
+}
 
 export interface HistoryEntry {
-  isAI: boolean;
-  word?: string | string[];
-  definitions?: DefinitionElement[];
+  isAI?: boolean;
+  word?: string;
+  definitions?: Definition[];
   points?: number | string;
-  score: {
-    computerScore: number | string;
-    playerScore: number | string;
-  };
-  skip:
+  score?: Score;
+  skip?:
     | boolean
     | {
-        isSwap: boolean;
+        isSwap?: boolean;
       };
+}
+
+export interface DefinitionElement {
+  [key: string]: {
+    definition?: string[];
+    partOfSpeech?: string[];
+    synonyms?: string[];
+    typeOf?: string[];
+    hasTypes?: string[];
+    examples?: string[];
+    partOf?: string[];
+    derivation?: string[];
+    verbGroup?: string[];
+    also?: string[];
+    inCategory?: string[];
+  };
 }

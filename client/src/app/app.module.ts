@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { AppComponent } from './app.component';
 import { ContainerComponent } from './components/container/container.component';
@@ -43,6 +44,7 @@ import { HistoryTableComponent } from './components/history-table/history-table.
     FormsModule,
     MatSliderModule,
     MatTableModule,
+    MatTabsModule,
   ],
   entryComponents: [ModalDialogComponent],
   // providers: [],

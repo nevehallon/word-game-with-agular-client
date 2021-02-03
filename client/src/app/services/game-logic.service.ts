@@ -67,7 +67,8 @@ export class GameLogicService {
 
     let playerRack;
     let data: DialogData;
-    if (player < pc) {
+    if (player < pc || true) {
+      //TODO: remove || true
       playerRack = this.deal2Player();
       this.deal2PC();
       this.source.playersTurn = true;

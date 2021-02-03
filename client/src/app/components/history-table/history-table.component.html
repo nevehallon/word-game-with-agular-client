@@ -1,4 +1,7 @@
-<div class="container mat-elevation-z8">
+<div
+    #container
+    class="container mat-elevation-z8"
+>
     <table
         mat-table
         [dataSource]="dataSource"
@@ -82,24 +85,33 @@
         <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
         <ng-container matColumnDef="expandedDetail">
             <td
+                #tCell
                 mat-cell
                 *matCellDef="let element"
                 [attr.colspan]="displayedColumns.length"
             >
                 <div
                     class="element-detail"
-                    [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'"
+                    [@detailExpand]="element === expandedElement ? scrollInView(container, tCell) : 'collapsed'"
                 >
-                    <div class="element-diagram">
-                        <div class="element-position"> {{element | json}} </div>
-                        <!-- <div class="element-symbol"> {{expandedElement}} </div>
-                        <div class="element-name"> {{expandedElement}} </div>
-                        <div class="element-weight"> {{expandedElement}} </div> -->
-                    </div>
-                    <div class="element-description">
-                        <!-- {{expandedElement}} -->
-                        <!-- <span class="element-description-attribution"> -- Wikipedia </span> -->
-                    </div>
+                    <mat-tab-group
+                        class="element-diagram"
+                        color="accent"
+                        backgroundColor="primary"
+                        [disablePagination]="true"
+                        mat-align-tabs="center"
+                    >
+                        <mat-tab
+                            *ngFor="let word of element?.definitions;index as i; count as count;"
+                            [ngStyle]="{'min-width': 100 / count + '%'}"
+                        >
+                            <ng-template mat-tab-label>{{element.word.split(', ')[i]}}</ng-template>
+
+                            <div *ngFor="let wordDef of returnProp(word, 'definition')">
+                                {{wordDef}}
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
                 </div>
             </td>
         </ng-container>
@@ -109,23 +121,27 @@
             *matHeaderRowDef="displayedColumns; sticky: true"
         ></tr>
         <tr
+            matRipple
             mat-row
             *matRowDef="let element; columns: displayedColumns; dataIndex as i"
             [hidden]="i === dataSource.length - 1"
+            class="element-row"
             [class.expanded-row]="expandedElement === element"
+            [class.hover]="element.points"
             (click)="expandedElement = expandedElement === element ? null : element"
-            (click)="log(i , dataSource.length - 1)"
         ></tr>
         <tr
+            matRipple
             mat-footer-row
             *matFooterRowDef="displayedColumns; sticky: true"
+            class="element-row"
             [class.expanded-row]="expandedElement === lastEntry"
+            [class.hover]="lastEntry.points"
             (click)="expandedElement = expandedElement === lastEntry ? null : lastEntry"
-            (click)="log(expandedElement, lastEntry, expandedElement === lastEntry)"
         ></tr>
         <tr
             mat-row
-            *matRowDef="let row; columns: ['expandedDetail']"
+            *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
             class="detail-row"
         ></tr>
     </table>
