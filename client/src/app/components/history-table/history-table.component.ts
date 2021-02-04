@@ -43,18 +43,6 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
     console.log(source.history);
   }
 
-  // returnPropName(obj) {
-  //   // console.log(obj);
-
-  //   return Object.keys(obj);
-  // }
-  // returnProp(obj, prop) {
-  //   // console.log(obj);
-
-  //   let propName = this.returnPropName(obj);
-  //   return obj[`${propName}`][prop];
-  // }
-
   @ViewChildren('td') td: QueryList<ElementRef>;
 
   firstTurn = this.source.firstTurn;
@@ -91,7 +79,7 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
       // console.log('start'); TODO: limit the amount of calls
 
       el.scrollTo({
-        top: el2.offsetTop - (el2.offsetHeight - 35),
+        top: el2.offsetTop - (el2.offsetHeight - 35 - 18),
         behavior: 'smooth',
       });
     }, 225);
@@ -1508,7 +1496,14 @@ let def: any[] = [
   },
   {
     isAI: true,
-    word: 'Ret',
+    points: '',
+    score: { computerScore: '24 + 2', playerScore: '16 - 2' },
+    word: 'Opponent Won',
+    skip: false,
+  },
+  {
+    isAI: true,
+    word: 'Ret, Mir, Last',
     definitions: [
       {
         headword: 'ret',
@@ -1742,16 +1737,305 @@ let def: any[] = [
         },
         userDevice: null,
       },
+      {
+        headword: 'mir',
+        definitions: [
+          {
+            id: 1221807,
+            dic: 16,
+            part: 'NOUN',
+            txt:
+              'A village community of peasant farmers in prerevolutionary Russia.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221808,
+            dic: 2,
+            part: 'NOUN',
+            txt: 'In czarist Russia, a village community of peasant farmers.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221809,
+            dic: 2,
+            part: 'ABR',
+            txt: 'Middle Irish.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221810,
+            dic: 11,
+            txt:
+              '(<b>M</b>usic <b>I</b>nformation <b>R</b>etrieval) See <a>music search</a>.',
+            link: ['music-search'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221811,
+            dic: 26,
+            part: 'NOUN',
+            spart: ' (<i>plural</i> mirs)',
+            txt: 'A <a>Russian</a> <a>village</a> <a>community</a>.',
+            link: ['Russian', 'village', 'community'],
+            ex: [''],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221812,
+            dic: 26,
+            part: 'PRON',
+            txt: 'A <a>Soviet</a>, later <a>Russian</a> space station.',
+            link: ['Soviet', 'Russian'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221813,
+            dic: 26,
+            part: 'PRON',
+            spart: ' (Transliteration of مصر)',
+            txt: 'Alternative form of <i><a>Masr</a></i>.',
+            link: ['Masr'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+        ],
+        filteredDefinitions: [
+          {
+            id: 1221807,
+            dic: 16,
+            part: 'NOUN',
+            txt:
+              'A village community of peasant farmers in prerevolutionary Russia.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221808,
+            dic: 2,
+            part: 'NOUN',
+            txt: 'In czarist Russia, a village community of peasant farmers.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221809,
+            dic: 2,
+            part: 'ABR',
+            txt: 'Middle Irish.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221810,
+            dic: 11,
+            txt:
+              '(<b>M</b>usic <b>I</b>nformation <b>R</b>etrieval) See <a>music search</a>.',
+            link: ['music-search'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221811,
+            dic: 26,
+            part: 'NOUN',
+            spart: ' (<i>plural</i> mirs)',
+            txt: 'A <a>Russian</a> <a>village</a> <a>community</a>.',
+            link: ['Russian', 'village', 'community'],
+            ex: [''],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221812,
+            dic: 26,
+            part: 'PRON',
+            txt: 'A <a>Soviet</a>, later <a>Russian</a> space station.',
+            link: ['Soviet', 'Russian'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221813,
+            dic: 26,
+            part: 'PRON',
+            spart: ' (Transliteration of مصر)',
+            txt: 'Alternative form of <i><a>Masr</a></i>.',
+            link: ['Masr'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+        ],
+        audio: 'en/mir.mp3',
+        pronunciation: 'mîr ',
+        isFilterPanelOpened: false,
+        filters: {
+          source: { default: [2, 16, 26, 11], active: [] },
+          pos: { default: ['NOUN', 'ABR', 'PRON'], active: [] },
+          category: { default: [], active: [] },
+        },
+        origin: {
+          txt:
+            'Russian <i>commune, peace</i> <i>from</i> Old Church Slavonic <i>mirŭ</i> <i>peace</i> <i>possibly of Iranian origin</i> ',
+        },
+        userDevice: null,
+      },
+      {
+        headword: 'last',
+        definitions: [
+          {
+            id: 1221807,
+            dic: 16,
+            part: 'NOUN',
+            txt:
+              'A village community of peasant farmers in prerevolutionary Russia.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221808,
+            dic: 2,
+            part: 'NOUN',
+            txt: 'In czarist Russia, a village community of peasant farmers.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221809,
+            dic: 2,
+            part: 'ABR',
+            txt: 'Middle Irish.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221810,
+            dic: 11,
+            txt:
+              '(<b>M</b>usic <b>I</b>nformation <b>R</b>etrieval) See <a>music search</a>.',
+            link: ['music-search'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221811,
+            dic: 26,
+            part: 'NOUN',
+            spart: ' (<i>plural</i> mirs)',
+            txt: 'A <a>Russian</a> <a>village</a> <a>community</a>.',
+            link: ['Russian', 'village', 'community'],
+            ex: [''],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221812,
+            dic: 26,
+            part: 'PRON',
+            txt: 'A <a>Soviet</a>, later <a>Russian</a> space station.',
+            link: ['Soviet', 'Russian'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221813,
+            dic: 26,
+            part: 'PRON',
+            spart: ' (Transliteration of مصر)',
+            txt: 'Alternative form of <i><a>Masr</a></i>.',
+            link: ['Masr'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+        ],
+        filteredDefinitions: [
+          {
+            id: 1221807,
+            dic: 16,
+            part: 'NOUN',
+            txt:
+              'A village community of peasant farmers in prerevolutionary Russia.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221808,
+            dic: 2,
+            part: 'NOUN',
+            txt: 'In czarist Russia, a village community of peasant farmers.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221809,
+            dic: 2,
+            part: 'ABR',
+            txt: 'Middle Irish.',
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221810,
+            dic: 11,
+            txt:
+              '(<b>M</b>usic <b>I</b>nformation <b>R</b>etrieval) See <a>music search</a>.',
+            link: ['music-search'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221811,
+            dic: 26,
+            part: 'NOUN',
+            spart: ' (<i>plural</i> mirs)',
+            txt: 'A <a>Russian</a> <a>village</a> <a>community</a>.',
+            link: ['Russian', 'village', 'community'],
+            ex: [''],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221812,
+            dic: 26,
+            part: 'PRON',
+            txt: 'A <a>Soviet</a>, later <a>Russian</a> space station.',
+            link: ['Soviet', 'Russian'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+          {
+            id: 1221813,
+            dic: 26,
+            part: 'PRON',
+            spart: ' (Transliteration of مصر)',
+            txt: 'Alternative form of <i><a>Masr</a></i>.',
+            link: ['Masr'],
+            upvotes: 0,
+            downvotes: 0,
+          },
+        ],
+        audio: 'en/mir.mp3',
+        pronunciation: 'mîr ',
+        isFilterPanelOpened: false,
+        filters: {
+          source: { default: [2, 16, 26, 11], active: [] },
+          pos: { default: ['NOUN', 'ABR', 'PRON'], active: [] },
+          category: { default: [], active: [] },
+        },
+        origin: {
+          txt:
+            'Russian <i>commune, peace</i> <i>from</i> Old Church Slavonic <i>mirŭ</i> <i>peace</i> <i>possibly of Iranian origin</i> ',
+        },
+        userDevice: null,
+      },
     ],
     points: 3,
     score: { computerScore: 24, playerScore: 16 },
-    skip: false,
-  },
-  {
-    isAI: true,
-    points: '',
-    score: { computerScore: '24 + 2', playerScore: '16 - 2' },
-    word: 'Opponent Won',
     skip: false,
   },
 ];

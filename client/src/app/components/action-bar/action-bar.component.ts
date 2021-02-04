@@ -197,7 +197,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     this.dialog.open(ModalDialogComponent, {
       id: 'historyModal',
       maxWidth: '75vh',
-      width: '99vmax',
+      width: '99vmin',
       data: {
         type: 'history',
       },

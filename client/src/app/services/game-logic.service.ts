@@ -434,7 +434,7 @@ export class GameLogicService {
     return false; //? remove extra style from tiles that AI played
   }
 
-  async play(isAI = false, $document: HTMLDocument) {
+  play(isAI = false, $document: HTMLDocument) {
     if (!this.source.isValidMove.words && this.source.DEBUG_MODE) {
       this.source.playersTurn = true;
     }
@@ -463,17 +463,19 @@ export class GameLogicService {
           return `${word}`;
         })
         .join(', ');
-      this.source.history.push({
-        isAI: true,
-        word,
-        definitions: await this.http.getDefinitions(word),
-        points: this.source.isValidMove.pointTally,
-        score: {
-          computerScore: this.source.computerScore,
-          playerScore: this.source.playerScore,
-        },
-        skip: false,
-      });
+      setTimeout(async () => {
+        this.source.history.push({
+          isAI: true,
+          word,
+          definitions: await this.http.getDefinitions(word),
+          points: this.source.isValidMove.pointTally,
+          score: {
+            computerScore: this.source.computerScore,
+            playerScore: this.source.playerScore,
+          },
+          skip: false,
+        });
+      }, 0);
       // add and display pc's score
     } else {
       this.source.playersTurn = true;
@@ -488,18 +490,19 @@ export class GameLogicService {
           return `${word}`;
         })
         .join(', ');
-
-      this.source.history.push({
-        isAI: false,
-        word,
-        definitions: await this.http.getDefinitions(word),
-        points: this.source.isValidMove.pointTally,
-        score: {
-          computerScore: this.source.computerScore,
-          playerScore: this.source.playerScore,
-        },
-        skip: false,
-      });
+      setTimeout(async () => {
+        this.source.history.push({
+          isAI: false,
+          word,
+          definitions: await this.http.getDefinitions(word),
+          points: this.source.isValidMove.pointTally,
+          score: {
+            computerScore: this.source.computerScore,
+            playerScore: this.source.playerScore,
+          },
+          skip: false,
+        });
+      }, 0);
       //calculate and add points to "player"
     }
 

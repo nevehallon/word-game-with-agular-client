@@ -9,6 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatRippleModule } from '@angular/material/core';
 
 import { AppComponent } from './app.component';
 import { ContainerComponent } from './components/container/container.component';
@@ -20,6 +21,7 @@ import { ModalDialogComponent } from './components/modal-dialog/modal-dialog.com
 import { FormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
 import { HistoryTableComponent } from './components/history-table/history-table.component';
+import { FilterDefsPipe } from './pipes/filter-defs.pipe';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { HistoryTableComponent } from './components/history-table/history-table.
     RackFrameComponent,
     ModalDialogComponent,
     HistoryTableComponent,
+    FilterDefsPipe,
   ],
   imports: [
     BrowserModule,
@@ -45,6 +48,7 @@ import { HistoryTableComponent } from './components/history-table/history-table.
     MatSliderModule,
     MatTableModule,
     MatTabsModule,
+    MatRippleModule,
   ],
   entryComponents: [ModalDialogComponent],
   // providers: [],

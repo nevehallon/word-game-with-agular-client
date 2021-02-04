@@ -1,5 +1,5 @@
 .container {
-  height: 400px;
+  height: 396px;
   overflow: auto;
 }
 
@@ -35,6 +35,13 @@ table {
   border: none;
 }
 
+/* :host ::ng-deep */
+.mat-column-move {
+  padding: 0 0 0 10px !important;
+
+  // TODO: reduce column width to fit smaller screens
+}
+
 .cdk-column-player {
   text-align: center;
 }
@@ -55,17 +62,22 @@ tr.detail-row {
   height: 0;
 }
 
-tr.element-row.hover:not(.expanded-row):hover {
+tr.element-row.expandable:not(.expanded-row):hover {
   background: whitesmoke;
   cursor: pointer;
 }
 
-tr.element-row:not(.expanded-row):active {
+tr.element-row.expandable:not(.expanded-row):active {
   background: rgb(222 222 222) !important;
 }
 
-tr.expanded-row {
+tr.element-row {
+  box-shadow: 0px 0px 4px 0px;
+}
+
+tr.expanded-row.expandable {
   background: rgb(222 222 222) !important;
+  cursor: pointer;
 }
 
 .element-row td {
@@ -79,10 +91,9 @@ tr.expanded-row {
 
 .element-diagram {
   min-width: 80px;
-  padding: 8px;
   font-weight: lighter;
-  margin: 8px 0;
-  height: 122px;
+  margin: 3px 0;
+  height: 150px;
 }
 
 /* 
@@ -96,7 +107,7 @@ mat-tab-group
 }
 
 :host ::ng-deep mat-tab-header {
-  border-radius: 10px;
+  margin: 0;
 }
 
 :host ::ng-deep .mat-tab-label {
@@ -108,4 +119,8 @@ mat-tab-group
 
 :host ::ng-deep .mat-tab-label-content {
   margin: auto;
+}
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  margin: 0 5px;
 }

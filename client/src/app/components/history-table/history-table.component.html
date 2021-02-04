@@ -105,10 +105,28 @@
                             *ngFor="let word of element?.definitions;index as i; count as count;"
                             [ngStyle]="{'min-width': 100 / count + '%'}"
                         >
-                            <ng-template mat-tab-label>{{word.headword}}</ng-template>
+                            <ng-template mat-tab-label>
+                                <span>
+                                    {{word.headword | titlecase}}
+                                    [<small>
+                                        {{word.pronunciation}}
+                                    </small>]
+                                </span>
 
-                            <div *ngFor="let wordDef of word.definitions">
-                                {{wordDef}}
+                            </ng-template>
+                            <div *ngFor="let wordDef of word.definitions | filterDefs; first as first">
+
+
+                                <div *ngIf="first">
+                                    <span
+                                        *ngIf="first"
+                                        [innerHTML]="wordDef.txt"
+                                    ></span><br>
+                                    <span
+                                        *ngIf="first"
+                                        [innerHTML]="wordDef.part| uppercase"
+                                    ></span>
+                                </div>
                             </div>
                         </mat-tab>
                     </mat-tab-group>
@@ -121,22 +139,20 @@
             *matHeaderRowDef="displayedColumns; sticky: true"
         ></tr>
         <tr
-            matRipple
             mat-row
-            *matRowDef="let element; columns: displayedColumns; dataIndex as i"
+            *matRowDef="let row; columns: displayedColumns; dataIndex as i"
             [hidden]="i === dataSource.length - 1"
             class="element-row"
-            [class.expanded-row]="expandedElement === element"
-            [class.hover]="element.points"
-            (click)="expandedElement = expandedElement === element ? null : element"
+            [class.expanded-row]="expandedElement === row"
+            [class.expandable]="row.points"
+            (click)="expandedElement = expandedElement === row ? null : row"
         ></tr>
         <tr
-            matRipple
             mat-footer-row
             *matFooterRowDef="displayedColumns; sticky: true"
             class="element-row"
             [class.expanded-row]="expandedElement === lastEntry"
-            [class.hover]="lastEntry.points"
+            [class.expandable]="lastEntry.points"
             (click)="expandedElement = expandedElement === lastEntry ? null : lastEntry"
         ></tr>
         <tr
