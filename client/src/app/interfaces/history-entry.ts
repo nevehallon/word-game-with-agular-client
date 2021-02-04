@@ -6,7 +6,7 @@ export interface Score {
 export interface HistoryEntry {
   isAI?: boolean;
   word?: string;
-  definitions?: State[];
+  definitions?: DefinitionElement[];
   points?: number | string;
   score?: Score;
   skip?:
@@ -62,7 +62,7 @@ export interface Origin {
   link: string[];
 }
 
-export interface State {
+export interface DefinitionElement {
   headword: string;
   definitions: Definition[];
   filteredDefinitions: FilteredDefinition[];

@@ -105,9 +105,9 @@
                             *ngFor="let word of element?.definitions;index as i; count as count;"
                             [ngStyle]="{'min-width': 100 / count + '%'}"
                         >
-                            <ng-template mat-tab-label>{{element.word.split(', ')[i]}}</ng-template>
+                            <ng-template mat-tab-label>{{word.headword}}</ng-template>
 
-                            <div *ngFor="let wordDef of returnProp(word, 'definition')">
+                            <div *ngFor="let wordDef of word.definitions">
                                 {{wordDef}}
                             </div>
                         </mat-tab>
