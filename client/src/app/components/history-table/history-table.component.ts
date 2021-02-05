@@ -43,6 +43,12 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
     console.log(source.history);
   }
 
+  fitFont(span, table, numWords, wordLength) {
+    // // 'font-size': table._elementRef.nativeElement.offsetWidth / (count * 2) - (word.headword.length + word.pronunciation.trim().length) + 'px'
+    // let tWidth = table._elementRef.nativeElement.offsetWidth;
+    // span.nativeElement.style.fontSize = tWidth / (numWords * 2.5 - wordLength);
+  }
+
   @ViewChildren('td') td: QueryList<ElementRef>;
 
   firstTurn = this.source.firstTurn;
@@ -1506,7 +1512,7 @@ let def: any[] = [
     word: 'Ret, Mir, Last',
     definitions: [
       {
-        headword: 'ret',
+        headword: 'retiestest',
         definitions: [
           {
             id: 2055769,
@@ -1724,7 +1730,7 @@ let def: any[] = [
           },
         ],
         audio: 'en/ret.mp3',
-        pronunciation: 'rĕt ',
+        pronunciation: 'rĕtiestest ',
         isFilterPanelOpened: false,
         filters: {
           source: { default: [2, 16, 26], active: [] },

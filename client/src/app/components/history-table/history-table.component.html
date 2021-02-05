@@ -3,6 +3,7 @@
     class="container mat-elevation-z8"
 >
     <table
+        #table
         mat-table
         [dataSource]="dataSource"
         multiTemplateDataRows
@@ -112,21 +113,14 @@
                             [ngStyle]="{'min-width': 100 / count + '%'}"
                         >
                             <ng-template mat-tab-label>
-                                <svg
-                                    preserveAspectRatio="none"
-                                    width="100%"
-                                    viewBox="0 0 90 19"
-                                    fill="currentColor"
+                                <span
+                                    #span
+                                    (window:resize)="fitFont(span, table, count, word.headword.length + word.pronunciation.trim().length)"
                                 >
-                                    <text
-                                        x="50%"
-                                        y="50%"
-                                        dominant-baseline="middle"
-                                        text-anchor="middle"
-                                    >
-                                        {{word.headword | titlecase}} [{{word.pronunciation}}]
-                                    </text>
-                                </svg>
+                                    {{word.headword | titlecase}}
+                                    [<small>{{word.pronunciation.trim()}}</small>]
+                                </span>
+
                             </ng-template>
                             <div *ngFor="let wordDef of word.definitions | filterDefs; first as first">
 
