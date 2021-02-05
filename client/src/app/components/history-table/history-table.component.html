@@ -21,23 +21,29 @@
                 *matCellDef="let element"
                 [class]="element.isAI ? 'opponent' : 'player'"
             >
-                {{element.word}}
-                <span [ngClass]="{'bold': element.points}">
-                    {{element.points ? '[+' + element.points + ']': element.skip.isSwap ? "Swap"
-                    :
-                    "Pass"}}
-                </span>
+                <div class="move-column-text">
+
+                    {{element.word}}
+                    <span [ngClass]="{'bold': element.points}">
+                        {{element.points ? '[+' + element.points + ']': element.skip.isSwap ? "Swap"
+                        :
+                        "Pass"}}
+                    </span>
+                </div>
             </td>
             <td
                 [class]="lastEntry?.isAI ? 'opponent' : 'player'"
                 mat-footer-cell
                 *matFooterCellDef
             >
-                {{lastEntry?.word}}
-                <span [ngClass]="{'bold': lastEntry?.points}">
-                    {{lastEntry?.points ? '[+' + lastEntry?.points + ']': lastEntry?.skip.isSwap ? "Swap"
-                    : firstTurn && !gameOver ? 'Start of Game' : gameOver ? '' : "Pass"}}
-                </span>
+                <div class="move-column-text">
+
+                    {{lastEntry?.word}}
+                    <span [ngClass]="{'bold': lastEntry?.points}">
+                        {{lastEntry?.points ? '[+' + lastEntry?.points + ']': lastEntry?.skip.isSwap ? "Swap"
+                        : firstTurn && !gameOver ? 'Start of Game' : gameOver ? '' : "Pass"}}
+                    </span>
+                </div>
             </td>
         </ng-container>
 
@@ -106,13 +112,21 @@
                             [ngStyle]="{'min-width': 100 / count + '%'}"
                         >
                             <ng-template mat-tab-label>
-                                <span>
-                                    {{word.headword | titlecase}}
-                                    [<small>
-                                        {{word.pronunciation}}
-                                    </small>]
-                                </span>
-
+                                <svg
+                                    preserveAspectRatio="none"
+                                    width="100%"
+                                    viewBox="0 0 90 19"
+                                    fill="currentColor"
+                                >
+                                    <text
+                                        x="50%"
+                                        y="50%"
+                                        dominant-baseline="middle"
+                                        text-anchor="middle"
+                                    >
+                                        {{word.headword | titlecase}} [{{word.pronunciation}}]
+                                    </text>
+                                </svg>
                             </ng-template>
                             <div *ngFor="let wordDef of word.definitions | filterDefs; first as first">
 
