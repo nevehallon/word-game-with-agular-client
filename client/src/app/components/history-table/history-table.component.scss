@@ -1,3 +1,7 @@
+.center-align {
+  text-align: center;
+}
+
 .container {
   height: 396px;
   overflow: auto;
@@ -70,12 +74,12 @@ tr.detail-row {
 }
 
 tr.element-row.expandable:not(.expanded-row):hover {
-  background: whitesmoke;
+  background: #f8f9fa;
   cursor: pointer;
 }
 
 tr.element-row.expandable:not(.expanded-row):active {
-  background: rgb(222 222 222) !important;
+  background: #f1f3f4 !important;
 }
 
 tr.element-row {
@@ -83,7 +87,7 @@ tr.element-row {
 }
 
 tr.expanded-row.expandable {
-  background: rgb(222 222 222) !important;
+  background: #f1f3f4 !important;
   cursor: pointer;
 }
 
@@ -135,4 +139,8 @@ mat-tab-group
 
 :host ::ng-deep .mat-tab-body-wrapper {
   margin: 0 5px;
+}
+
+.part {
+  font-style: italic;
 }

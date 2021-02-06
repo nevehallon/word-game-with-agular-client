@@ -24,7 +24,7 @@
             >
                 <div class="move-column-text">
 
-                    {{element.word}}
+                    {{element.word | lowercase}}
                     <span [ngClass]="{'bold': element.points}">
                         {{element.points ? '[+' + element.points + ']': element.skip.isSwap ? "Swap"
                         :
@@ -39,9 +39,9 @@
             >
                 <div class="move-column-text">
 
-                    {{lastEntry?.word}}
+                    {{lastEntry?.word | lowercase}}
                     <span [ngClass]="{'bold': lastEntry?.points}">
-                        {{lastEntry?.points ? '[+' + lastEntry?.points + ']': lastEntry?.skip.isSwap ? "Swap"
+                        {{lastEntry?.points ? '[+' + lastEntry?.points + ']': lastEntry?.skip?.isSwap ? "Swap"
                         : firstTurn && !gameOver ? 'Start of Game' : gameOver ? '' : "Pass"}}
                     </span>
                 </div>
@@ -65,7 +65,7 @@
                 class="opponent bold"
                 mat-footer-cell
                 *matFooterCellDef
-            > {{lastEntry?.score.computerScore || 0}} </td>
+            > {{lastEntry?.score?.computerScore || 0}} </td>
         </ng-container>
 
         <!-- Player Column -->
@@ -85,7 +85,7 @@
                 class="player bold"
                 mat-footer-cell
                 *matFooterCellDef
-            > {{lastEntry?.score.playerScore || 0}} </td>
+            > {{lastEntry?.score?.playerScore || 0}} </td>
         </ng-container>
 
 
@@ -113,28 +113,37 @@
                             [ngStyle]="{'min-width': 100 / count + '%'}"
                         >
                             <ng-template mat-tab-label>
-                                <span
-                                    #span
-                                    (window:resize)="fitFont(span, table, count, word.headword.length + word.pronunciation.trim().length)"
-                                >
-                                    {{word.headword | titlecase}}
-                                    [<small>{{word.pronunciation.trim()}}</small>]
+                                <span>
+                                    {{word.headword || element.word.split(", ")[i] | lowercase}}
                                 </span>
-
                             </ng-template>
                             <div *ngFor="let wordDef of word.definitions | filterDefs; first as first">
-
-
                                 <div *ngIf="first">
+                                    <span *ngIf="first && word.pronunciation.trim()">
+                                        [<span [innerHTML]="word.pronunciation.trim()"></span>]
+                                    </span>
                                     <span
+                                        class="part"
                                         *ngIf="first"
-                                        [innerHTML]="wordDef.txt"
-                                    ></span><br>
-                                    <span
-                                        *ngIf="first"
-                                        [innerHTML]="wordDef.part| uppercase"
+                                        [innerHTML]="wordDef.part| lowercase"
                                     ></span>
                                 </div>
+                                <span
+                                    class="bold"
+                                    *ngIf="first"
+                                    [innerHTML]="wordDef.txt"
+                                ></span>
+                            </div>
+                            <div *ngIf="!word.definitions.length">
+                                Sorry, we couldn't find the definition for the word "{{word.headword ||
+                                element.word.split(', ')[i] | lowercase}}", but you might have better luck if you check
+                                <a
+                                    class="bold player"
+                                    target="_blank"
+                                    [href]="'https://www.google.com/search?q=define+' + (word.headword || element.word.split(', ')[i]) |lowercase"
+                                >
+                                    here
+                                </a>
                             </div>
                         </mat-tab>
                     </mat-tab-group>
@@ -160,7 +169,7 @@
             *matFooterRowDef="displayedColumns; sticky: true"
             class="element-row"
             [class.expanded-row]="expandedElement === lastEntry"
-            [class.expandable]="lastEntry.points"
+            [class.expandable]="lastEntry?.points"
             (click)="expandedElement = expandedElement === lastEntry ? null : lastEntry"
         ></tr>
         <tr

@@ -38,30 +38,20 @@ import { SourceService } from 'src/app/services/source.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryTableComponent implements OnInit, AfterViewInit {
-  constructor(private source: SourceService) {
-    // console.log(this.source.history);
-    console.log(source.history);
-  }
-
-  fitFont(span, table, numWords, wordLength) {
-    // // 'font-size': table._elementRef.nativeElement.offsetWidth / (count * 2) - (word.headword.length + word.pronunciation.trim().length) + 'px'
-    // let tWidth = table._elementRef.nativeElement.offsetWidth;
-    // span.nativeElement.style.fontSize = tWidth / (numWords * 2.5 - wordLength);
-  }
+  constructor(private source: SourceService) {}
 
   @ViewChildren('td') td: QueryList<ElementRef>;
 
   firstTurn = this.source.firstTurn;
   gameOver = this.source.gameOver;
 
-  dataSource: HistoryEntry[] = def; /* .slice(0, -1) */
+  dataSource: HistoryEntry[] = this.source.history; /* .slice(0, -1); */
   displayedColumns = ['move', 'opponent', 'player'];
 
-  // lastEntry: any = this.source.history[this.source.history.length - 1];
-  lastEntry: any = def[def.length - 1];
+  lastEntry: any = this.source.history[this.source.history.length - 1];
+  // lastEntry: any = def[def.length - 1]; //? mock data
   log(...rest) {
     console.log(...rest);
-    // console.log(this.source.history);
   }
   expandedElement:
     | DefinitionElement[]
@@ -70,7 +60,8 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
   ) */
 
   isExpansionDetailRow = (i: number, row: any) => {
-    if (i == 0) console.log(i, row); //!change to no def and return false
+    if (i == 0)
+      console.log(this.source.history, this.dataSource, this.lastEntry); //!change to no def and return false
 
     if (!row.points) return false;
     return true;
@@ -95,7 +86,7 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {}
   ngAfterViewInit(): void {
-    let el = this.td.toArray()[this.dataSource.length - 2].nativeElement;
+    let el = this.td.toArray()[this.dataSource.length - 2]?.nativeElement;
     if (!el) return;
     setTimeout(() => {
       el.scrollIntoView({

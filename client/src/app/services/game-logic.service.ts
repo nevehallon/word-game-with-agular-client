@@ -306,58 +306,93 @@ export class GameLogicService {
         .getPlayerRack()
         .reduce((acc, cur) => acc + cur.content.points, 0);
 
-      this.source.history.push({
-        isAI: true,
-        points: '',
-        score: {
-          computerScore: `${computerScore} + ${sum}`,
-          playerScore: `${playerScore} - ${sum}`,
-        },
-        word:
-          (playerScore -= sum) < (computerScore += sum)
-            ? 'Opponent Won'
-            : 'Player Won',
-        skip: false,
-      });
+      this.source.history.push({});
+      let index = this.source.history.length - 1;
 
-      this.source.playerScore = playerScore < 0 ? 0 : playerScore;
-      this.source.computerScore = computerScore < 0 ? 0 : computerScore;
-      //? deduct points from player and give them to AI
-    }
-
-    if (!$document.querySelectorAll('#rack .tile').length) {
+      setTimeout(() => {
+        this.source.history[index] = {
+          isAI: true,
+          points: '',
+          score: {
+            computerScore: `${computerScore} + ${sum}`,
+            playerScore: `${playerScore} - ${sum}`,
+          },
+          word:
+            (playerScore -= sum) == (computerScore += sum)
+              ? 'Tie,'
+              : playerScore < computerScore
+              ? 'Opponent Won'
+              : 'Player Won',
+          skip: false,
+        };
+        this.source.playerScore = playerScore < 0 ? 0 : playerScore;
+        this.source.computerScore = computerScore < 0 ? 0 : computerScore;
+        //? deduct points from player and give them to AI
+      }, 0);
+    } else if (!$document.querySelectorAll('#rack .tile').length) {
       let sum = this.source.rivalRack.reduce((acc, cur) => acc + cur.points, 0);
 
-      this.source.history.push({
-        isAI: false,
-        points: '',
-        score: {
-          computerScore: `${computerScore} - ${sum}`,
-          playerScore: `${playerScore} + ${sum}`,
-        },
-        word:
-          (playerScore += sum) > (computerScore -= sum)
-            ? 'Player Won'
-            : 'Opponent',
-        skip: false,
-      });
+      this.source.history.push({});
+      let index = this.source.history.length - 1;
 
-      this.source.playerScore = playerScore < 0 ? 0 : playerScore;
-      this.source.computerScore = computerScore < 0 ? 0 : computerScore;
-      //? deduct points from AI and give them to player
+      setTimeout(() => {
+        this.source.history[index] = {
+          isAI: false,
+          points: '',
+          score: {
+            computerScore: `${computerScore} - ${sum}`,
+            playerScore: `${playerScore} + ${sum}`,
+          },
+          word:
+            (playerScore += sum) == (computerScore -= sum)
+              ? 'Tie'
+              : playerScore > computerScore
+              ? 'Player Won'
+              : 'Opponent Won',
+          skip: false,
+        };
+        this.source.playerScore = playerScore < 0 ? 0 : playerScore;
+        this.source.computerScore = computerScore < 0 ? 0 : computerScore;
+        //? deduct points from AI and give them to player
+      }, 0);
+    } else {
+      this.source.history.push({});
+      let index = this.source.history.length - 1;
+
+      setTimeout(() => {
+        this.source.history[index] = {
+          isAI: false,
+          points: '',
+          score: {
+            computerScore,
+            playerScore,
+          },
+          word:
+            playerScore == computerScore
+              ? 'Tie'
+              : playerScore > computerScore
+              ? 'Player Won'
+              : 'Opponent Won',
+          skip: false,
+        };
+      }, 0);
     }
-
-    let winner = playerScore > computerScore ? 'You' : 'Opponent';
 
     let time = 1650;
     if (!this.dialogRef.getState()) time *= 3;
     setTimeout(() => {
+      let winnerMsg =
+        playerScore == computerScore
+          ? 'Tie'
+          : playerScore > computerScore
+          ? 'You Won'
+          : 'Opponent Won';
       this.closeDialog();
 
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
         data: {
           type: 'message',
-          message: `${winner} Won, Good Game`,
+          message: `${winnerMsg}, Good Game`,
           player: `Player: ${this.source.playerScore}`,
           opponent: `Opponent: ${this.source.computerScore}`,
           buttons: ['Close', 'Rematch'],
@@ -388,14 +423,22 @@ export class GameLogicService {
     //    add to passCount
 
     if (isSwap !== undefined) {
-      this.source.history.push({
-        isAI: isAI,
-        score: {
-          computerScore: this.source.computerScore,
-          playerScore: this.source.playerScore,
-        },
-        skip: { isSwap: isSwap },
-      });
+      let computerScore = this.source.computerScore;
+      let playerScore = this.source.playerScore;
+
+      this.source.history.push({});
+      let index = this.source.history.length - 1;
+
+      setTimeout(() => {
+        this.source.history[index] = {
+          isAI: isAI,
+          score: {
+            computerScore,
+            playerScore,
+          },
+          skip: { isSwap: isSwap },
+        };
+      }, 0);
     }
 
     if (wasClicked) {
@@ -457,24 +500,31 @@ export class GameLogicService {
 
     if (this.source.isValidMove.hasOwnProperty('rivalRack')) {
       this.source.computerScore += this.source.isValidMove.pointTally;
+
+      let points = this.source.isValidMove.pointTally;
+      let computerScore = this.source.computerScore;
+      let playerScore = this.source.playerScore;
       let word = this.source.isValidMove.wordsPlayed
         .map((x) => {
           let word = x[0].toUpperCase() + x.slice(1).toLowerCase();
           return `${word}`;
         })
         .join(', ');
+      this.source.history.push({});
+      let index = this.source.history.length - 1;
+
       setTimeout(async () => {
-        this.source.history.push({
+        this.source.history[index] = {
           isAI: true,
           word,
           definitions: await this.http.getDefinitions(word),
-          points: this.source.isValidMove.pointTally,
+          points,
           score: {
-            computerScore: this.source.computerScore,
-            playerScore: this.source.playerScore,
+            computerScore,
+            playerScore,
           },
           skip: false,
-        });
+        };
       }, 0);
       // add and display pc's score
     } else {
@@ -484,24 +534,31 @@ export class GameLogicService {
     if (this.source.playersTurn && this.source.isValidMove.pointTally) {
       this.source.playerScore += this.source.isValidMove.pointTally;
 
+      let points = this.source.isValidMove.pointTally;
+      let computerScore = this.source.computerScore;
+      let playerScore = this.source.playerScore;
+
       let word = this.source.isValidMove.bestWord
         .map((x) => {
           let word = x[0].toUpperCase() + x.slice(1).toLowerCase();
           return `${word}`;
         })
         .join(', ');
+      this.source.history.push({});
+      let index = this.source.history.length - 1;
+
       setTimeout(async () => {
-        this.source.history.push({
+        this.source.history[index] = {
           isAI: false,
           word,
           definitions: await this.http.getDefinitions(word),
-          points: this.source.isValidMove.pointTally,
+          points,
           score: {
-            computerScore: this.source.computerScore,
-            playerScore: this.source.playerScore,
+            computerScore,
+            playerScore,
           },
           skip: false,
-        });
+        };
       }, 0);
       //calculate and add points to "player"
     }
