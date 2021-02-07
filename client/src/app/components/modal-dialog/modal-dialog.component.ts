@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LetterToPointsService } from 'src/app/services/letter-to-points.service';
 import { ScrabbleLettersService } from 'src/app/services/scrabble-letters.service';
-import _ from 'lodash';
+import { countBy, mergeWith, pullAt, shuffle } from 'lodash-es';
 import { MatSliderChange } from '@angular/material/slider';
 import { SourceService } from 'src/app/services/source.service';
 import { Subscription } from 'rxjs';
@@ -26,7 +26,7 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
   // *
   // * bag
   // *
-  lettersByFreq = _.countBy(this.letters.get(), 'letter');
+  lettersByFreq = countBy(this.letters.get(), 'letter');
   letterToPointsSorted = this.ltp.get().sort((a, b) => {
     a.letter === 'BLANK' ? (a.letter = '') : a.letter;
     return b.letter > a.letter ? -1 : 1;
@@ -40,9 +40,9 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
   }
 
   currentFreq() {
-    let currentFreq = _.countBy(this.source.bag, 'letter');
+    let currentFreq = countBy(this.source.bag, 'letter');
 
-    _.mergeWith(currentFreq, this.lettersByFreq, this.customizer);
+    mergeWith(currentFreq, this.lettersByFreq, this.customizer);
 
     return currentFreq;
   }
@@ -152,7 +152,7 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
 
     for (let i = 0; i < tilesToSwap.length; i++) {
       if (this.source.bag.length) {
-        let newTile = _.pullAt(this.source.bag, [0])[0];
+        let newTile = pullAt(this.source.bag, [0])[0];
         remainingRack.push({
           content: newTile,
           id: `tile${this.source.numSource}`,
@@ -164,7 +164,7 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
     }
 
     this.source.bag.push(...tilesToSwap);
-    this.source.bag = _.shuffle(_.shuffle(this.source.bag));
+    this.source.bag = shuffle(shuffle(this.source.bag));
 
     let newRack = remainingRack;
 

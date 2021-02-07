@@ -4,7 +4,7 @@ import { take } from 'rxjs/operators';
 
 import { BtnAttrs } from 'src/app/interfaces/btn-attrs';
 import { SourceService } from 'src/app/services/source.service';
-import _ from 'lodash';
+import { shuffle } from 'lodash-es';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
 import { CreateGridService } from 'src/app/services/create-grid.service';
@@ -40,7 +40,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     if (this.tiles.length < 2) return;
 
     let shuffledRack =
-      this.tiles.length === 2 ? this.tiles.reverse() : _.shuffle(this.tiles);
+      this.tiles.length === 2 ? this.tiles.reverse() : shuffle(this.tiles);
 
     this.source.changePlayerRack(shuffledRack);
   }
@@ -164,7 +164,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
   zoomOut() {
     if (!this.source.isZoomed) return;
-    const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
+    const btnAttrs: BtnAttrs = { ...this.btnAttributes };
 
     let $board: HTMLElement = document.querySelector('#board');
 
@@ -177,7 +177,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   }
   zoomIn() {
     if (this.source.isZoomed) return;
-    const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
+    const btnAttrs: BtnAttrs = { ...this.btnAttributes };
     let $board: HTMLElement = document.querySelector('#board');
     let centerSquare = document.querySelector('[data-location="7,7"]');
     $board.classList.add('zoomedIn');

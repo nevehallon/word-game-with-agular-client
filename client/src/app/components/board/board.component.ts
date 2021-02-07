@@ -13,7 +13,6 @@ import { SourceService } from 'src/app/services/source.service';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import _ from 'lodash';
 import { BtnAttrs } from 'src/app/interfaces/btn-attrs';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
@@ -65,7 +64,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
   zoomOut() {
     if (!this.source.isZoomed) return;
-    const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
+    const btnAttrs: BtnAttrs = { ...this.btnAttributes };
 
     let $board: HTMLElement = document.querySelector('#board');
 
@@ -79,7 +78,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
   zoomIn(target: HTMLElement, overRide: boolean = false) {
     if (this.source.isZoomed && !overRide) return;
-    const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
+    const btnAttrs: BtnAttrs = { ...this.btnAttributes };
     let $board: HTMLElement = document.querySelector('#board');
     $board.classList.add('zoomedIn');
     this.source.isZoomed = true;

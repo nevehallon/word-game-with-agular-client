@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Square } from '../interfaces/square';
 import { ScrabbleLettersService } from './scrabble-letters.service';
-import _ from 'lodash';
+import { shuffle, drop } from 'lodash-es';
 import { HistoryEntry } from '../interfaces/history-entry';
 
 @Injectable({
@@ -11,7 +10,7 @@ import { HistoryEntry } from '../interfaces/history-entry';
 })
 export class SourceService {
   constructor(private letters: ScrabbleLettersService) {
-    this.bag = _.drop(this.bag, 86); //? uncomment for doing tests on a shorter game
+    // this.bag = drop(this.bag, 86); //? uncomment for doing tests on a shorter game
   }
 
   public numSource = 101;
@@ -37,7 +36,7 @@ export class SourceService {
     });
   }
 
-  wordArr = ['C', 'A', 'T']; //? uncomment to test AI after "CAT" is played for first turn
+  // wordArr = ['C', 'A', 'T']; //? uncomment to test AI after "CAT" is played for first turn
 
   private boardSource = new BehaviorSubject(
     Array(225)
@@ -128,5 +127,5 @@ export class SourceService {
   public rivalRack = [];
   public gameOver = false;
 
-  public bag = _.shuffle(_.shuffle(this.letters.get()));
+  public bag = shuffle(shuffle(this.letters.get()));
 }

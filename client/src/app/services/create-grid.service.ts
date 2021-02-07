@@ -1,5 +1,5 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import _ from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { Square } from '../interfaces/square';
 import { SourceService } from './source.service';
 
@@ -56,7 +56,7 @@ export class CreateGridService {
 
     this.$document = $document;
     this.gridState = this.createGrid($document);
-    this.cleanGrid = _.cloneDeep(this.gridState);
+    this.cleanGrid = cloneDeep(this.gridState);
 
     let count = 0;
     let gridLetters = [];

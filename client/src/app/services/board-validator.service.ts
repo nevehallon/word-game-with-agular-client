@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Trie } from '../../assets/trie-prefix-tree/index.js';
-import _ from 'lodash';
+import { without, drop, sum } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { BtnAttrs } from '../interfaces/btn-attrs.js';
 
@@ -49,7 +49,7 @@ export class BoardValidatorService implements OnDestroy {
   }
 
   isHot() {
-    const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
+    const btnAttrs: BtnAttrs = { ...this.btnAttributes };
 
     btnAttrs.passPlay.text = 'Play';
 
@@ -62,7 +62,7 @@ export class BoardValidatorService implements OnDestroy {
   }
 
   isNot() {
-    const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
+    const btnAttrs: BtnAttrs = { ...this.btnAttributes };
 
     btnAttrs.passPlay.text = 'Pass';
     btnAttrs.passPlay.bgColor = '';
@@ -76,7 +76,7 @@ export class BoardValidatorService implements OnDestroy {
 
   playError() {
     // setTimeout(() => {
-    const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
+    const btnAttrs: BtnAttrs = { ...this.btnAttributes };
 
     if (btnAttrs.passPlay.text === 'Pass') return;
 
@@ -246,7 +246,7 @@ export class BoardValidatorService implements OnDestroy {
             singleHot ? singleHot++ : undefined;
           if (bool.includes('falsetrue') || bool.includes('truefalse'))
             touching = true;
-          if (_.without(hotLetters, '', 'true').length > 1) {
+          if (without(hotLetters, '', 'true').length > 1) {
             if (isPlayer) {
               if (!$document.querySelectorAll('#board .hot').length)
                 return this.isNot();
@@ -291,7 +291,7 @@ export class BoardValidatorService implements OnDestroy {
       let done = false;
 
       fullMatrix.hotRows.forEach((row, rowIndex) => {
-        if (_.without(row, ' ').length > 1 && row.includes(true)) {
+        if (without(row, ' ').length > 1 && row.includes(true)) {
           row.forEach((cell, index) => {
             if (done) return;
             let prev =
@@ -302,7 +302,7 @@ export class BoardValidatorService implements OnDestroy {
               row[index + 1] === undefined || row[index + 1] === ' '
                 ? true
                 : false;
-            let skip = !_.drop(row, index + 1).includes(true);
+            let skip = !drop(row, index + 1).includes(true);
             if (cell !== ' ') {
               if (prev && !skip) coords = [];
               if (cell === true && prev) {
@@ -329,7 +329,7 @@ export class BoardValidatorService implements OnDestroy {
       });
 
       fullMatrixZip.hotColumns.forEach((column, columnIndex) => {
-        if (_.without(column, ' ').length > 1 && column.includes(true)) {
+        if (without(column, ' ').length > 1 && column.includes(true)) {
           column.forEach((cell, index) => {
             if (done) return;
             let prev =
@@ -340,7 +340,7 @@ export class BoardValidatorService implements OnDestroy {
               column[index + 1] === undefined || column[index + 1] === ' '
                 ? true
                 : false;
-            let skip = !_.drop(column, index + 1).includes(true);
+            let skip = !drop(column, index + 1).includes(true);
             if (cell !== ' ') {
               if (prev && !skip) zipCoords = [];
               if (cell === true && prev) {
@@ -396,13 +396,13 @@ export class BoardValidatorService implements OnDestroy {
         });
       });
 
-      let numHot = _.without(hotLetters, '').length
-        ? _.without(hotLetters, '').sort().reverse()[0].length / 4
+      let numHot = without(hotLetters, '').length
+        ? without(hotLetters, '').sort().reverse()[0].length / 4
         : 0;
       if (isPlayer) {
         // console.log(hotLetters);
         if (
-          _.without(hotLetters, '').length >
+          without(hotLetters, '').length >
           this.potentialPoints.length + this.potentialZipPoints.length
         ) {
           if (!$document.querySelectorAll('#board .hot').length)
@@ -412,7 +412,7 @@ export class BoardValidatorService implements OnDestroy {
         }
       }
 
-      _.without(words, ...wordsLogged).forEach((word) => {
+      without(words, ...wordsLogged).forEach((word) => {
         if (!Trie().hasWord(word)) {
           if (isPlayer) {
             if (!$document.querySelectorAll('#board .hot').length)
@@ -426,7 +426,7 @@ export class BoardValidatorService implements OnDestroy {
         //check words validity
       }); // passing in everything but words that have already been played to make sure we are only checking new words ->faster Trie check
 
-      let pointTally = [];
+      let pointTally: any = [];
 
       this.potentialPoints.forEach((word, index) => {
         let isEmpty =
@@ -435,8 +435,8 @@ export class BoardValidatorService implements OnDestroy {
             ? true
             : false;
         if (numHot > 6 && isPlayer) pointTally.push(50);
-        if (isEmpty) return pointTally.push(_.sum(word));
-        pointTally.push(_.sum(word) * _.sum(this.wordMultiplier[index]));
+        if (isEmpty) return pointTally.push(sum(word));
+        pointTally.push(sum(word) * sum(this.wordMultiplier[index]));
       });
 
       this.potentialZipPoints.forEach((word, index) => {
@@ -446,14 +446,14 @@ export class BoardValidatorService implements OnDestroy {
             ? true
             : false;
         if (numHot > 6 && isPlayer) pointTally.push(50);
-        if (isEmpty) return pointTally.push(_.sum(word));
-        pointTally.push(_.sum(word) * _.sum(this.zipWordMultiplier[index]));
+        if (isEmpty) return pointTally.push(sum(word));
+        pointTally.push(sum(word) * sum(this.zipWordMultiplier[index]));
       });
 
-      pointTally = _.sum(pointTally);
+      pointTally = sum(pointTally);
 
       if (isPlayer) {
-        const btnAttrs: BtnAttrs = _.cloneDeep(this.btnAttributes);
+        const btnAttrs: BtnAttrs = { ...this.btnAttributes };
 
         if (!$document.querySelectorAll('.square .hot').length)
           return this.isNot();
@@ -468,7 +468,7 @@ export class BoardValidatorService implements OnDestroy {
         return {
           words,
           pointTally,
-          bestWord: _.without(words, ...wordsLogged),
+          bestWord: without(words, ...wordsLogged),
         }; //return wordsToBeLogged, totalPotentialPoints
       } else {
         return { words, pointTally: 0 };

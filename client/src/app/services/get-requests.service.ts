@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LetterToPointsService } from './letter-to-points.service.js';
 import { getTrie } from '../../assets/trie-prefix-tree/index.js';
 import { HttpClient } from '@angular/common/http';
-import _ from 'lodash';
+import { orderBy } from 'lodash-es';
 import * as localforage from 'localforage';
 
 @Injectable({
@@ -87,7 +87,7 @@ export class GetRequestsService {
         });
       });
 
-      let wordsByValue = _.orderBy(result, ['points', 'word'], ['desc']);
+      let wordsByValue = orderBy(result, ['points', 'word'], ['desc']);
 
       return wordsByValue;
     } catch (error) {

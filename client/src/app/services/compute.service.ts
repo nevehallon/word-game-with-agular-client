@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BoardValidatorService } from './board-validator.service';
 import { GetRequestsService } from './get-requests.service';
 import { Trie } from '../../assets/trie-prefix-tree/index.js';
-import _ from 'lodash';
+import { orderBy, cloneDeep, sum } from 'lodash-es';
 import { SourceService } from './source.service';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class ComputeService {
   boardData;
 
   updateBoardData() {
-    let tempSquares = _.cloneDeep(this.source.getBoard());
+    let tempSquares = cloneDeep(this.source.getBoard());
     this.boardData = [];
     while (tempSquares.length) this.boardData.push(tempSquares.splice(0, 15));
   }
@@ -31,7 +31,7 @@ export class ComputeService {
   ) {
     let firstTurn = this.source.firstTurn;
     let wordsLogged = this.source.wordsLogged;
-    let rivalRack = _.cloneDeep(this.source.rivalRack);
+    let rivalRack = [...this.source.rivalRack];
     // firstTurn = false; //TODO: remove me
     this.updateBoardData();
     let difficultlyLimit = +localStorage.getItem('difficulty')
@@ -67,7 +67,7 @@ export class ComputeService {
           extraCount++;
         }
 
-        let cleanGrid = _.cloneDeep(gridState);
+        let cleanGrid = cloneDeep(gridState);
         let start = 7;
 
         wordSlice[x].word
@@ -107,7 +107,7 @@ export class ComputeService {
         }
       }
 
-      let bestWord = _.orderBy(candidates, ['pointTally'], ['desc'])[0];
+      let bestWord = orderBy(candidates, ['pointTally'], ['desc'])[0];
 
       if (!bestWord) return false;
 
@@ -908,7 +908,7 @@ export class ComputeService {
                       letters: x,
                       points: temp1.points[i],
                       details: temp1.details[i],
-                      score: _.sum(temp1.points[i].a),
+                      score: sum(temp1.points[i].a),
                       length: 7 - x.b.length,
                     });
                   });
@@ -917,7 +917,7 @@ export class ComputeService {
                       letters: x,
                       points: temp2.points[i],
                       details: temp2.details[i],
-                      score: _.sum(temp2.points[i].a),
+                      score: sum(temp2.points[i].a),
                       length: 7 - x.b.length,
                     });
                   });
@@ -1401,7 +1401,7 @@ export class ComputeService {
                       letters: x,
                       points: temp1.points[i],
                       details: temp1.details[i],
-                      score: _.sum(temp1.points[i].a),
+                      score: sum(temp1.points[i].a),
                       length: 7 - x.b.length,
                     });
                   });
@@ -1410,7 +1410,7 @@ export class ComputeService {
                       letters: x,
                       points: temp2.points[i],
                       details: temp2.details[i],
-                      score: _.sum(temp2.points[i].a),
+                      score: sum(temp2.points[i].a),
                       length: 7 - x.b.length,
                     });
                   });
@@ -1636,7 +1636,7 @@ export class ComputeService {
                   word: setWord,
                   joined: setWord.join(''),
                   points: setPoints,
-                  score: _.sum(setPoints),
+                  score: sum(setPoints),
                   path,
                   reverseOrder: isPre ? true : false,
                 });
@@ -1669,7 +1669,7 @@ export class ComputeService {
                   word: setWord,
                   joined: setWord.join(''),
                   points: setPoints,
-                  score: _.sum(setPoints),
+                  score: sum(setPoints),
                   path,
                   a_branch2: true,
                   a_isEnd: potentialBranch2Mid[i].details.isEnd,
@@ -1710,7 +1710,7 @@ export class ComputeService {
                   word: setWord,
                   joined: setWord.join(''),
                   points: setPoints,
-                  score: _.sum(setPoints),
+                  score: sum(setPoints),
                   path,
                   reverseOrder: potentialNewBranchMid[i].details.isEnd
                     ? true
@@ -1744,8 +1744,8 @@ export class ComputeService {
       }
       let bingos = potentialWordsMain.filter((x) => x.numHotTiles === 7);
       let notBingos = potentialWordsMain.filter((x) => x.numHotTiles !== 7);
-      notBingos = _.orderBy(notBingos, ['score'], ['desc']);
-      bingos = _.orderBy(bingos, ['score'], ['desc']);
+      notBingos = orderBy(notBingos, ['score'], ['desc']);
+      bingos = orderBy(bingos, ['score'], ['desc']);
       let candidates = [...bingos, ...notBingos];
       if (!candidates.length) {
         return false;
@@ -1758,7 +1758,7 @@ export class ComputeService {
       wordSlice.forEach((item, index) => {
         let badCookie = false;
         let choice = wordSlice[index];
-        let cleanGrid = _.cloneDeep(gridState);
+        let cleanGrid = cloneDeep(gridState);
         let start = choice.startCoord;
         let gridOrder = [];
         if (choice.reverseOrder) {
@@ -1858,7 +1858,7 @@ export class ComputeService {
         }
       });
 
-      let bestWord = _.orderBy(candidates, ['pointTally'], ['desc'])[0];
+      let bestWord = orderBy(candidates, ['pointTally'], ['desc'])[0];
 
       if (!bestWord) {
         return false;

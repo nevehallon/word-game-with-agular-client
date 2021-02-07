@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import _ from 'lodash';
+import { pullAt, shuffle, cloneDeep } from 'lodash-es';
 import { ComputeService } from './compute.service';
 import { CreateGridService } from './create-grid.service';
 import { BoardValidatorService } from './board-validator.service';
@@ -39,7 +39,7 @@ export class GameLogicService {
   deal2Player() {
     let playerRack = [];
     for (let i = 0; i < 7; i++) {
-      let tile = _.pullAt(this.source.bag, [0])[0];
+      let tile = pullAt(this.source.bag, [0])[0];
       playerRack.push(tile);
     }
     return playerRack;
@@ -47,15 +47,15 @@ export class GameLogicService {
 
   deal2PC() {
     for (let i = 0; i < 7; i++) {
-      this.source.rivalRack.push(_.pullAt(this.source.bag, [0])[0]);
+      this.source.rivalRack.push(pullAt(this.source.bag, [0])[0]);
     }
   }
 
   whoStarts() {
-    let bagSim = _.shuffle(this.source.bag);
+    let bagSim = shuffle(this.source.bag);
     return {
-      player: _.pullAt(bagSim, [0])[0].letter,
-      pc: _.pullAt(bagSim, [0])[0].letter,
+      player: pullAt(bagSim, [0])[0].letter,
+      pc: pullAt(bagSim, [0])[0].letter,
     };
   }
 
@@ -201,12 +201,12 @@ export class GameLogicService {
 
     for (let i = 0; i < maxNumTilesToSwap; i++) {
       if (this.source.bag.length) {
-        this.source.rivalRack.push(_.pullAt(this.source.bag, [0])[0]);
+        this.source.rivalRack.push(pullAt(this.source.bag, [0])[0]);
       }
     }
 
     this.source.bag.push(...tilesLeftInRivalRack.slice(0, maxNumTilesToSwap));
-    this.source.bag = _.shuffle(_.shuffle(this.source.bag));
+    this.source.bag = shuffle(shuffle(this.source.bag));
     console.log(this.source.rivalRack, this.source.bag);
     this.source.passCount = -1;
     this.pass(true, true, true, undefined, $document);
@@ -571,7 +571,7 @@ export class GameLogicService {
         $document.querySelectorAll('#board .hot')
       ).map((el) => el.parentElement);
 
-      let newBoard: Square[] = _.cloneDeep(board);
+      let newBoard: Square[] = cloneDeep(board);
       //fill rack back up to 7 or what ever is left in bag
       for (let i = 0; i < refill; i++) {
         let coords: string[] = tilesPlayed[i]
@@ -604,12 +604,11 @@ export class GameLogicService {
 
         if (this.source.bag.length) {
           this.source.addToPlayerRack({
-            content: _.pullAt(this.source.bag, [0])[0],
+            content: pullAt(this.source.bag, [0])[0],
             id: `tile${++this.source.numSource}`,
             class: ['tile', 'hot'],
             'data-drag': this.source.numSource,
           });
-          // ++this.source.lettersUsed;
         }
       }
 
@@ -642,7 +641,7 @@ export class GameLogicService {
         ].hot = false;
 
         if (this.source.bag.length) {
-          this.source.rivalRack.push(_.pullAt(this.source.bag, [0])[0]);
+          this.source.rivalRack.push(pullAt(this.source.bag, [0])[0]);
           // console.log(this.source.rivalRack);
         }
         // ++this.source.lettersUsed;
@@ -697,7 +696,7 @@ export class GameLogicService {
     if (this.source.firstTurn) this.source.firstTurn = false;
     this.source.isValidMove = false;
 
-    const btnAttrs: BtnAttrs = _.cloneDeep(this.source.getBtnAttr());
+    const btnAttrs: BtnAttrs = { ...this.source.getBtnAttr() };
 
     btnAttrs.passPlay.text = 'Pass';
     btnAttrs.passPlay.bgColor = '';
