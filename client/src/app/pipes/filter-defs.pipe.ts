@@ -9,7 +9,7 @@ export class FilterDefsPipe implements PipeTransform {
       .sort((a, b) => (a.upvotes > b.upvotes ? -1 : 1))
       .filter(
         (x) =>
-          !['INIT', 'ABR', 'PRX', 'AFF', 'SUF', 'SYM'].includes(x.part) &&
+          !['INIT', 'PRX', 'AFF', 'SUF', 'SYM', 'ANA'].includes(x.part) &&
           x.part !== undefined
       )
       .map((x) => {
@@ -23,6 +23,16 @@ export class FilterDefsPipe implements PipeTransform {
             ? 'noun'
             : p === 'ADV'
             ? 'adverb'
+            : p === 'ABR'
+            ? 'abbreviation'
+            : p === 'DET'
+            ? 'determiner'
+            : p === 'CONT'
+            ? 'contraction'
+            : p === 'IART'
+            ? 'indefinite article'
+            : p === 'PRE'
+            ? 'preposition'
             : p === 'CONJ'
             ? 'conjunction'
             : p === 'PRN'

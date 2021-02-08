@@ -117,24 +117,26 @@
                                     {{word.headword || element.word.split(", ")[i] | lowercase}}
                                 </span>
                             </ng-template>
-                            <div *ngFor="let wordDef of word.definitions | filterDefs; first as first">
-                                <div *ngIf="first">
-                                    <span *ngIf="first && word.pronunciation.trim()">
+                            <div *ngFor="let wordDef of word.definitions | filterDefs; index as i;">
+                                <div *ngIf="i === 0 || i === 1">
+                                    <span
+                                        *ngIf="word.pronunciation && (i === 0 || i === 1) && word.pronunciation.trim()"
+                                    >
                                         [<span [innerHTML]="word.pronunciation.trim()"></span>]
                                     </span>
                                     <span
                                         class="part"
-                                        *ngIf="first"
-                                        [innerHTML]="wordDef.part| lowercase"
+                                        *ngIf="i === 0 || i === 1"
+                                        [innerHTML]="wordDef.part | lowercase"
                                     ></span>
                                 </div>
                                 <span
                                     class="bold"
-                                    *ngIf="first"
+                                    *ngIf="i === 0 || i === 1"
                                     [innerHTML]="wordDef.txt"
                                 ></span>
                             </div>
-                            <div *ngIf="!word.definitions.length">
+                            <div *ngIf="!(word.definitions | filterDefs).length">
                                 Sorry, we couldn't find the definition for the word "{{word.headword ||
                                 element.word.split(', ')[i] | lowercase}}", but you might have better luck if you check
                                 <a
