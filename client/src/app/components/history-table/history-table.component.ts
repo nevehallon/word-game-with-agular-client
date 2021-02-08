@@ -45,11 +45,11 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
   firstTurn = this.source.firstTurn;
   gameOver = this.source.gameOver;
 
-  dataSource: HistoryEntry[] = this.source.history; /* .slice(0, -1); */
+  dataSource: HistoryEntry[] = def /* this.source.history */;
   displayedColumns = ['move', 'opponent', 'player'];
 
-  lastEntry: any = this.source.history[this.source.history.length - 1];
-  // lastEntry: any = def[def.length - 1]; //? mock data
+  // lastEntry: any = this.source.history[this.source.history.length - 1];
+  lastEntry: any = def[def.length - 1]; //? mock data
   log(...rest) {
     console.log(...rest);
   }

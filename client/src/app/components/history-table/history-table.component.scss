@@ -5,16 +5,7 @@
 .container {
   height: 396px;
   overflow: auto;
-}
-
-::-webkit-scrollbar {
-  width: 0; /* Remove scrollbar space */
-  height: 0; /* Remove scrollbar space */
-  background: transparent; /* Optional: just make scrollbar invisible */
-}
-/* Optional: show position indicator in red */
-::-webkit-scrollbar-thumb {
-  background: #000000;
+  overflow: overlay;
 }
 
 table {
@@ -43,14 +34,14 @@ table {
 .mat-column-move {
   padding: 0 0 0 10px !important;
 
-  // TODO: reduce column width to fit smaller screens
+  /* // TODO: reduce column width to fit smaller screens */
 }
-
-// .move-column-text {
-//   display: flex;
-//   flex-wrap: wrap;
-//   max-width: 33.3vw;
-// }
+/* 
+.move-column-text {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 33.3vw;
+} */
 
 .cdk-column-player {
   text-align: center;
@@ -60,7 +51,7 @@ table {
   text-align: center;
 }
 
-/* 
+/*
 * collapsed/expanded row
 */
 
@@ -105,9 +96,13 @@ tr.expanded-row.expandable {
   font-weight: lighter;
   margin: 3px 0;
   height: 150px;
+  direction: rtl;
+  * {
+    direction: ltr;
+  }
 }
 
-/* 
+/*
 mat-tab-group
  */
 
@@ -118,6 +113,7 @@ mat-tab-group
 }
 
 :host ::ng-deep mat-tab-header {
+  direction: ltr;
   margin: 0;
 }
 
@@ -138,9 +134,53 @@ mat-tab-group
 }
 
 :host ::ng-deep .mat-tab-body-wrapper {
-  margin: 0 5px;
+  margin: 0 5px 0 0;
+  color: rgb(63 81 181);
+  background: lightgray;
+}
+.defContainer {
+  margin-bottom: 25px;
+}
+
+.moreDetails {
+  background: #3f51b5;
+  background: linear-gradient(90deg, #3f51b5 0%, rgba(0, 0, 0, 0) 50%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3f51b5",endColorstr="#000000",GradientType=1);
+
+  padding: 3px 12px;
+  border-radius: 2em;
+  font-weight: bold;
+  text-shadow: 0 0 3px white;
 }
 
 .part {
   font-style: italic;
+}
+
+.defText {
+  margin-right: 10px;
+  padding: 3px 22px 0 0;
+
+  background: #3f51b5;
+  background: linear-gradient(270deg, #28a745 0%, rgba(0, 0, 0, 0) 54%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3f51b5",endColorstr="#000000",GradientType=1);
+
+  border-radius: 0 3em 3em 0;
+  text-shadow: 0 0 3px white;
+}
+
+.between {
+  height: 2px;
+  background: rgb(63, 81, 181);
+  background: radial-gradient(
+    circle,
+    rgba(63, 81, 181, 1) 0%,
+    rgba(63, 81, 181, 0.5777661406359419) 75%,
+    rgba(226, 226, 226, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3f51b5",endColorstr="#e2e2e2",GradientType=1);
+
+  width: 90%;
+  margin: 2px 0px 5px 12px;
+  box-shadow: 0px 0px 8px 0px black;
 }
