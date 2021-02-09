@@ -126,6 +126,9 @@ mat-tab-group
   min-width: 50px;
   width: 100%;
   height: 34px;
+  box-shadow: inset 0px 0px 8px 0px black;
+}
+:host ::ng-deep .mat-tab-label-active {
   box-shadow: inset 0px 0px 8px 0px white;
 }
 
@@ -138,6 +141,11 @@ mat-tab-group
   color: rgb(63 81 181);
   background: lightgray;
 }
+
+.pronunciation {
+  margin: 5px;
+}
+
 .defContainer {
   margin-bottom: 25px;
 }
@@ -151,6 +159,7 @@ mat-tab-group
   );
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3f51b5",endColorstr="#000000",GradientType=1);
 
+  margin-right: 10px;
   padding: 3px 12px;
   border-radius: 2em;
   font-weight: bold;
@@ -163,9 +172,9 @@ mat-tab-group
 
 .defText {
   margin-right: 10px;
-  padding: 3px 22px 0 0;
+  padding: 3px 22px;
 
-  background: #28a745;
+  background: #28a74575;
   background: linear-gradient(
     270deg,
     rgba(0, 0, 0, 0) 15%,
@@ -174,23 +183,11 @@ mat-tab-group
   );
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3f51b5",endColorstr="#000000",GradientType=1);
 
-  border-radius: 0 3em 3em 0;
+  border-radius: 3em;
   text-shadow: 0 0 3px white;
 }
 
-.between {
-  /* not in use TODO:delete */
-  height: 2px;
-  background: rgb(63, 81, 181);
-  background: radial-gradient(
-    circle,
-    rgba(63, 81, 181, 1) 0%,
-    rgba(63, 81, 181, 0.5777661406359419) 75%,
-    rgba(226, 226, 226, 1) 100%
-  );
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3f51b5",endColorstr="#e2e2e2",GradientType=1);
-
-  width: 90%;
-  margin: 2px 0px 5px 12px;
-  box-shadow: 0px 0px 8px 0px black;
+.wordOrigin {
+  margin-right: 10px;
+  text-shadow: 0px 0 2px #3f51b5;
 }
