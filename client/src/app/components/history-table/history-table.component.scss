@@ -134,7 +134,7 @@ mat-tab-group
 }
 
 :host ::ng-deep .mat-tab-body-wrapper {
-  margin: 0 5px 0 0;
+  padding: 0 5px 0 0;
   color: rgb(63 81 181);
   background: lightgray;
 }
@@ -143,8 +143,12 @@ mat-tab-group
 }
 
 .moreDetails {
-  background: #3f51b5;
-  background: linear-gradient(90deg, #3f51b5 0%, rgba(0, 0, 0, 0) 50%);
+  background: rgba(63, 81, 181, 0.7);
+  background: linear-gradient(
+    90deg,
+    rgba(63, 81, 181, 0.7) 0%,
+    rgba(0, 0, 0, 0) 50%
+  );
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3f51b5",endColorstr="#000000",GradientType=1);
 
   padding: 3px 12px;
@@ -161,8 +165,13 @@ mat-tab-group
   margin-right: 10px;
   padding: 3px 22px 0 0;
 
-  background: #3f51b5;
-  background: linear-gradient(270deg, #28a745 0%, rgba(0, 0, 0, 0) 54%);
+  background: #28a745;
+  background: linear-gradient(
+    270deg,
+    rgba(0, 0, 0, 0) 15%,
+    #28a74575 25%,
+    rgba(0, 0, 0, 0) 100%
+  );
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3f51b5",endColorstr="#000000",GradientType=1);
 
   border-radius: 0 3em 3em 0;
@@ -170,6 +179,7 @@ mat-tab-group
 }
 
 .between {
+  /* not in use TODO:delete */
   height: 2px;
   background: rgb(63, 81, 181);
   background: radial-gradient(

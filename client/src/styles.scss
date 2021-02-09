@@ -46,7 +46,7 @@ $client-theme: mat-light-theme(
   -ms-user-select: none;
   user-select: none;
 
-  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.35) transparent;
   scrollbar-width: thin;
 }
 
@@ -80,7 +80,7 @@ body.inheritCursors * {
   border: 4px solid rgba(0, 0, 0, 0);
   background-clip: padding-box;
   -webkit-border-radius: 7px;
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, 0.35);
   -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05),
     inset 1px 1px 0px rgba(0, 0, 0, 0.05);
 }

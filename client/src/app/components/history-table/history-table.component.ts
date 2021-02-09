@@ -1474,11 +1474,11 @@ let def: any[] = [
           pos: { default: ['NOUN', 'VERB'], active: [] },
           category: { default: ['Scot.'], active: [] },
         },
-        origin: {
-          txt:
-            'Apparently cognate with East Frisian <i>todde</i> (“bundle"), dialectal Swedish <a>todd</a> (“mass (of wool)").',
-          link: ['todd'],
-        },
+        // origin: {
+        //   txt:
+        //     'Apparently cognate with East Frisian <i>todde</i> (“bundle"), dialectal Swedish <a>todd</a> (“mass (of wool)").',
+        //   link: ['todd'],
+        // },
         userDevice: null,
       },
     ],

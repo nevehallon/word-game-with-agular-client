@@ -132,17 +132,18 @@
                                             [innerHTML]="wordDef.part | lowercase"
                                         ></span>
                                     </div>
-                                    <div class="defText">
-                                        <span
-                                            class="bold"
-                                            [innerHTML]="wordDef.txt"
-                                        ></span>
+                                    <div class="defText bold">
+
+                                        - <span [innerHTML]="wordDef.txt"></span>
                                     </div>
-                                    <!-- <div *ngIf="ii < 9 && !last">
-                                        <div class="between"></div>
-                                    </div> -->
+
                                 </div>
                             </div>
+                            <div
+                                *ngIf="word?.origin?.txt"
+                                class="wordOrigin"
+                                [innerHTML]="'*'+word?.origin?.txt"
+                            ></div>
                             <div *ngIf="!(word.definitions | filterDefs).length">
                                 Sorry, we couldn't find the definition for the word "{{word.headword ||
                                 element.word.split(', ')[i] | lowercase}}", but you might have better luck if you check
