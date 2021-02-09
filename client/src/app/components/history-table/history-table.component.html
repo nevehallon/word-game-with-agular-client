@@ -20,13 +20,13 @@
                 #td
                 mat-cell
                 *matCellDef="let element"
-                [class]="element.isAI ? 'opponent' : 'player'"
+                [class]="element?.isAI ? 'opponent' : 'player'"
             >
                 <div class="move-column-text">
 
-                    {{element.word | lowercase}}
-                    <span [ngClass]="{'bold': element.points}">
-                        {{element.points ? '[+' + element.points + ']': element?.skip?.isSwap ? "Swap"
+                    {{element?.word | lowercase}}
+                    <span [ngClass]="{'bold': element?.points}">
+                        {{element?.points ? '[+' + element?.points + ']': element?.skip?.isSwap ? "Swap"
                         :
                         "Pass"}}
                     </span>
@@ -59,8 +59,8 @@
                 class="opponent"
                 mat-cell
                 *matCellDef="let element"
-                [ngClass]="{'bold': element.points && element.isAI}"
-            > {{element.score.computerScore}} </td>
+                [ngClass]="{'bold': element?.points && element?.isAI}"
+            > {{element?.score?.computerScore}} </td>
             <td
                 class="opponent bold"
                 mat-footer-cell
@@ -79,8 +79,8 @@
                 class="player"
                 mat-cell
                 *matCellDef="let element"
-                [ngClass]="{'bold': element.points && !element.isAI}"
-            > {{element.score.playerScore}} </td>
+                [ngClass]="{'bold': element?.points && !element?.isAI}"
+            > {{element?.score.playerScore}} </td>
             <td
                 class="player bold"
                 mat-footer-cell
@@ -114,7 +114,7 @@
                         >
                             <ng-template mat-tab-label>
                                 <span>
-                                    {{word.headword || element.word.split(", ")[i] | lowercase}}
+                                    {{word.headword || element?.word.split(", ")[i] | lowercase}}
                                 </span>
                             </ng-template>
                             <div
@@ -150,11 +150,11 @@
                             ></div>
                             <div *ngIf="!(word.definitions | filterDefs).length">
                                 Sorry, we couldn't find the definition for the word "{{word.headword ||
-                                element.word.split(', ')[i] | lowercase}}", but you might have better luck if you check
+                                element?.word.split(', ')[i] | lowercase}}", but you might have better luck if you check
                                 <a
                                     class="bold player"
                                     target="_blank"
-                                    [href]="'https://www.google.com/search?q=define+' + (word.headword || element.word.split(', ')[i]) |lowercase"
+                                    [href]="'https://www.google.com/search?q=define+' + (word.headword || element?.word.split(', ')[i]) |lowercase"
                                 >
                                     here
                                 </a>

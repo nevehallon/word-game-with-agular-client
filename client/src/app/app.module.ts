@@ -10,6 +10,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatRippleModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 
 import { AppComponent } from './app.component';
 import { ContainerComponent } from './components/container/container.component';
@@ -49,6 +50,7 @@ import { FilterDefsPipe } from './pipes/filter-defs.pipe';
     MatTableModule,
     MatTabsModule,
     MatRippleModule,
+    MatIconModule,
   ],
   entryComponents: [ModalDialogComponent],
   // providers: [],

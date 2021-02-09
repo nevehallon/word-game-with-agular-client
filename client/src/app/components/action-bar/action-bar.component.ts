@@ -108,10 +108,10 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     this.zoomOut();
   }
 
-  swapRecall(action: 'Recall' | 'Swap') {
+  swapRecall(action) {
     if (!this.source.playersTurn && !this.source.gameOver) return;
 
-    if (action === 'Recall') {
+    if (action.includes('Recall')) {
       let tilesToReturn: any[] = [];
       let newBoard = this.squares.map((square) => {
         if (square.data[0]?.class.includes('hot')) {

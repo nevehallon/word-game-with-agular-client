@@ -179,6 +179,7 @@ export class GameLogicService {
     let status = await this.http.checkServerStatus();
     if (status) {
       this.closeDialog();
+      this.source.loaderShown = false;
       return this.startGame($document);
     }
     setTimeout(() => {

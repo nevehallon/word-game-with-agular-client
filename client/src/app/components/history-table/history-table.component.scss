@@ -110,6 +110,7 @@ mat-tab-group
   width: 100%;
   display: flex;
   border-radius: 10px;
+  background: lightgray;
 }
 
 :host ::ng-deep mat-tab-header {
