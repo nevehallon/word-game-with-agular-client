@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { interval } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-audio-btn',
@@ -6,36 +8,63 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./audio-btn.component.scss'],
 })
 export class AudioBtnComponent implements OnInit {
+  audioIcon = 'volume_mute';
+
+  @Input() word: string = '';
   hasAudio: boolean = false;
-
-  flip = true;
-  statusIcon: string = 'volume_mute';
-
-  @Input() word: string = null;
 
   playAudio(el) {
     el.play();
+    this.audioIcon = 'volume_down';
+    let statusArr = [
+      'volume_up',
+      'volume_down',
+      'volume_up',
+      'volume_down',
+      'volume_mute',
+      'volume_up',
+      'volume_down',
+      'volume_up',
+      'volume_down',
+    ];
+
+    let fourth = (el.duration * 1000) / 4;
+
+    const numbers = interval(fourth);
+
+    const takeFourNumbers = numbers.pipe(take(5));
+
+    takeFourNumbers.subscribe((x) => {
+      this.audioIcon = statusArr[x];
+      console.log(statusArr[x], this.audioIcon);
+    });
   }
 
-  interval;
-
   playing(el) {
-    let step = 0;
-    let statusArr = ['volume_down', 'volume_up', 'volume_down'];
-    let fourth = (el.duration * 1000) / 4;
-    this.interval = setInterval(() => {
-      this.flip = !this.flip;
-      this.statusIcon = statusArr[step++];
-      this.flip = !this.flip;
-    }, fourth);
+    // let step = 0;
+    // let statusArr = [
+    //   'volume_down',
+    //   'volume_up',
+    //   'volume_down',
+    //   'volume_up',
+    //   'volume_down',
+    //   'volume_up',
+    //   'volume_down',
+    //   'volume_up',
+    //   'volume_down',
+    //   'volume_up',
+    //   'volume_down',
+    // ];
+    // let fourth = (el.duration * 1000) / 4;
+    // this.interval = setInterval(() => {
+    //   this.changeAudioIcon(statusArr[step++]);
+    // }, 200);
   }
 
   end() {
-    clearInterval(this.interval);
-    this.flip = !this.flip;
-
-    this.statusIcon = 'volume_mute';
-    this.flip = !this.flip;
+    setTimeout(() => {
+      this.audioIcon = 'volume_mute';
+    }, 1000);
   }
 
   constructor() {}
