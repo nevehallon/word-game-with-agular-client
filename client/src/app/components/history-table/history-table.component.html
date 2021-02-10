@@ -80,7 +80,7 @@
                 mat-cell
                 *matCellDef="let element"
                 [ngClass]="{'bold': element?.points && !element?.isAI}"
-            > {{element?.score.playerScore}} </td>
+            > {{element?.score?.playerScore}} </td>
             <td
                 class="player bold"
                 mat-footer-cell
@@ -117,6 +117,9 @@
                                     {{word.headword || element?.word.split(", ")[i] | lowercase}}
                                 </span>
                             </ng-template>
+
+                            <app-audio-btn [word]="word.headword | lowercase"></app-audio-btn>
+
                             <div
                                 class="bold pronunciation"
                                 *ngIf="word.pronunciation && word.pronunciation.trim()"

@@ -1,0 +1,32 @@
+<button
+    mat-mini-fab
+    color="primary"
+    aria-label="icon button with play audio icon"
+    *ngIf="hasAudio"
+    (click)="playAudio(audio)"
+>
+    <mat-icon
+        [hidden]="flip"
+        aria-hidden="false"
+        aria-label="audio icon"
+    >{{statusIcon}}</mat-icon>
+</button>
+<audio
+    #audio
+    (loadeddata)="audio.readyState >= 2 ? hasAudio = true : null"
+    preload="auto"
+    (play)="playing(audio)"
+    (ended)="end()"
+>
+    <source
+        type="audio/mp3"
+        [src]="'//ssl.gstatic.com/dictionary/static/sounds/20200429/'+(word)+'--_us_1.mp3'"
+    >
+    <source
+        type="audio/mp3"
+        [src]="'https://cdn.yourdictionary.com/audio/en/'+(word)+'.mp3'"
+    >
+
+    Your browser does not support the
+    <code>audio</code> element.
+</audio>

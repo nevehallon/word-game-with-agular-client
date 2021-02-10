@@ -278,7 +278,7 @@ export class GameLogicService {
         }
 
         console.error(error);
-        // this.pcPlay($document);
+        this.pcPlay($document);
       }
     }, 250);
   }

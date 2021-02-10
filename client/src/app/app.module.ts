@@ -23,6 +23,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
 import { HistoryTableComponent } from './components/history-table/history-table.component';
 import { FilterDefsPipe } from './pipes/filter-defs.pipe';
+import { AudioBtnComponent } from './components/audio-btn/audio-btn.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { FilterDefsPipe } from './pipes/filter-defs.pipe';
     ModalDialogComponent,
     HistoryTableComponent,
     FilterDefsPipe,
+    AudioBtnComponent,
   ],
   imports: [
     BrowserModule,
