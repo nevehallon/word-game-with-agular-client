@@ -5,11 +5,24 @@
     *ngIf="hasAudio"
     (click)="playAudio(audio)"
 >
-    <mat-icon
+    <fa-icon
+        [hidden]="!faVolumeOff"
         aria-hidden="false"
         aria-label="audio icon"
-    >{{audioIcon}}
-    </mat-icon>
+        [icon]="faVolumeOffIcon"
+    ></fa-icon>
+    <fa-icon
+        [hidden]="!faVolumeDown"
+        aria-hidden="false"
+        aria-label="audio icon"
+        [icon]="faVolumeDownIcon"
+    ></fa-icon>
+    <fa-icon
+        [hidden]="!faVolumeUp"
+        aria-hidden="false"
+        aria-label="audio icon"
+        [icon]="faVolumeUpIcon"
+    ></fa-icon>
 </button>
 <audio
     #audio

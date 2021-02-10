@@ -24,6 +24,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { HistoryTableComponent } from './components/history-table/history-table.component';
 import { FilterDefsPipe } from './pipes/filter-defs.pipe';
 import { AudioBtnComponent } from './components/audio-btn/audio-btn.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { AudioBtnComponent } from './components/audio-btn/audio-btn.component';
     MatTabsModule,
     MatRippleModule,
     MatIconModule,
+    FontAwesomeModule,
   ],
   entryComponents: [ModalDialogComponent],
   // providers: [],
