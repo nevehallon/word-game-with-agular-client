@@ -23,6 +23,8 @@ import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit, AfterViewInit {
+  isZoomed = this.source.isZoomed;
+
   Math = Math;
   squares: any[] = [];
   // = Array(225)

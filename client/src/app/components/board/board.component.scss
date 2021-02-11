@@ -13,21 +13,40 @@ $wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-t
   height: 100%;
   line-height: 0; //? not best solution
 }
+.square::before {
+  position: absolute;
+  font-weight: bold;
+  z-index: 0;
+  font-size: clamp(8px, 75vmax / 50, 22px);
+}
 
 .tw {
   background: #d53b5d;
+}
+.tw::before {
+  content: "TW";
 }
 
 .dw {
   background: #dc98af;
 }
+.dw::before {
+  content: "DW";
+}
 
 .tl {
   background: #0655c3;
 }
+.tl::before {
+  content: "TL";
+  color: white;
+}
 
 .dl {
   background: #97bfcd;
+}
+.dl::before {
+  content: "DL";
 }
 
 .tile {
