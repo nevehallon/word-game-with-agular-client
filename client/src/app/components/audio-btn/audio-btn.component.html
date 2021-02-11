@@ -3,42 +3,61 @@
     color="primary"
     aria-label="icon button with play audio icon"
     *ngIf="hasAudio"
-    (click)="playAudio(audio)"
+    [ngClass]="{'active': isPlaying}"
+    (click)="playAudio(audio, animation)"
 >
-    <fa-icon
-        [hidden]="!faVolumeOff"
-        aria-hidden="false"
-        aria-label="audio icon"
-        [icon]="faVolumeOffIcon"
-    ></fa-icon>
-    <fa-icon
-        [hidden]="!faVolumeDown"
-        aria-hidden="false"
-        aria-label="audio icon"
-        [icon]="faVolumeDownIcon"
-    ></fa-icon>
-    <fa-icon
-        [hidden]="!faVolumeUp"
-        aria-hidden="false"
-        aria-label="audio icon"
-        [icon]="faVolumeUpIcon"
-    ></fa-icon>
+    <span
+        #animation
+        [ngClass]="{'playing': isPlaying}"
+    >
+        <mat-icon
+            aria-hidden="false"
+            aria-label="audio icon"
+        >volume_mute</mat-icon><span></span>
+    </span>
 </button>
 <audio
     #audio
     (loadeddata)="audio.readyState >= 2 ? hasAudio = true : null"
     preload="auto"
-    (play)="playing(audio)"
-    (ended)="end()"
 >
+
+
+    <source
+        type="audio/mp3"
+        [src]="'//ssl.gstatic.com/dictionary/static/sounds/20200429/'+(word)+'--_3_rr.mp3'"
+    >
+    <source
+        type="audio/mp3"
+        [src]="'//ssl.gstatic.com/dictionary/static/sounds/20200429/'+(word)+'--_3.mp3'"
+    >
+    <source
+        type="audio/mp3"
+        [src]="'//ssl.gstatic.com/dictionary/static/sounds/20200429/'+(word)+'--_us_2rr.mp3'"
+    >
+    <source
+        type="audio/mp3"
+        [src]="'//ssl.gstatic.com/dictionary/static/sounds/20200429/'+(word)+'--_us_2.mp3'"
+    >
+    <source
+        type="audio/mp3"
+        [src]="'//ssl.gstatic.com/dictionary/static/sounds/20200429/'+(word)+'--_us_1rr.mp3'"
+    >
+
+
     <source
         type="audio/mp3"
         [src]="'//ssl.gstatic.com/dictionary/static/sounds/20200429/'+(word)+'--_us_1.mp3'"
     >
+
     <source
         type="audio/mp3"
         [src]="'https://cdn.yourdictionary.com/audio/en/'+(word)+'.mp3'"
     >
+
+
+
+
 
     Your browser does not support the
     <code>audio</code> element.

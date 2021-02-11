@@ -26,16 +26,6 @@ export interface Definition {
   downvotes: number;
 }
 
-export interface FilteredDefinition {
-  id: number;
-  dic: number;
-  part: string;
-  txt: string;
-  ex: string[];
-  upvotes: number;
-  downvotes: number;
-}
-
 export interface Source {
   default: number[];
   active: any[];
@@ -51,12 +41,6 @@ export interface Category {
   active: any[];
 }
 
-export interface Filter {
-  source: Source;
-  pos: Po;
-  category: Category;
-}
-
 export interface Origin {
   txt: string;
   link: string[];
@@ -65,11 +49,7 @@ export interface Origin {
 export interface DefinitionElement {
   headword: string;
   definitions: Definition[];
-  filteredDefinitions: FilteredDefinition[];
-  audio: string;
   pronunciation: string;
-  isFilterPanelOpened: boolean;
-  filters: Filter;
   origin: Origin;
-  userDevice?: any;
+  success: boolean;
 }

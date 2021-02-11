@@ -118,7 +118,8 @@
                                 </span>
                             </ng-template>
 
-                            <app-audio-btn [word]="word.headword | lowercase"></app-audio-btn>
+                            <app-audio-btn [word]="word.headword || element?.word.split(', ')[i] | lowercase">
+                            </app-audio-btn>
 
                             <div
                                 class="bold pronunciation"
@@ -147,11 +148,14 @@
                                 </div>
                             </div>
                             <div
-                                *ngIf="word?.origin?.txt"
                                 class="wordOrigin"
-                                [innerHTML]="'* '+word?.origin?.txt"
+                                [innerHTML]="'* '+origin.txt"
+                                *ngFor="let origin of word?.origin"
                             ></div>
-                            <div *ngIf="!(word.definitions | filterDefs).length">
+                            <div
+                                class="notFound center-align"
+                                *ngIf="!(word.definitions | filterDefs).length"
+                            >
                                 Sorry, we couldn't find the definition for the word "{{word.headword ||
                                 element?.word.split(', ')[i] | lowercase}}", but you might have better luck if you check
                                 <a

@@ -1,13 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-// import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import {
-  faVolumeOff,
-  faVolumeDown,
-  faVolumeUp,
-  IconDefinition,
-} from '@fortawesome/free-solid-svg-icons';
-import { interval } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-audio-btn',
@@ -15,78 +6,34 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./audio-btn.component.scss'],
 })
 export class AudioBtnComponent implements OnInit {
-  faVolumeOff = true;
-  faVolumeDown = false /* faVolumeDown */;
-  faVolumeUp = false /* faVolumeUp */;
-  faVolumeOffIcon = faVolumeOff;
-  faVolumeDownIcon = faVolumeDown;
-  faVolumeUpIcon = faVolumeUp;
-  // iconComponent: FaIconComponent;
+  constructor(private cd: ChangeDetectorRef) {}
+  ngOnInit(): void {}
+
+  private _timeOut;
 
   @Input() word: string = '';
   hasAudio: boolean = false;
+  isPlaying: boolean = null;
 
-  playAudio(el, iconComponent) {
-    // this.iconComponent = iconComponent;
+  playAudio(el: HTMLAudioElement, $animation) {
+    el.currentTime = 0;
+    clearTimeout(this._timeOut);
+    this.stop($animation);
+    this.isPlaying = true;
+    this.cd.markForCheck();
+
     el.play();
-    // this.faVolume = faVolumeDown;
-    let statusArr = [
-      'faVolumeUp',
-      'faVolumeDown',
-      'faVolumeUp',
-      'faVolumeDown',
-      'faVolumeUp',
-      'faVolumeDown',
-    ];
 
-    let fourth = (el.duration * 1000) / 4;
-
-    const numbers = interval(fourth);
-
-    const takeFourNumbers = numbers.pipe(take(5));
-
-    takeFourNumbers.subscribe((x) => {
-      this.faVolumeOff = false;
-      this.faVolumeDown = false;
-      this.faVolumeUp = false;
-      this[statusArr[x]] = true;
-      // this.faVolume = statusArr[x];
-      // this.iconComponent.icon = statusArr[x];
-      // this.iconComponent.render();
-      // console.log(statusArr[x], this.faVolume);
-    });
+    this._timeOut = setTimeout(() => {
+      this.stop($animation);
+    }, 1600);
   }
 
-  playing(el) {
-    // let step = 0;
-    // let statusArr = [
-    //   'volume_down',
-    //   'volume_up',
-    //   'volume_down',
-    //   'volume_up',
-    //   'volume_down',
-    //   'volume_up',
-    //   'volume_down',
-    //   'volume_up',
-    //   'volume_down',
-    //   'volume_up',
-    //   'volume_down',
-    // ];
-    // let fourth = (el.duration * 1000) / 4;
-    // this.interval = setInterval(() => {
-    //   this.changeAudioIcon(statusArr[step++]);
-    // }, 200);
+  stop($animation) {
+    this.isPlaying = null;
+    this.cd.markForCheck();
+    $animation.style.display = 'none';
+    $animation.offsetHeight; /* trigger reflow */
+    $animation.style.display = 'initial';
   }
-
-  end() {
-    setTimeout(() => {
-      // this.faVolume = faVolumeOff;
-      // this.iconComponent.icon = faVolumeOff;
-      // this.iconComponent.render();
-    }, 500);
-  }
-
-  constructor() {}
-
-  ngOnInit(): void {}
 }

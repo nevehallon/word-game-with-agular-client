@@ -5,7 +5,7 @@ import { take } from 'rxjs/operators';
 import { BtnAttrs } from 'src/app/interfaces/btn-attrs';
 import { SourceService } from 'src/app/services/source.service';
 import { shuffle } from 'lodash-es';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
 import { CreateGridService } from 'src/app/services/create-grid.service';
 import { GameLogicService } from 'src/app/services/game-logic.service';
@@ -24,6 +24,10 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     public gameService: GameLogicService,
     private validate: BoardValidatorService
   ) {}
+
+  private _timeOut;
+
+  dialogRef: MatDialogRef<any>;
 
   remainingTiles;
 
@@ -192,10 +196,36 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   showScoreHistory() {
     if (!this.source.playersTurn && !this.source.gameOver) return;
 
+    if (
+      this.source.history.length &&
+      (this.source.history[this.source.history.length - 2].isAI === undefined ||
+        this.source.history[this.source.history.length - 1].isAI === undefined)
+    ) {
+      if (!this.dialogRef) {
+        this.dialogRef = this.dialog.open(ModalDialogComponent, {
+          disableClose: true,
+          id: 'loading',
+          data: {
+            type: 'loading',
+            message: 'loading words...',
+          },
+        });
+      }
+
+      return (this._timeOut = setTimeout(() => {
+        this.showScoreHistory();
+      }, 500));
+    }
+
+    this.dialogRef = undefined;
+    clearTimeout(this._timeOut);
+
     this.dialog.closeAll();
 
     this.dialog.open(ModalDialogComponent, {
       id: 'historyModal',
+      maxHeight: '95vh',
+      height: '95vh',
       maxWidth: '75vh',
       width: '99vmin',
       data: {

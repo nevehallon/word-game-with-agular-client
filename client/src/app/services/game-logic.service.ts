@@ -511,6 +511,7 @@ export class GameLogicService {
           return `${word}`;
         })
         .join(', ');
+
       this.source.history.push({});
       let index = this.source.history.length - 1;
 
@@ -545,6 +546,7 @@ export class GameLogicService {
           return `${word}`;
         })
         .join(', ');
+
       this.source.history.push({});
       let index = this.source.history.length - 1;
 
