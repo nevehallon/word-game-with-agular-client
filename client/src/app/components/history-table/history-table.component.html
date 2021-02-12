@@ -98,7 +98,9 @@
                 [attr.colspan]="displayedColumns.length"
             >
                 <div
-                    class="element-detail"
+                    class="element-detail mat-content"
+                    (touchstart)="swipe($event, 'start', element?.definitions.length || 1)"
+                    (touchend)="swipe($event, 'end')"
                     [@detailExpand]="element === expandedElement ? scrollInView(container, tCell) : 'collapsed'"
                 >
                     <mat-tab-group
@@ -107,6 +109,7 @@
                         backgroundColor="primary"
                         [disablePagination]="true"
                         mat-align-tabs="center"
+                        [(selectedIndex)]="selectedTab"
                     >
                         <mat-tab
                             *ngFor="let word of element?.definitions;index as i; count as count;"
@@ -184,6 +187,7 @@
             [class.expanded-row]="expandedElement === row"
             [class.expandable]="row.points"
             (click)="expandedElement = expandedElement === row ? null : row"
+            (click)="selectedTab = 0"
         ></tr>
         <tr
             mat-footer-row
@@ -192,6 +196,7 @@
             [class.expanded-row]="expandedElement === lastEntry"
             [class.expandable]="lastEntry?.points"
             (click)="expandedElement = expandedElement === lastEntry ? null : lastEntry"
+            (click)="selectedTab = 0"
         ></tr>
         <tr
             mat-row
