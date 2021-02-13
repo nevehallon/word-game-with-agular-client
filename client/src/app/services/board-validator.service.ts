@@ -469,6 +469,7 @@ export class BoardValidatorService implements OnDestroy {
           words,
           pointTally,
           bestWord: without(words, ...wordsLogged),
+          /* TODO: if there is a word more than once leave the last of its kind */
         }; //return wordsToBeLogged, totalPotentialPoints
       } else {
         return { words, pointTally: 0 };
