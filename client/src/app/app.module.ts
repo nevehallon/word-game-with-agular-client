@@ -22,9 +22,14 @@ import { ModalDialogComponent } from './components/modal-dialog/modal-dialog.com
 import { FormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
 import { HistoryTableComponent } from './components/history-table/history-table.component';
-import { FilterDefsPipe } from './pipes/filter-defs.pipe';
 import { AudioBtnComponent } from './components/audio-btn/audio-btn.component';
 
+import { FilterDefsPipe } from './pipes/filter-defs.pipe';
+
+import {
+  HammerGestureConfig,
+  HAMMER_GESTURE_CONFIG,
+} from '@angular/platform-browser';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +60,9 @@ import { AudioBtnComponent } from './components/audio-btn/audio-btn.component';
     MatIconModule,
   ],
   entryComponents: [ModalDialogComponent],
-  // providers: [],
+  providers: [
+    { provide: HAMMER_GESTURE_CONFIG, useClass: HammerGestureConfig },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

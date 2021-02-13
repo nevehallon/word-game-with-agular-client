@@ -12,6 +12,7 @@ export class AudioBtnComponent implements OnInit {
   private _timeOut;
 
   @Input() word: string = '';
+  @Input() audioSources: string = '';
   hasAudio: boolean = false;
   isPlaying: boolean = null;
 
