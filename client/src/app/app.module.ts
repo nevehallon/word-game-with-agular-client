@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { NgModule, Injectable } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +12,6 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
-import { HammerModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { ContainerComponent } from './components/container/container.component';
@@ -29,17 +27,38 @@ import { TabContainerComponent } from './components/tab-container/tab-container.
 import { FilterDefsPipe } from './pipes/filter-defs.pipe';
 
 import {
+  BrowserModule,
+  HammerModule,
   HammerGestureConfig,
   HAMMER_GESTURE_CONFIG,
 } from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
 
+@Injectable({ providedIn: 'root' })
 export class MyHammerConfig extends HammerGestureConfig {
   overrides = <any>{
     swipe: { direction: Hammer.DIRECTION_HORIZONTAL },
     pinch: { enable: false },
     rotate: { enable: false },
   };
+
+  buildHammer(element: HTMLElement) {
+    const mc = new Hammer(element, {
+      touchAction: 'auto',
+      inputClass: Hammer.SUPPORT_POINTER_EVENTS
+        ? Hammer.PointerEventInput
+        : Hammer.TouchInput,
+      recognizers: [
+        [
+          Hammer.Swipe,
+          {
+            direction: Hammer.DIRECTION_HORIZONTAL,
+          },
+        ],
+      ],
+    });
+    return mc;
+  }
 }
 
 @NgModule({
@@ -74,9 +93,7 @@ export class MyHammerConfig extends HammerGestureConfig {
     HammerModule,
   ],
   entryComponents: [ModalDialogComponent],
-  providers: [
-    { provide: HAMMER_GESTURE_CONFIG, useClass: HammerGestureConfig },
-  ],
+  providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

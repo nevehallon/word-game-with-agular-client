@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tab-container',
@@ -11,9 +10,6 @@ export class TabContainerComponent implements OnInit {
   ngOnInit() {}
 
   @Input() element;
-
-  // @ViewChild(MatTabGroup) group;
-  // @ViewChildren(MatTab) tabs;
   tabCount = 0;
   selectedTab = 0;
 
@@ -21,6 +17,8 @@ export class TabContainerComponent implements OnInit {
 
   number_tabs;
   swipe(eType, tabCount) {
+    console.log('receiving event');
+
     if (!tabCount) return;
     this.tabCount = tabCount;
     // console.log(eType, tabCount, this.selectedTab);
