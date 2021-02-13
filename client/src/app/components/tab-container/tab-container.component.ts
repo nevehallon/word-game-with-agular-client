@@ -17,21 +17,13 @@ export class TabContainerComponent implements OnInit {
 
   number_tabs;
   swipe(eType, tabCount) {
-    console.log('receiving event');
-
     if (!tabCount) return;
     this.tabCount = tabCount;
     // console.log(eType, tabCount, this.selectedTab);
     if (eType === this.SWIPE_ACTION.LEFT && this.selectedTab < tabCount - 1) {
-      // console.log('movin right');
       this.selectedTab++;
-    } else if (
-      eType === this.SWIPE_ACTION.RIGHT &&
-      this.selectedTab > 0 /* this.tabCount */
-    ) {
-      // console.log('movin left ');
+    } else if (eType === this.SWIPE_ACTION.RIGHT && this.selectedTab > 0) {
       this.selectedTab--;
     }
-    // console.log(this.selectedTab);
   }
 }

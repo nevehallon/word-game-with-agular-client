@@ -6,7 +6,6 @@ import {
   OnInit,
   QueryList,
   ViewChildren,
-  // ViewChild,
 } from '@angular/core';
 import {
   animate,
@@ -21,9 +20,8 @@ import {
   DefinitionElement,
 } from 'src/app/interfaces/history-entry';
 import { SourceService } from 'src/app/services/source.service';
-// import { MatTab, MatTabGroup } from '@angular/material/tabs';
 
-import { def } from '../../../../../../mockHistoryEntries';
+import { def } from '../../../../../../mockHistoryEntries'; //? use to emulate local mock data
 
 @Component({
   selector: 'app-history-table',
@@ -49,9 +47,10 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
   firstTurn = this.source.firstTurn;
   gameOver = this.source.gameOver;
 
+  displayedColumns = ['move', 'opponent', 'player'];
+
   // dataSource: HistoryEntry[] = this.source.history;
   dataSource: HistoryEntry[] = def; //? mock data for testing located in mockHistoryEntries.ts
-  displayedColumns = ['move', 'opponent', 'player'];
 
   // lastEntry: any = this.source.history[this.source.history.length - 1];
   lastEntry: any = def[def.length - 1]; //? mock data for testing located in mockHistoryEntries.ts
@@ -60,11 +59,7 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
     console.log(...rest);
   }
 
-  expandedElement:
-    | DefinitionElement[]
-    | null; /* = this.source.history.map(
-    (x) => x.definitions
-  ) */
+  expandedElement: DefinitionElement[] | null;
 
   isExpansionDetailRow = (i: number, row: any) => {
     if (i == 0)

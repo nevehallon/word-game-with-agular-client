@@ -6,7 +6,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FilterDefsPipe implements PipeTransform {
   transform(defs: any[], ...args: unknown[]): any[] {
     let result = defs
-      .sort((a, b) => (a.upvotes > b.upvotes ? -1 : 1))
       .filter(
         (x) =>
           !['INIT', 'PRX', 'AFF', 'SUF', 'SYM', 'ANA'].includes(x.part) &&
