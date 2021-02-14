@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Trie } from '../../assets/trie-prefix-tree/index.js';
-import { without, drop, sum } from 'lodash-es';
+import { without, drop, sum, uniq } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { BtnAttrs } from '../interfaces/btn-attrs.js';
 
@@ -412,7 +412,7 @@ export class BoardValidatorService implements OnDestroy {
         }
       }
 
-      without(words, ...wordsLogged).forEach((word) => {
+      without(uniq(words), ...wordsLogged).forEach((word) => {
         if (!Trie().hasWord(word)) {
           if (isPlayer) {
             if (!$document.querySelectorAll('#board .hot').length)
@@ -468,8 +468,7 @@ export class BoardValidatorService implements OnDestroy {
         return {
           words,
           pointTally,
-          bestWord: without(words, ...wordsLogged),
-          /* TODO: if there is a word more than once leave the last of its kind */
+          bestWord: without(uniq(words), ...wordsLogged),
         }; //return wordsToBeLogged, totalPotentialPoints
       } else {
         return { words, pointTally: 0 };
