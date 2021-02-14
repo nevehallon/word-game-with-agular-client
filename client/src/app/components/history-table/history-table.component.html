@@ -100,16 +100,14 @@
             >
                 <div
                     class="element-detail"
-                    [@detailExpand]="element === expandedElement ? ('expanded' | scrollTo:container:tCell) : 'collapsed'"
+                    [@detailExpand]="(element === expandedElement ? 'expanded'  : 'collapsed') | scrollTo:container:tCell"
                 >
-                    <!-- <ng-container *ngIf="expandedElement === element"> -->
                     <app-tab-container
                         [@fadeInOut]
                         *ngIf="expandedElement === element"
                         class="tab-container"
                         [element]="element"
                     ></app-tab-container>
-                    <!-- </ng-container> -->
                 </div>
             </td>
         </ng-container>

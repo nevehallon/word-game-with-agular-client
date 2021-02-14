@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnInit,
@@ -41,7 +42,7 @@ import { def } from '../../../../../../mockHistoryEntries'; //? use to emulate l
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryTableComponent implements OnInit, AfterViewInit {
-  constructor(private source: SourceService) {}
+  constructor(private source: SourceService, private cd: ChangeDetectorRef) {}
 
   @ViewChildren('td') td: QueryList<ElementRef>;
 
@@ -83,5 +84,9 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
         behavior: 'smooth',
       });
     }, 500);
+  }
+
+  getUniqueStr() {
+    return new Date().toLocaleString();
   }
 }

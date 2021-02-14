@@ -4,7 +4,9 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'scrollTo',
 })
 export class ScrollToPipe implements PipeTransform {
-  transform(srt: string, container: HTMLElement, tCell: HTMLElement): string {
+  transform(str: string, container: HTMLElement, tCell: HTMLElement): string {
+    if (str !== 'expanded') return 'collapsed';
+
     setTimeout(() => {
       container.scrollTo({
         top: tCell.offsetTop - (tCell.offsetHeight - 125),
@@ -12,6 +14,6 @@ export class ScrollToPipe implements PipeTransform {
       });
     }, 800);
 
-    return srt;
+    return 'expanded';
   }
 }
