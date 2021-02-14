@@ -33,9 +33,10 @@ import { def } from '../../../../../../mockHistoryEntries'; //? use to emulate l
       state('expanded', style({ height: '*' })),
       transition(
         'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+        animate('700ms cubic-bezier(0.4, 0.0, 0.2, 1)')
       ),
     ]),
+    trigger('fadeInOut', [transition('* <=> void', animate(0))]),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -63,28 +64,11 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
 
   isExpansionDetailRow = (i: number, row: any) => {
     if (i == 0)
-      console.log(this.source.history, this.dataSource, this.lastEntry); //!change to no def and return false
+      console.log(this.source.history, this.dataSource, this.lastEntry);
 
     if (!row.points) return false;
     return true;
   };
-
-  scrollInView(el: HTMLElement, el2: HTMLElement) {
-    // clearTimeout(this.timer);
-
-    // console.log(this.lastEntry, this.source.history);
-
-    setTimeout(() => {
-      // console.log('start'); TODO: limit the amount of calls
-
-      el.scrollTo({
-        top: el2.offsetTop - (el2.offsetHeight - 125),
-        behavior: 'smooth',
-      });
-    }, 225);
-
-    return 'expanded';
-  }
 
   trackByFn(index, item) {
     return index; // or item.id

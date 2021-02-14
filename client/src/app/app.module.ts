@@ -33,6 +33,7 @@ import {
   HAMMER_GESTURE_CONFIG,
 } from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
+import { ScrollToPipe } from './pipes/scroll-to.pipe';
 
 @Injectable({ providedIn: 'root' })
 export class MyHammerConfig extends HammerGestureConfig {
@@ -74,6 +75,7 @@ export class MyHammerConfig extends HammerGestureConfig {
     FilterDefsPipe,
     AudioBtnComponent,
     TabContainerComponent,
+    ScrollToPipe,
   ],
   imports: [
     BrowserModule,

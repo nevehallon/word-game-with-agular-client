@@ -100,14 +100,16 @@
             >
                 <div
                     class="element-detail"
-                    [@detailExpand]="element === expandedElement ? scrollInView(container, tCell) : 'collapsed'"
+                    [@detailExpand]="element === expandedElement ? ('expanded' | scrollTo:container:tCell) : 'collapsed'"
                 >
-                    <ng-container *ngIf="expandedElement === element">
-                        <app-tab-container
-                            class="tab-container"
-                            [element]="element"
-                        ></app-tab-container>
-                    </ng-container>
+                    <!-- <ng-container *ngIf="expandedElement === element"> -->
+                    <app-tab-container
+                        [@fadeInOut]
+                        *ngIf="expandedElement === element"
+                        class="tab-container"
+                        [element]="element"
+                    ></app-tab-container>
+                    <!-- </ng-container> -->
                 </div>
             </td>
         </ng-container>
@@ -122,8 +124,8 @@
             [hidden]="i === dataSource.length - 1"
             class="element-row"
             [class.expanded-row]="expandedElement === row"
-            [class.expandable]="row.points"
-            (click)="expandedElement = expandedElement === row ? null : row"
+            [class.expandable]="row?.points"
+            (click)="row?.points && expandedElement = expandedElement === row ? null : row"
         ></tr>
         <tr
             mat-footer-row
@@ -131,7 +133,7 @@
             class="element-row"
             [class.expanded-row]="expandedElement === lastEntry"
             [class.expandable]="lastEntry?.points"
-            (click)="expandedElement = expandedElement === lastEntry ? null : lastEntry"
+            (click)="lastEntry?.points && expandedElement = expandedElement === lastEntry ? null : lastEntry"
         ></tr>
         <tr
             mat-row
