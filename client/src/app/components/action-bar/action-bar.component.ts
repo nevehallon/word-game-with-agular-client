@@ -41,14 +41,14 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   btnAttributeSubscription: Subscription;
 
   mixTiles() {
-    // this.dialog.open(ModalDialogComponent, {
-    //   disableClose: true,
-    //   id: 'loading',
-    //   data: {
-    //     type: 'loading',
-    //     message: 'loading words...',
-    //   },
-    // }); //? testing svg animation
+    this.dialog.open(ModalDialogComponent, {
+      disableClose: true,
+      id: 'loading',
+      data: {
+        type: 'loading',
+        message: 'loading words...',
+      },
+    }); //? testing svg animation
     if (this.tiles.length < 2) return;
 
     let shuffledRack =
@@ -225,8 +225,8 @@ export class ActionBarComponent implements OnInit, OnDestroy {
       }, 500));
     }
 
-    // this.dialogRef = undefined;
-    // clearTimeout(this._timeOut);
+    this.dialogRef = undefined;
+    clearTimeout(this._timeOut);
 
     this.dialog.closeAll();
 

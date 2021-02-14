@@ -323,7 +323,11 @@ export class ComputeService {
             },
           };
 
-          // rivalRack = [...rivalRack.slice(0, 5), { letter: "", points: 0 }, { letter: "", points: 0 }]; //? uncomment to test how long it would take if every turn AI has two blanks
+          rivalRack = [
+            ...rivalRack.slice(0, 5),
+            { letter: '', points: 0 },
+            { letter: '', points: 0 },
+          ]; //? uncomment to test how long it would take if every turn AI has two blanks
 
           // gridState.gridLetters[6][5] = { letter: "S", id: "34", pointVal: "taken3", hot: " " }; //? uncomment for debug - checking with interrupting tiles
 

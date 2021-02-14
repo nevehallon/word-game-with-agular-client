@@ -45,9 +45,6 @@ $wood-tile: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/light-wood-t
   border-radius: 8%;
   svg {
     width: 100%;
-    text {
-      letter-spacing: -2px;
-    }
   }
 
   div {
@@ -120,6 +117,7 @@ mat-dialog-actions {
   margin: auto;
 }
 .spinner {
+  display: inline-block;
   box-shadow: inset 0 0 8px 2px black;
   padding: 15px;
   width: 65px;
@@ -128,49 +126,84 @@ mat-dialog-actions {
   color: blue;
   transform: translateZ(0);
   animation: spin 3s infinite linear alternate-reverse;
+  transform-origin: center;
 }
 @-webkit-keyframes spin {
   0% {
     transform: scale(1);
+    -ms-transform: scale(1);
+    -moz-transform: scale(1);
   }
   50% {
     transform: scale(1.35) rotate(360deg);
+    -ms-transform: scale(1.35) rotate(360deg);
+    -moz-transform: scale(1.35) rotate(360deg);
   }
   100% {
     transform: scale(1) rotate(0deg);
+    -ms-transform: scale(1) rotate(0deg);
+    -moz-transform: scale(1) rotate(0deg);
   }
 }
 @keyframes spin {
   0% {
     transform: scale(1);
+    -ms-transform: scale(1);
+    -moz-transform: scale(1);
   }
   50% {
     transform: scale(1.35) rotate(360deg);
+    -ms-transform: scale(1.35) rotate(360deg);
+    -moz-transform: scale(1.35) rotate(360deg);
   }
   100% {
     transform: scale(1) rotate(0deg);
+    -ms-transform: scale(1) rotate(0deg);
+    -moz-transform: scale(1) rotate(0deg);
   }
 }
 
-// #path1 {
-//   animation: spin1 2.5s infinite linear !important;
-//   transform: translate(50%, 50%);
-// }
+#path1 {
+  display: inline-block;
+  animation: spin1 2.5s infinite linear;
+  transform-origin: center;
+}
 
-// #path2 {
-//   animation: spin2 8s infinite linear !important;
-// }
+@keyframes spin1 {
+  100% {
+    transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+  }
+}
+@-webkit-keyframes spin1 {
+  100% {
+    transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+  }
+}
 
-// @keyframes spin1 {
-//   100% {
-//     transform: rotate(-360deg);
-//   }
-// }
-// @keyframes spin2 {
-//   100% {
-//     transform: rotate(360deg);
-//   }
-// }
+#path2 {
+  display: inline-block;
+  animation: spin2 8s infinite linear;
+  transform-origin: center;
+}
+
+@keyframes spin2 {
+  100% {
+    transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin2 {
+  100% {
+    transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+  }
+}
 
 // *
 // * history
