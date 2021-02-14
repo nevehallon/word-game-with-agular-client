@@ -7,6 +7,7 @@
         mat-table
         [dataSource]="dataSource"
         multiTemplateDataRows
+        [trackBy]="trackByFn"
     >
 
         <!-- Moves Column -->
@@ -101,10 +102,12 @@
                     class="element-detail"
                     [@detailExpand]="element === expandedElement ? scrollInView(container, tCell) : 'collapsed'"
                 >
-                    <app-tab-container
-                        class="tab-container"
-                        [element]="element"
-                    ></app-tab-container>
+                    <ng-container *ngIf="expandedElement === element">
+                        <app-tab-container
+                            class="tab-container"
+                            [element]="element"
+                        ></app-tab-container>
+                    </ng-container>
                 </div>
             </td>
         </ng-container>

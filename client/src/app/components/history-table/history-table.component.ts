@@ -86,6 +86,10 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
     return 'expanded';
   }
 
+  trackByFn(index, item) {
+    return index; // or item.id
+  }
+
   ngOnInit(): void {}
   ngAfterViewInit(): void {
     let el = this.td.toArray()[this.dataSource.length - 2]?.nativeElement;

@@ -225,8 +225,8 @@ export class ActionBarComponent implements OnInit, OnDestroy {
       }, 500));
     }
 
-    this.dialogRef = undefined;
-    clearTimeout(this._timeOut);
+    // this.dialogRef = undefined;
+    // clearTimeout(this._timeOut);
 
     this.dialog.closeAll();
 
