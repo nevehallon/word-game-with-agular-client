@@ -22,7 +22,7 @@ import {
 } from 'src/app/interfaces/history-entry';
 import { SourceService } from 'src/app/services/source.service';
 
-import { def } from '../../../../../../mockHistoryEntries'; //? use to emulate local mock data
+// import { def } from '../../../../../../mockHistoryEntries'; //? use to emulate local mock data
 
 @Component({
   selector: 'app-history-table',
@@ -51,11 +51,11 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['move', 'opponent', 'player'];
 
-  // dataSource: HistoryEntry[] = this.source.history;
-  dataSource: HistoryEntry[] = def; //? mock data for testing located in mockHistoryEntries.ts
+  dataSource: HistoryEntry[] = this.source.history;
+  // dataSource: HistoryEntry[] = def; //? mock data for testing located in mockHistoryEntries.ts
 
-  // lastEntry: any = this.source.history[this.source.history.length - 1];
-  lastEntry: any = def[def.length - 1]; //? mock data for testing located in mockHistoryEntries.ts
+  lastEntry: any = this.source.history[this.source.history.length - 1];
+  // lastEntry: any = def[def.length - 1]; //? mock data for testing located in mockHistoryEntries.ts
 
   log(...rest) {
     console.log(...rest);
@@ -84,9 +84,5 @@ export class HistoryTableComponent implements OnInit, AfterViewInit {
         behavior: 'smooth',
       });
     }, 500);
-  }
-
-  getUniqueStr() {
-    return new Date().toLocaleString();
   }
 }

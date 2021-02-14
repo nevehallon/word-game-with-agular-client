@@ -31,6 +31,15 @@ export class BoardValidatorService implements OnDestroy {
     return arrays[0].map((_, i) => arrays.map((array) => array[i]));
   }
 
+  difference(a, b) {
+    return a.filter(
+      function (v) {
+        return !this.get(v) || !this.set(v, this.get(v) - 1);
+      },
+      b.reduce((acc, v) => acc.set(v, (acc.get(v) || 0) + 1), new Map())
+    );
+  }
+
   rowWordStack = [];
   columnWordStack = [];
   potentialPoints = [];
@@ -468,7 +477,7 @@ export class BoardValidatorService implements OnDestroy {
         return {
           words,
           pointTally,
-          bestWord: without(uniq(words), ...wordsLogged),
+          bestWord: this.difference(words, wordsLogged),
         }; //return wordsToBeLogged, totalPotentialPoints
       } else {
         return { words, pointTally: 0 };

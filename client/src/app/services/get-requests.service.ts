@@ -108,7 +108,7 @@ export class GetRequestsService {
       let {
         body: { words },
       } = await data;
-      console.log(words);
+      // console.log(words);
 
       return words;
     } catch (error) {
