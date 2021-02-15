@@ -46,15 +46,15 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   btnAttributeSubscription: Subscription;
 
   mixTiles() {
-    this.closeDialog();
-    this.dialog.open(ModalDialogComponent, {
-      disableClose: true,
-      panelClass: 'loadingPanel',
-      data: {
-        type: 'loading',
-        message: 'loading words...',
-      },
-    }); //? testing svg animation
+    // this.closeDialog();
+    // this.dialog.open(ModalDialogComponent, {
+    //   disableClose: true,
+    //   panelClass: 'loadingPanel',
+    //   data: {
+    //     type: 'loading',
+    //     message: 'loading words...',
+    //   },
+    // }); //? uncomment to test svg loading animation
     if (this.tiles.length < 2) return;
 
     let shuffledRack =
