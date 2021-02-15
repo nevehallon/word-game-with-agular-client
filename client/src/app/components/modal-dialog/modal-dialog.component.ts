@@ -134,7 +134,6 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
       });
 
     if (tilesToSwap.length > this.source.bag.length) {
-      let TO;
       this.dialog.closeAll();
       let dialogRef = this.dialog.open(ModalDialogComponent, {
         data: {
@@ -144,8 +143,8 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
           btnCloseData: [null],
         },
       });
-      clearTimeout(TO);
-      TO = setTimeout(() => {
+      clearTimeout(this.source.modalTO);
+      this.source.modalTO = setTimeout(() => {
         dialogRef.close();
       }, 3250);
       return;

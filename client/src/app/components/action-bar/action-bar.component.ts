@@ -25,6 +25,11 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     private validate: BoardValidatorService
   ) {}
 
+  closeDialog() {
+    clearTimeout(this.source.modalTO);
+    this.dialog.closeAll();
+  }
+
   private _timeOut;
 
   dialogRef: MatDialogRef<any>;
@@ -41,7 +46,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   btnAttributeSubscription: Subscription;
 
   mixTiles() {
-    this.dialog.closeAll();
+    this.closeDialog();
     this.dialog.open(ModalDialogComponent, {
       disableClose: true,
       panelClass: 'loadingPanel',
@@ -60,7 +65,8 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
   showBagContent() {
     if (!this.source.playersTurn && !this.source.gameOver) return;
-    this.dialog.closeAll();
+    this.closeDialog();
+
     this.dialog.open(ModalDialogComponent, {
       data: {
         type: 'bag',
@@ -70,7 +76,8 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
   showSettings() {
     if (!this.source.playersTurn && !this.source.gameOver) return;
-    this.dialog.closeAll();
+    this.closeDialog();
+
     this.dialog.open(ModalDialogComponent, {
       maxWidth: '75vh',
       width: '75%',
@@ -82,7 +89,8 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
   prePass(wasClicked, isSwap, isAI, legalClick) {
     if (legalClick === false) return;
-    this.dialog.closeAll();
+    this.closeDialog();
+
     const dialogRef = this.dialog.open(ModalDialogComponent, {
       data: {
         type: 'confirmPass',
@@ -160,9 +168,11 @@ export class ActionBarComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.dialog.closeAll();
+    this.closeDialog();
+
     let dialogRef = this.dialog.open(ModalDialogComponent, {
-      maxWidth: '99vw',
+      maxWidth: '75vh',
+      minWidth: '42vh',
       id: 'swapModal',
       data: {
         type: 'swap',
@@ -215,7 +225,8 @@ export class ActionBarComponent implements OnInit, OnDestroy {
         this.source.history[this.source.history.length - 1].isAI === undefined)
     ) {
       if (!this.dialogRef) {
-        this.dialog.closeAll();
+        this.closeDialog();
+
         this.dialogRef = this.dialog.open(ModalDialogComponent, {
           disableClose: true,
           panelClass: 'loadingPanel',
@@ -233,8 +244,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
     this.dialogRef = undefined;
     clearTimeout(this._timeOut);
-
-    this.dialog.closeAll();
+    this.closeDialog();
 
     this.dialog.open(ModalDialogComponent, {
       id: 'historyModal',

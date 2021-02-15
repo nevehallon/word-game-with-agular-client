@@ -126,6 +126,7 @@ export class SourceService {
   public history: HistoryEntry[] = [];
   public rivalRack = [];
   public gameOver = false;
+  public modalTO; //?timeout
 
   public bag = shuffle(shuffle(this.letters.get()));
 }

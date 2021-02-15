@@ -30,8 +30,9 @@ export class GameLogicService {
   dialogRef: MatDialogRef<any>;
 
   closeDialog(timeOut: number = 0) {
+    clearTimeout(this.source.modalTO);
     if (!timeOut) return this.dialog.closeAll();
-    setTimeout(() => {
+    this.source.modalTO = setTimeout(() => {
       this.dialog.closeAll();
     }, timeOut);
   }
