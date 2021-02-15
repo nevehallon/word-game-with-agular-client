@@ -68,8 +68,10 @@ export class GameLogicService {
 
     let playerRack;
     let data: DialogData;
-    if (player < pc || true) {
-      //TODO: remove || true
+    if (player < pc /* || true */) {
+      /*            ^           ^
+      ? uncomment so that player gets first turn
+       */
       playerRack = this.deal2Player();
       this.deal2PC();
       this.source.playersTurn = true;
@@ -85,7 +87,7 @@ export class GameLogicService {
       this.closeDialog(2250);
       if (this.source.DEBUG_MODE) {
         this.source.playersTurn = true;
-        this.pcPlay($document); //TODO:
+        this.pcPlay($document);
       }
     } else {
       this.source.playersTurn = false;
@@ -102,7 +104,7 @@ export class GameLogicService {
       });
       this.closeDialog(2250);
       setTimeout(() => {
-        this.pcPlay($document); //TODO:
+        this.pcPlay($document);
       }, 3000);
     }
     playerRack = playerRack.map((x, i) => ({
@@ -413,7 +415,7 @@ export class GameLogicService {
           if (!result) {
             return;
           }
-          window.location.reload(); //TODO: make all data, services and components reinitialize
+          window.location.reload(); //TODO: make all data, services and components reinitialize without reloading page
         });
     }, time);
 
@@ -478,7 +480,7 @@ export class GameLogicService {
     setTimeout(() => {
       this.source.playersTurn || this.source.DEBUG_MODE
         ? this.pcPlay($document)
-        : (this.source.playersTurn = true); //TODO:
+        : (this.source.playersTurn = true);
     }, 250);
     return false; //? remove extra style from tiles that AI played
   }

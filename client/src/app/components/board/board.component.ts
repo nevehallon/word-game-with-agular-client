@@ -125,7 +125,6 @@ export class BoardComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.zoomIn(event.container.element.nativeElement, true);
 
-      // TODO: if blank show blank options in modal
       let data: any = event.container.data[0];
 
       if (data.content.letter === '') {

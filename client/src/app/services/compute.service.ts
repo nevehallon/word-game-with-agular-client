@@ -32,7 +32,6 @@ export class ComputeService {
     let firstTurn = this.source.firstTurn;
     let wordsLogged = this.source.wordsLogged;
     let rivalRack = [...this.source.rivalRack];
-    // firstTurn = false; //TODO: remove me
     this.updateBoardData();
     let difficultlyLimit = +localStorage.getItem('difficulty')
       ? +localStorage.getItem('difficulty')
@@ -266,7 +265,6 @@ export class ComputeService {
           };
 
           checkNext();
-          //TODO make sure "nextCoord" is still on by comparing suffix.length + tile[0] !== 14
           let checkedOut = []; //
           let checkedOut4Branch = []; //suffixes that have already been used to insure no repeats
           let checkedOut4NewBranch = []; //
@@ -1701,7 +1699,7 @@ export class ComputeService {
                 Trie().hasWord(setWord.reverse().join(''))
               ) {
                 potentialWordsMain.push({
-                  a_joined: setWord.join(''), //TODO: get rid of prop
+                  a_joined: setWord.join(''),
                   set: supply[set].join(''),
                   numHotTiles: rivalRack.length - word.b.length,
                   remaining: word.b.map((x, index) => {
