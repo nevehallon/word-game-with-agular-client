@@ -41,9 +41,10 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   btnAttributeSubscription: Subscription;
 
   mixTiles() {
+    this.dialog.closeAll();
     this.dialog.open(ModalDialogComponent, {
       disableClose: true,
-      id: 'loading',
+      panelClass: 'loadingPanel',
       data: {
         type: 'loading',
         message: 'loading words...',
@@ -59,6 +60,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
   showBagContent() {
     if (!this.source.playersTurn && !this.source.gameOver) return;
+    this.dialog.closeAll();
     this.dialog.open(ModalDialogComponent, {
       data: {
         type: 'bag',
@@ -68,6 +70,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
   showSettings() {
     if (!this.source.playersTurn && !this.source.gameOver) return;
+    this.dialog.closeAll();
     this.dialog.open(ModalDialogComponent, {
       maxWidth: '75vh',
       width: '75%',
@@ -79,6 +82,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
   prePass(wasClicked, isSwap, isAI, legalClick) {
     if (legalClick === false) return;
+    this.dialog.closeAll();
     const dialogRef = this.dialog.open(ModalDialogComponent, {
       data: {
         type: 'confirmPass',
@@ -156,6 +160,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.dialog.closeAll();
     let dialogRef = this.dialog.open(ModalDialogComponent, {
       maxWidth: '99vw',
       id: 'swapModal',
@@ -210,9 +215,10 @@ export class ActionBarComponent implements OnInit, OnDestroy {
         this.source.history[this.source.history.length - 1].isAI === undefined)
     ) {
       if (!this.dialogRef) {
+        this.dialog.closeAll();
         this.dialogRef = this.dialog.open(ModalDialogComponent, {
           disableClose: true,
-          id: 'loading',
+          panelClass: 'loadingPanel',
           data: {
             type: 'loading',
             message: 'loading words...',

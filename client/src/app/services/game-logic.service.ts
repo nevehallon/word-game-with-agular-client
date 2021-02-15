@@ -30,9 +30,9 @@ export class GameLogicService {
   dialogRef: MatDialogRef<any>;
 
   closeDialog(timeOut: number = 0) {
-    if (!timeOut) return this.dialogRef.close();
+    if (!timeOut) return this.dialog.closeAll();
     setTimeout(() => {
-      this.dialogRef.close();
+      this.dialog.closeAll();
     }, timeOut);
   }
 
@@ -77,6 +77,7 @@ export class GameLogicService {
         message: 'You won the draw and will start',
       };
 
+      this.closeDialog();
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
         data: data,
       });
@@ -94,6 +95,7 @@ export class GameLogicService {
         message: 'Opponent won the draw and will start',
       };
 
+      this.closeDialog();
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
         data: data,
       });
@@ -157,6 +159,7 @@ export class GameLogicService {
         type: 'message',
         message: `Oops! Insufficient storage on your device or browser. Please consider fixing this if you want to enjoy the game.`,
       };
+      this.closeDialog();
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
         disableClose: true,
         id: 'error',
@@ -167,9 +170,10 @@ export class GameLogicService {
     }
     if (!this.source.loaderShown) {
       this.source.loaderShown = true;
+      this.closeDialog();
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
         disableClose: true,
-        id: 'loading',
+        panelClass: 'loadingPanel',
         data: {
           type: 'loading',
           message: 'Loading Resources...',
@@ -243,9 +247,10 @@ export class GameLogicService {
     this.source.changeBoard(newBoard);
     this.gridService.updateGameState($document);
 
+    this.closeDialog();
     this.dialogRef = this.dialog.open(ModalDialogComponent, {
       disableClose: true,
-      id: 'loading',
+      panelClass: 'loadingPanel',
       data: {
         type: 'loading',
         message: 'Opponent is thinking...',
@@ -259,7 +264,6 @@ export class GameLogicService {
     // }
     // rivalRack = Array(7).fill({ letter: "Q", points: 10 }); //[...rivalRack.slice(0, 6), { letter: "", points: 0 }]; //? uncomment for testing
 
-    // this.zoomOut(); //TODO:
     this.source.rivalRack.sort((a, b) => (b.letter ? 1 : -1)); //make sure that blanks are last tile
     setTimeout(async () => {
       try {
@@ -388,8 +392,8 @@ export class GameLogicService {
           : playerScore > computerScore
           ? 'You Won'
           : 'Opponent Won';
-      this.closeDialog();
 
+      this.closeDialog();
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
         data: {
           type: 'message',
@@ -491,6 +495,7 @@ export class GameLogicService {
         buttons: ['Close'],
         btnCloseData: [false],
       };
+      this.closeDialog();
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
         id: 'error',
         maxWidth: '99vw',
@@ -656,12 +661,11 @@ export class GameLogicService {
           !this.source.rivalRack.length)
       ) {
         setTimeout(() => {
-          this.closeDialog();
-
           let data: DialogData = {
             type: 'message',
             message: `Opponent played: "${wordUsed}"`,
           };
+          this.closeDialog();
           this.dialogRef = this.dialog.open(ModalDialogComponent, {
             data: data,
           });
@@ -681,12 +685,11 @@ export class GameLogicService {
       });
 
       setTimeout(() => {
-        this.closeDialog();
-
         let data: DialogData = {
           type: 'message',
           message: `Opponent played: "${wordUsed}"`,
         };
+        this.closeDialog();
         this.dialogRef = this.dialog.open(ModalDialogComponent, {
           data: data,
         });

@@ -109,7 +109,7 @@ export class SourceService {
   //prettier-ignore
   public dl = [3, 11, 36, 38, 45, 52, 59, 92, 96, 98, 102, 108, 116, 122, 126, 128, 132, 165, 172, 179, 186, 188, 213, 221];
 
-  public DEBUG_MODE = false; //TODO: fix: loading dialog unique id needed ! change to true for the AI to play it self
+  public DEBUG_MODE = true; //TODO: fix: loading dialog unique id needed ! change to true for the AI to play it self
 
   public loaderShown = false;
   public playerScore = 0;

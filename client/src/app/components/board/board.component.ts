@@ -129,6 +129,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
       let data: any = event.container.data[0];
 
       if (data.content.letter === '') {
+        this.dialog.closeAll();
         const dialogRef = this.dialog.open(ModalDialogComponent, {
           maxWidth: '99vw',
           id: 'swapModal',

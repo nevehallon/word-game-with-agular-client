@@ -102,20 +102,17 @@ mat-dialog-actions {
 // *
 // * loading...
 // *
-
-::ng-deep #loading::-webkit-scrollbar {
-  width: 0; /* Remove scrollbar space */
-  height: 0; /* Remove scrollbar space */
-  background: transparent; /* Optional: just make scrollbar invisible */
+::ng-deep .loadingPanel mat-dialog-container {
+  background: #ffffffd1;
 }
-
 .spinner-container {
   box-shadow: inset 0 0 8px 2px black;
   border-radius: 50%;
   width: 65px;
   height: 65px;
-  margin: auto;
+  margin: 10px auto;
 }
+
 .spinner {
   display: inline-block;
   box-shadow: inset 0 0 8px 2px black;

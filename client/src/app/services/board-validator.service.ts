@@ -484,6 +484,9 @@ export class BoardValidatorService implements OnDestroy {
       }
     } catch (error) {
       console.error(error);
+      if (this.source.DEBUG_MODE) {
+        throw error;
+      }
       return error;
     }
   }

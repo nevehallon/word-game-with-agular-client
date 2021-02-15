@@ -135,6 +135,7 @@ export class ModalDialogComponent implements OnInit, OnDestroy {
 
     if (tilesToSwap.length > this.source.bag.length) {
       let TO;
+      this.dialog.closeAll();
       let dialogRef = this.dialog.open(ModalDialogComponent, {
         data: {
           type: 'message',
