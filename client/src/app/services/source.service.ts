@@ -99,6 +99,21 @@ export class SourceService {
     return btnAttr;
   }
 
+  private hasListSource = new BehaviorSubject(false);
+  currentHasList = this.hasListSource.asObservable();
+
+  getHasList() {
+    let hasList;
+    this.currentHasList.pipe(take(1)).subscribe((result: boolean) => {
+      hasList = result;
+    });
+    return hasList;
+  }
+
+  changeHasList(bool: boolean) {
+    this.hasListSource.next(bool);
+  }
+
   public tw = [0, 7, 14, 105, 119, 210, 217, 224];
 
   //prettier-ignore

@@ -98,7 +98,7 @@ export class GameLogicService {
         message: 'Opponent won the draw and will start',
       };
 
-      this.closeDialog();
+      this.closeDialog(); //? closing any previously open dialog
       this.dialogRef = this.dialog.open(ModalDialogComponent, {
         data: data,
       });
@@ -155,7 +155,7 @@ export class GameLogicService {
     }
   }
 
-  serverCheck = async ($document) => {
+  serverCheck = async (check, $document) => {
     if (this.storageAvailable('localStorage') !== true) {
       // not available
       let data: DialogData = {
@@ -184,13 +184,26 @@ export class GameLogicService {
       });
     }
     let status = await this.http.checkServerStatus();
+    let TO;
     if (status) {
+      clearTimeout(TO);
+      let checkHasList = () => {
+        if (!check.getHasList()) {
+          return (TO = setTimeout(() => {
+            checkHasList();
+          }, 2500));
+        }
+      };
+      checkHasList();
       this.closeDialog();
       this.source.loaderShown = false;
       return this.startGame($document);
     }
-    setTimeout(() => {
-      this.serverCheck($document);
+    clearTimeout(TO);
+    TO = setTimeout(() => {
+      console.log('still');
+
+      this.serverCheck(check, $document);
     }, 2222);
   };
 

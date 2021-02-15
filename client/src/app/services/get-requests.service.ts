@@ -4,12 +4,13 @@ import { getTrie } from '../../assets/trie-prefix-tree/index.js';
 import { HttpClient } from '@angular/common/http';
 import { orderBy } from 'lodash-es';
 import * as localforage from 'localforage';
+import { SourceService } from './source.service.js';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GetRequestsService {
-  url: string = 'http://localhost:3000';
+  url: string = 'http://localhost:3001';
 
   async checkServerStatus() {
     let requestStatus: Promise<any> = this.http
@@ -31,12 +32,13 @@ export class GetRequestsService {
     }
   }
 
-  async getWordTrieStr() {
+  async getWordTrieStr(source) {
     try {
       if (
         (await localforage.getItem('wordTrieStr')) &&
         (await localforage.getItem('reverseWordTrieStr'))
       ) {
+        source.changeHasList(true);
         return;
       }
 
@@ -54,7 +56,8 @@ export class GetRequestsService {
       let localReverseTrieStr = reverseWordTrieStr;
       await localforage.setItem('wordTrieStr', localTrieStr);
       await localforage.setItem('reverseWordTrieStr', localReverseTrieStr);
-      getTrie();
+      let hasList = getTrie();
+      if (hasList) source.changeHasList(true);
     } catch (error) {
       console.error(error);
     }

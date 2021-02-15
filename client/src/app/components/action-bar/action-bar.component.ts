@@ -221,8 +221,10 @@ export class ActionBarComponent implements OnInit, OnDestroy {
 
     if (
       this.source.history.length &&
-      (this.source.history[this.source.history.length - 2].isAI === undefined ||
-        this.source.history[this.source.history.length - 1].isAI === undefined)
+      ((this.source.history[this.source.history.length - 2]?.isAI ===
+        undefined &&
+        this.source.history.length > 1) ||
+        this.source.history[this.source.history.length - 1]?.isAI === undefined)
     ) {
       if (!this.dialogRef) {
         this.closeDialog();
