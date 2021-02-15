@@ -17,13 +17,22 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["hammerjs"],
             "outputPath": "dist/client",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              {
+                "glob": "index.js",
+                "input": "src/trie-prefix-tree-alt",
+                "output": "."
+              }
+            ],
             "styles": ["src/styles.scss"],
             "scripts": ["node_modules/localforage/dist/localforage.js"]
           },
@@ -83,7 +92,15 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              {
+                "glob": "index.js",
+                "input": "src/trie-prefix-tree-alt",
+                "output": "."
+              }
+            ],
             "styles": ["src/styles.scss"],
             "scripts": ["node_modules/localforage/dist/localforage.js"]
           }

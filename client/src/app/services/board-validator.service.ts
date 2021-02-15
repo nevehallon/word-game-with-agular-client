@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Trie } from '../../assets/trie-prefix-tree/index.js';
+import { Trie } from '../../trie-prefix-tree-alt/index.js';
 import { without, drop, sum, uniq } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { BtnAttrs } from '../interfaces/btn-attrs.js';

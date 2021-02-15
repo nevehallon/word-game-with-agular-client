@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { LetterToPointsService } from './letter-to-points.service.js';
-import { getTrie } from '../../assets/trie-prefix-tree/index.js';
+import { getTrie } from '../../trie-prefix-tree-alt/index.js';
 import { HttpClient } from '@angular/common/http';
 import { orderBy } from 'lodash-es';
 import * as localforage from 'localforage';
-import { SourceService } from './source.service.js';
 
 @Injectable({
   providedIn: 'root',

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BoardValidatorService } from './board-validator.service';
 import { GetRequestsService } from './get-requests.service';
-import { Trie } from '../../assets/trie-prefix-tree/index.js';
+import { Trie } from '../../trie-prefix-tree-alt/index.js';
 import { orderBy, cloneDeep, sum } from 'lodash-es';
 import { SourceService } from './source.service';
 
