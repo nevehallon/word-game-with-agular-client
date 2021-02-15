@@ -17,7 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": ["hammerjs"],
+            "allowedCommonJsDependencies": [
+              "hammerjs"
+            ],
             "outputPath": "dist/client",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -28,13 +30,17 @@
               "src/favicon.ico",
               "src/assets",
               {
-                "glob": "index.js",
+                "glob": "main.js",
                 "input": "src/trie-prefix-tree-alt",
                 "output": "."
               }
             ],
-            "styles": ["src/styles.scss"],
-            "scripts": ["node_modules/localforage/dist/localforage.js"]
+            "styles": [
+              "src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/localforage/dist/localforage.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -96,13 +102,17 @@
               "src/favicon.ico",
               "src/assets",
               {
-                "glob": "index.js",
+                "glob": "main.js",
                 "input": "src/trie-prefix-tree-alt",
                 "output": "."
               }
             ],
-            "styles": ["src/styles.scss"],
-            "scripts": ["node_modules/localforage/dist/localforage.js"]
+            "styles": [
+              "src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/localforage/dist/localforage.js"
+            ]
           }
         },
         "lint": {
@@ -113,7 +123,9 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "e2e": {
@@ -127,6 +139,10 @@
               "devServerTarget": "client:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {}
         }
       }
     }
